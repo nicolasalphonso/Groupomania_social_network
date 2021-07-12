@@ -1,4 +1,10 @@
-Ce projet représente la dernière partie de ma formation de développeur web junior. J'ai créé le frontend et le backend.
+This project represents the last part of my training as a junior web developer. I created the frontend and the backend.
 
 Instructions
-Développement en cours... 
+Backend:
+* install all depedencies : npm install
+* create the empty mysql tables. Choose their name and put it un /backend/config/config.json (choose the passwords too ;) )
+* Migrate the tables : sequelize db:migrate
+* nodemon server ( or node server)
+
+Development in progress ...
