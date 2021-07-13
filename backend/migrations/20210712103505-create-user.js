@@ -10,11 +10,13 @@ module.exports = {
       },
       email: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
-      usename: {
+      username: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       password: {
         allowNull: false,
@@ -26,7 +28,8 @@ module.exports = {
       },
       isAdmin: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        defaultValue: 0,
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

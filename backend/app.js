@@ -1,7 +1,8 @@
 // Application utilisant le framework Express
 // utilise sequilize pour la gestion de la base de données MySQL
 const express = require("express"); // importation d'Express
-//const dotenv = require("dotenv").config(); // importation de dotenv
+const bodyParser = require('body-parser');
+const dotenv = require("dotenv").config(); // importation de dotenv
 const helmet = require('helmet'); // importation de Helmet - sécurisation des entêtes HTTP
 const xss = require('xss-clean'); // importation de XSS Clean contre les attaques XSS
 const { Sequelize, Model, DataTypes } = require('sequelize'); // importation de sequelize
@@ -25,9 +26,9 @@ const session = require('express-session');
 // importation de path pour accéder au path de notre serveur
 const path = require('path');
 
-// Routeurs pour les "sauces" et les "utilisateurs"
-//const sauceRoutes = require('./routes/sauce');
-//const userRoutes = require('./routes/user');
+// Routeurs pour les "messages" et les "utilisateurs"
+const messageRoutes = require('./routes/message');
+const userRoutes = require('./routes/user');
 
 const app = express(); // notre application
 
@@ -40,23 +41,11 @@ app.use(function(req, res, next) {
   }
 });
 
-/*
-// Connexion à la base de données MongoDB
-// Les mots de passes et login sont pour la phase de production ;)
-mongoose
-  .connect(
-    process.env.BDD_PATH,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
-*/
-
   // headers pour éviter les erreurs CORS - appliqué à toutes les routes
   // nous souhaitons que nos deux serveurs puissent communiquer
   // Cross Origin Resource sharing
   app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
@@ -64,6 +53,9 @@ mongoose
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     next(); // passe l'exécution au middleware suivant
   });
+  
+  //Body Parser configuration
+  app.use(bodyParser.urlencoded({ extended: true}))
   
   // transforme le corps de la requête en objet JSON
   app.use(express.json());
@@ -85,8 +77,8 @@ mongoose
   app.use('/images', express.static(path.join(__dirname, 'images')));
 
   // routes de base du chemin des routeurs
-  //app.use('/api/posts', postsRoutes); 
-  //app.use('/api/auth', userRoutes);
+  app.use('/api/posts', messageRoutes); 
+  app.use('/api/auth', userRoutes);
 
 // exportation de l'application pour pouvoir y accéder depuis
 // d'autres fichiers notamment le serveur node
