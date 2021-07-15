@@ -1,29 +1,29 @@
 const express = require('express');
-// routeur nécessaire (optimisation des fichiers du backend)
+// import of Router
 const router = express.Router();
 
-// importation du middleware d'authentification
+// import of authentication middleware
 const auth = require('../middleware/auth');
-// importation du middleware de gestion des fichiers
+// import of file management middleware
 const multer = require('../middleware/multer-config');
 
-// les logiques métier sont dans le fichier controler message
+// all controls are in the controler message file
 const messageCtrl = require('../controlers/message');
 
-// les requêtes sont authentifiées (auth)
-// route de récupération de l'ensemble des messages
+// all request are authentified (auth)
+// route to get all messages
 router.get('/', auth, messageCtrl.getAllMessages);
-//route de création d'une sauce
+//route to create a message
 router.post('/', auth, multer, messageCtrl.createMessage);
-//route de récupération d'une sauce
-// les ":" avant id signifie que cette partie de la route est dynamique
+//route to get one message
+// ":" before id means that this part of the route is dynamic
 router.get('/:id', auth, messageCtrl.getOneMessage);
-// route de modification d'une sauce
+// route to modify a message
 router.put('/:id', auth, multer, messageCtrl.modifyMessage);
-// route de suppression d'une sauce
+// route to delete a message
 router.delete('/:id', auth, messageCtrl.deleteMessage);
-// route de gestion des likes
+// route to manage likes
 router.post('/:id/like', auth, messageCtrl.likesManagement);
 
-// on exporte le routeur
+// export of router
 module.exports = router;

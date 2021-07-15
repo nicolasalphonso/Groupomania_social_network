@@ -55,11 +55,9 @@ exports.signup = async (req, res, next) => {
     .has()
     .symbols(); // Doit contenir au moins un symbole
 
-  //const validationMDP = schema.validate(req.body.password);
-  const validationMDP = true;
-
-  //const validationEmail = validator.validate(req.body.email);
-  const validationEmail = true;
+  const validationMDP = schema.validate(req.body.password);
+  
+  const validationEmail = validator.validate(req.body.email);
 
   if (validationMDP && validationEmail) {
     bcrypt
@@ -75,7 +73,7 @@ exports.signup = async (req, res, next) => {
           password: hash,
           username: req.body.username,
           biography: req.body.biography,
-          isAdmin: 0,
+          isAdmin: req.body.isAdmin,
         })
           .then(function (user) {
             return res.status(201).json({
@@ -101,14 +99,13 @@ exports.signup = async (req, res, next) => {
 
 // connexion des utilisateurs existants
 exports.login = (req, res, next) => {
-  /*
   // on crypte l'adresse email fournie pour la comparer ensuite à ce qui se trouve dans la bdd
   const adresseRequeteCryptee = cryptojs
     .HmacSHA256(req.body.email, process.env.EMAIL_KEY_SECRET)
     .toString();
 
   // on cherche dans bdd le user correspondant à l'adresse email
-  User.findOne({ email: adresseRequeteCryptee })
+  models.User.findOne({ where: {email: adresseRequeteCryptee }})
     // on vérifie d'abord que l'utilisateur existe
     .then((user) => {
       if (!user) {
@@ -128,9 +125,9 @@ exports.login = (req, res, next) => {
           // on encode userId pour appliquer à chaque objet pour éviter
           // qu'un autre utilisateur fasse des modifications
           res.status(200).json({
-            userId: user._id,
+            userId: user.id,
             token: jwt.sign(
-              { userId: user._id },
+              { userId: user.id },
               process.env.RANDOM_TOKEN_SECRET,
               { expiresIn: "24h" }
             ),
@@ -139,5 +136,4 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
-    */
 };

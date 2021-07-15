@@ -26,3 +26,5 @@
 # secrets
 /backend/.env
 
+# logs
+/backend/requetes.log
