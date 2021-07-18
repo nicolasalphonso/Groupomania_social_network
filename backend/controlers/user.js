@@ -72,7 +72,9 @@ exports.signup = async (req, res, next) => {
             .toString(),
           password: hash,
           username: req.body.username,
-          biography: req.body.biography,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          bio: req.body.bio,
           isAdmin: req.body.isAdmin,
         })
           .then(function (user) {

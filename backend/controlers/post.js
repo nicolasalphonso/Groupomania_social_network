@@ -1,12 +1,12 @@
-// import du model message
-const Sauce = require("../models/message");
+// import du model post
+const Sauce = require("../models/post");
 // importation de FS pour la modification du système de fichiers
 // ici pour la suppression
 const fs = require("fs");
 
-exports.createMessage = (req, res, next) => {
+exports.createPost = (req, res, next) => {
   // analyse de la requête pour obtenir un objet utilisable
-  const messageObject = JSON.parse(req.body.message);
+  const postObject = JSON.parse(req.body.post);
 /*
   // instance du modèle Sauce
   // ...sauceObject = opérateur spread : copie les champs dans le body
@@ -29,7 +29,7 @@ exports.createMessage = (req, res, next) => {
 
 
 // récupération du tableau de toutes les sauces de la base de données
-exports.getAllMessages = (req, res, next) => {
+exports.getAllPosts = (req, res, next) => {
  /* Sauce.find() // la réponse est le tableau de toutes les sauces de la base de données
     .then((sauces) => res.status(200).json(sauces)) // on retourne le tableau des sauces
     .catch((error) => res.status(400).json({ error }));
@@ -38,7 +38,7 @@ exports.getAllMessages = (req, res, next) => {
 
 // récupération de la sauce correspondant à l'id dans la base de données
 // méthode findOne( paramètre de comparaison)
-exports.getOneMessage = (req, res, next) => {
+exports.getOnePost = (req, res, next) => {
     /*
   //paramètre de route dynamique id doit être égal au paramètre id de la requête
   Sauce.findOne({ _id: req.params.id })
@@ -52,7 +52,7 @@ exports.getOneMessage = (req, res, next) => {
 // méthodes findOne et updateOne
 // si on a un req.file = on a une image à traiter
 // sinon on peut traiter la requête comme objet directement
-exports.modifyMessage = (req, res, next) => {
+exports.modifyPost = (req, res, next) => {
     /*
   // l'image actuelle doit elle être effacée après remplacement ?
   const effacementAncienneImage = req.file ? true : false;
@@ -82,7 +82,7 @@ exports.modifyMessage = (req, res, next) => {
     { ...sauceObject, _id: req.params.id }
   )
     .then(() => {
-      res.status(200).json({ message: "Sauce modifiée !" });
+      res.status(200).json({ post: "Sauce modifiée !" });
       // on efface l'ancienne image si elle a été remplacée
       if (effacementAncienneImage) {
         fs.unlink(`images/${nomImageActuelle}`, (err) => {
@@ -97,7 +97,7 @@ exports.modifyMessage = (req, res, next) => {
 
 // supression d'une sauce
 // méthode deleteOne ( objet de comparaison)
-exports.deleteMessage = (req, res, next) => {
+exports.deletePost = (req, res, next) => {
     /*
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
@@ -105,7 +105,7 @@ exports.deleteMessage = (req, res, next) => {
       const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: "Sauce supprimée !" }))
+          .then(() => res.status(200).json({ post: "Sauce supprimée !" }))
           .catch((error) => res.status(400).json({ error }));
       });
     })
@@ -181,7 +181,7 @@ exports.likesManagement = (req, res, next) => {
         .then(() =>
           res
             .status(200)
-            .json({ message: "La notation de la sauce a été mise à jour" })
+            .json({ post: "La notation de la sauce a été mise à jour" })
         )
         .catch((error) => res.status(400).json({ error }));
     })

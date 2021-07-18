@@ -27,4 +27,5 @@
 /backend/.env
 
 # logs
-/backend/requetes.log
+backend/seeders/.env
+backend/requetes.log

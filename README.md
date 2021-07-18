@@ -3,9 +3,10 @@ This project represents the last part of my training as a junior web developer. 
 Instructions
 Backend:
 * install all depedencies : npm install
-* create the empty mysql tables. Choose their name and put it un /backend/config/config.json (choose the passwords too ;) )
+* configure mysql tables. Choose their name and put it un /backend/config/config.json (choose the passwords too ;) )
 * create the tables : sequelize db:create
 * Migrate the tables : sequelize db:migrate
+* Populate the tables : npx sequelize-cli db:seed:all
 * nodemon server ( or node server)
 
 Development in progress ...

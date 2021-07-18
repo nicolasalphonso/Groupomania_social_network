@@ -18,11 +18,19 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true
       },
+      firstname: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      lastname: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       password: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      biography: {
+      bio: {
         allowNull: true,
         type: Sequelize.STRING
       },

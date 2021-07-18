@@ -26,8 +26,8 @@ const session = require('express-session');
 // importation de path pour accéder au path de notre serveur
 const path = require('path');
 
-// Routeurs pour les "messages" et les "utilisateurs"
-const messageRoutes = require('./routes/message');
+// Routeurs pour les "posts" et les "utilisateurs"
+const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
 
 const app = express(); // notre application
@@ -77,7 +77,7 @@ app.use(function(req, res, next) {
   app.use('/images', express.static(path.join(__dirname, 'images')));
 
   // routes de base du chemin des routeurs
-  app.use('/api/posts', messageRoutes); 
+  app.use('/api/posts', postRoutes); 
   app.use('/api/auth', userRoutes);
 
 // exportation de l'application pour pouvoir y accéder depuis

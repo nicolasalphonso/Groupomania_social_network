@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       // define association here
-      models.User.hasMany(models.Message);
+      models.User.hasMany(models.Post);
+      models.User.hasMany(models.Comment);
     }
   };
   User.init({
@@ -20,11 +21,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    firstname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    biography: DataTypes.STRING,
+    bio: DataTypes.STRING,
     isAdmin: {
       type: DataTypes.STRING,
       allowNull: false,
