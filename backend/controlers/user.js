@@ -139,3 +139,13 @@ exports.login = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
+
+// liste de tous utilisateurs existants
+exports.usersList = (req, res, next) => {
+
+  // on cherche dans bdd le user correspondant à l'adresse email
+  models.User.findAll()
+    // on vérifie d'abord que l'utilisateur existe
+    .then((usersList) => res.status(200).json(usersList)) // on retourne le tableau des sauces
+    .catch((error) => res.status(400).json({ error }));
+};

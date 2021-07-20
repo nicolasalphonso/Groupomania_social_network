@@ -1,19 +1,23 @@
-// import du model post
-const Sauce = require("../models/post");
+// import of models
+const models = require("../models");
+
 // importation de FS pour la modification du système de fichiers
 // ici pour la suppression
 const fs = require("fs");
+//const { where } = require("sequelize/types");
 
 exports.createPost = (req, res, next) => {
   // analyse de la requête pour obtenir un objet utilisable
-  const postObject = JSON.parse(req.body.post);
-/*
+  //const postObject = JSON.parse(req.body.post);
+  const postObject = req.body.post;
+  console.log(req.body.post);
+
   // instance du modèle Sauce
   // ...sauceObject = opérateur spread : copie les champs dans le body
   // de la request
   // on modifie url de l'image avec une adresse dynamique valable aussi
   // en production
-  const sauce = new Sauce({
+  /*const post = new Sauce({
     ...sauceObject,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
@@ -23,29 +27,30 @@ exports.createPost = (req, res, next) => {
     .save() // enregistre l'objet dans la base et retourne un promise
     .then(() => res.status(201).json({ sauce: sauce })) // réponse obligatoire
     .catch((error) => res.status(400).json({ error })); // error seul = error: error
-    */
+  */
+    const post = models.Post.create({
+      ...postObject,
+      attachment: `${req.protocol}://${req.get("host")}/images/${
+        req.body.post.attachment
+      }`
+    })
+      .then(function (post) {
+        return res.status(201).json({
+          postId: post.id,
+        });
+      })
+      .catch((error) => res.status(400).json({ error }));
 };
 
 
 
-// récupération du tableau de toutes les sauces de la base de données
+// get all posts
 exports.getAllPosts = (req, res, next) => {
- /* Sauce.find() // la réponse est le tableau de toutes les sauces de la base de données
-    .then((sauces) => res.status(200).json(sauces)) // on retourne le tableau des sauces
-    .catch((error) => res.status(400).json({ error }));
-    */
+  models.Post.findAll()
+  .then((postsList) => res.status(200).json(postsList)) // returns the array of posts
+  .catch((error) => res.status(400).json({ error }));
 };
 
-// récupération de la sauce correspondant à l'id dans la base de données
-// méthode findOne( paramètre de comparaison)
-exports.getOnePost = (req, res, next) => {
-    /*
-  //paramètre de route dynamique id doit être égal au paramètre id de la requête
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce)) // on retourne l'objet
-    .catch((error) => res.status(404).json({ error }));
-    */
-};
 
 
 // modification de la sauce correspondant à l'id dans la base de données

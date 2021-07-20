@@ -17,6 +17,7 @@ module.exports = {
      */
     return queryInterface.bulkInsert("Users", [
       {
+        id: 1,
         firstname: "John",
         lastname: "Doe",
         email: cryptojs
@@ -33,6 +34,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 2,
         firstname: "Nicolas",
         lastname: "Alphonso",
         email: cryptojs
@@ -49,6 +51,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 3,
         firstname: "Nancy",
         lastname: "Alphonso",
         email: cryptojs
@@ -65,6 +68,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 4,
         firstname: "James",
         lastname: "Brown",
         email: cryptojs
@@ -81,6 +85,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 5,
         firstname: "Serena",
         lastname: "Williams",
         email: cryptojs
@@ -97,6 +102,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 6,
         firstname: "Abdoul",
         lastname: "Kachama",
         email: cryptojs
@@ -113,6 +119,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 7,
         firstname: "Suzanne",
         lastname: "Makanaki",
         email: cryptojs
@@ -129,6 +136,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 8,
         firstname: "Antoine",
         lastname: "Durand",
         email: cryptojs
@@ -145,6 +153,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 9,
         firstname: "Delphine",
         lastname: "Cossard",
         email: cryptojs
@@ -161,6 +170,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 10,
         firstname: "Henriette",
         lastname: "Dupond",
         email: cryptojs

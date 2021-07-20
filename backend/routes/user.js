@@ -16,6 +16,7 @@ router.post('/login', bouncer.block, userCtrl.login);
 //routes vers les controlleurs
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
+router.get('/list', userCtrl.usersList);
 
 // Clear all logged addresses
 // (Usually never really used)

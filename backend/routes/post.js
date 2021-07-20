@@ -17,9 +17,6 @@ router.get('/', postCtrl.getAllPosts);
 //route to create a post
 //router.post('/', auth, multer, postCtrl.createPost);
 router.post('/', postCtrl.createPost);
-//route to get one post
-// ":" before id means that this part of the route is dynamic
-router.get('/:id', auth, postCtrl.getOnePost);
 // route to modify a post
 router.put('/:id', auth, multer, postCtrl.modifyPost);
 // route to delete a post
