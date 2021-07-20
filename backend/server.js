@@ -15,7 +15,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '5000');
 
  // on renseigne l'application express sur le port
  // sur lequel elle va tourner
