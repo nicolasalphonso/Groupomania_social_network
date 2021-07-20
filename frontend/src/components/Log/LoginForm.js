@@ -12,7 +12,7 @@ const LoginForm = () => {
         password: password
     };
       e.preventDefault();
-      console.log("ok");
+
       fetch("http://localhost:7000/api/auth/login", {
           method: "POST",
           headers: {
