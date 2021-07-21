@@ -16,7 +16,10 @@ router.post('/login', bouncer.block, userCtrl.login);
 //routes vers les controlleurs
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.get('/list', userCtrl.usersList);
+//router.post('/logout', userCtrl.logout);
+//router.get("/profile/:id", auth, userCtrl.getUserProfile);
+//router.put("/profile/:id", auth, userCtrl.updateUserProfile);
+//router.delete("/profile/:id", auth, userCtrl.deleteUserProfile);
 
 // Clear all logged addresses
 // (Usually never really used)

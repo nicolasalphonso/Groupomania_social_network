@@ -15,14 +15,13 @@ module.exports = (req, res, next) => {
     const userId = decodedToken.userId;
     // on vérifie que l'userId correspond à celui du token
     if (req.body.userId && req.body.userId !== userId) {
-      throw 'user ID invalide';
+      throw 'invalid user ID';
     } else {
       // on passe au middleware suivant car la requête est authentifiée
       next();
     }
-  } catch {
+  } catch (error) {
     res.status(401).json({
-      error: new Error('Requête non authentifiée')
-    });
+      error: error });
   }
 };

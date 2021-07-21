@@ -159,6 +159,10 @@ nav {
 .postContent {
   text-align: left;
 }
+.postContent .username {
+  font-weight: 800;
+  font-size: large;
+}
 
 .posts {
   background-color: #fde9ee;
@@ -167,9 +171,6 @@ nav {
   padding: 30px;
   text-align: center;
   border-radius: 20px;
-}
-.posts h1 {
-  font-size: xx-large;
 }
 .posts ul {
   padding: 10px;

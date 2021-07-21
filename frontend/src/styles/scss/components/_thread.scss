@@ -5,6 +5,10 @@
 
 .postContent {
   text-align: left;
+  .username {
+    font-weight: 800;
+    font-size: large;
+  }
 }
 
 .posts {
@@ -14,11 +18,7 @@
     padding: 30px;
     text-align: center;
     border-radius: 20px;
-    
   
-    h1 {
-      font-size: xx-large;
-    }
   
     ul {
       padding: 10px;

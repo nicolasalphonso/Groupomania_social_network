@@ -45,10 +45,28 @@ exports.createPost = (req, res, next) => {
 
 
 // get all posts
-exports.getAllPosts = (req, res, next) => {
-  models.Post.findAll()
-  .then((postsList) => res.status(200).json(postsList)) // returns the array of posts
-  .catch((error) => res.status(400).json({ error }));
+exports.getAllPosts = async (req, res, next) => {
+  try {
+		const fields = req.query.fields;
+		const order = req.query.order;
+
+		const posts = await models.Post.findAll({
+			order: [order != null ? order.split(':') : ['createdAt', 'DESC']],
+			attributes: fields != '*' && fields != null ? fields.split(',') : null,
+			include: [
+				{
+					model: models.User,
+					attributes: ['username', 'firstname', 'lastname'],
+				},
+			],
+		});
+		if (!posts) {
+			throw new Error(' Nothing to fetch');
+		}
+		res.status(200).send(posts);
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
 };
 
 

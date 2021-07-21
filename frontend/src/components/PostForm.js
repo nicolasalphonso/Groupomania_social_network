@@ -40,6 +40,7 @@ const PostForm = () => {
   return (
     <div className="posts">
     <form action="" onSubmit={handlePost} id="postForm">
+      <h1>What's up ?</h1>
       <label htmlFor="email">Content</label>
       <textarea
         name="content"

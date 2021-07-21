@@ -112,7 +112,7 @@ exports.login = (req, res, next) => {
     .then((user) => {
       if (!user) {
         // accès non autorisé : erreur 401
-        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+        return res.status(401).json({ error: "User not found !" });
       }
       // on compare les hashs du mot de passe envoyé et celui de la bdd
       bcrypt
@@ -120,24 +120,30 @@ exports.login = (req, res, next) => {
         .then((valid) => {
           // si le mot de passe est faux
           if (!valid) {
-            return res.status(401).json({ error: "Mot de passe incorrect !" });
+            return res.status(401).json({ error: "Incorrect password !" });
           }
-          // secret simple en production
-          // token dure 24h
-          // on encode userId pour appliquer à chaque objet pour éviter
-          // qu'un autre utilisateur fasse des modifications
-          res.status(200).json({
+          // Send a simple token
+          // token expires in 1h
+
+          token = jwt.sign(
+            { userId: user.id, isAdmin: user.isAdmin },
+            process.env.RANDOM_TOKEN_SECRET,
+            { expiresIn: "1h" }
+            );
+            
+          res
+          .status(200)
+          .cookie("token", token)
+          .json({
             userId: user.id,
-            token: jwt.sign(
-              { userId: user.id },
-              process.env.RANDOM_TOKEN_SECRET,
-              { expiresIn: "24h" }
-            ),
+            token: token,
           });
+          
         })
+
         .catch((error) => res.status(500).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
+        })
+      .catch((error) => res.status(500).json({ error }));
 };
 
 // liste de tous utilisateurs existants
