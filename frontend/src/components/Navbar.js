@@ -8,6 +8,7 @@ const NavigationBar = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="light">
     <Container>
+    <Nav.Link href="">
     <Navbar.Brand href="">
           <img
             alt="groupomania logo"
@@ -16,6 +17,7 @@ const NavigationBar = () => {
             className="d-inline-block align-center"
           />
         </Navbar.Brand>
+        </Nav.Link>
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="me-auto">
