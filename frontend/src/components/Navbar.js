@@ -6,7 +6,7 @@ import Nav from "react-bootstrap/Nav";
 
 const NavigationBar = () => {
   return (
-    <Navbar collapseOnSelect expand="lg" bg="light">
+    <Navbar collapseOnSelect expand="lg" bg="light" fixed="top">
     <Container>
     <Nav.Link href="">
     <Navbar.Brand href="">
@@ -23,9 +23,9 @@ const NavigationBar = () => {
       <Nav className="me-auto">
       </Nav>
       <Nav>
-      <Nav.Link href="">News</Nav.Link>
-            <Nav.Link href="">Profile</Nav.Link>
-            <Nav.Link href="">Logout</Nav.Link>
+      <Nav.Link href="/home">News</Nav.Link>
+            <Nav.Link href="/profile">Profile</Nav.Link>
+            <Nav.Link href="/">Logout</Nav.Link>
       </Nav>
     </Navbar.Collapse>
     </Container>
