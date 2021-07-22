@@ -7,27 +7,31 @@ const PostForm = () => {
   //const postError = document.getElementById("postError");
 
   // setting the options for the authenticated request
-  let data = JSON.parse(localStorage.getItem("ReponseServeur"));   
+  let data = JSON.parse(localStorage.getItem("ReponseServeur"));  
+  
+  let myHeaders = new Headers();
+
+    myHeaders.append("authorization",'bearer ' + data.token);
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Accept", "application/json");
 
   const handlePost = (e) => {
 
     let donnees = {
       "post": {
-          "userId": 2,
-          "content": "Post généré par Postman",
-          "attachment": "zozor.jpg"
+          "userId": data.userId,
+          "content": content,
+          "attachment": attachment
       }
     };
 
   const reqOptions = {
     method: 'POST',
-    headers: { "Authorization": 'Bearer ' + data.token},
+    headers: myHeaders,
     body: JSON.stringify(donnees),
-  }
+  } 
   
-  console.log(JSON.stringify(donnees));
-    
-    e.preventDefault();
+  e.preventDefault();
 
     fetch('http://localhost:7000/api/posts', reqOptions)
     .then(function(response) {
@@ -47,12 +51,13 @@ const PostForm = () => {
         onChange={(e) => setContent(e.target.value)}
         value={content}
       />
-      <label htmlFor="password">Image</label>
+      <label htmlFor="attachment">Add a picture to your post (jpg, jpeg, png):</label>
       <input
-        type="text"
+        type="file"
         name="attachment"
         id="attachment"
         onChange={(e) => setAttachment(e.target.value)}
+        accept="image/png, image/jpeg"
         value={attachment}
       />
       <input type="submit" value="post" />

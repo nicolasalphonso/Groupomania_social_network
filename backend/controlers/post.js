@@ -22,13 +22,27 @@ exports.createPost = async (req, res, next) => {
   const postObject = req.body.post;
   console.log(req.body.post);
 
+  if (!req.body.post.attachment) {
+    var attachment = "NULL"
+  } else {
+    var attachment = `${req.protocol}://${req.get("host")}/images/${
+      req.body.post.attachment
+    }`
+  }
+  
   const newPost = await models.Post.create({
+    ...postObject,
+    attachment: attachment,
+  })
+  .catch((error) => res.status(400).json({ error }));
+
+  /*const newPost = await models.Post.create({
     ...postObject,
     attachment: `${req.protocol}://${req.get("host")}/images/${
       req.body.post.attachment
     }`,
   })
-  .catch((error) => res.status(400).json({ error }));
+  .catch((error) => res.status(400).json({ error }));*/
 
   return res.status(201).json({
     postId: newPost.id,
