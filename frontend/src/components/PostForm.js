@@ -12,14 +12,16 @@ const PostForm = () => {
   const handlePost = (e) => {
 
     let donnees = {
-      "userId": 2,
-      "content": "Post généré par Postman",
-      "attachment": "zozor.jpg"
-  };
+      "post": {
+          "userId": 2,
+          "content": "Post généré par Postman",
+          "attachment": "zozor.jpg"
+      }
+    };
 
   const reqOptions = {
     method: 'POST',
-    //headers: { "Authorization": 'Bearer ' + data.token},
+    headers: { "Authorization": 'Bearer ' + data.token},
     body: JSON.stringify(donnees),
   }
   

@@ -19,8 +19,8 @@ exports.createPost = async (req, res, next) => {
 
   // analyse de la requête pour obtenir un objet utilisable
   //const postObject = JSON.parse(req.body.post);
-  const postObject = req.body;
-  console.log(req.body.attachment);
+  const postObject = req.body.post;
+  console.log(req.body.post);
 
   const newPost = await models.Post.create({
     ...postObject,
