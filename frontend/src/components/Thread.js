@@ -5,12 +5,6 @@ class Post {
     jsonPost && Object.assign(this, jsonPost);
   }
 }
-
-class User {
-    constructor(jsonUser) {
-      jsonUser && Object.assign(this, jsonUser);
-    }
-  }
   
 const Thread = () => {
   // setting the options for the dates display

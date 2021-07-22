@@ -4,37 +4,34 @@ import { useState } from "react";
 const PostForm = () => {
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState("");
-  const postError = document.getElementById("postError");
+  //const postError = document.getElementById("postError");
+
+  // setting the options for the authenticated request
+  let data = JSON.parse(localStorage.getItem("ReponseServeur"));   
 
   const handlePost = (e) => {
-    e.preventDefault();
 
     let donnees = {
-      content: content,
-      attachment: attachment,
-    };
+      "userId": 2,
+      "content": "Post généré par Postman",
+      "attachment": "zozor.jpg"
+  };
 
-    console.log(donnees);
+  const reqOptions = {
+    method: 'POST',
+    //headers: { "Authorization": 'Bearer ' + data.token},
+    body: JSON.stringify(donnees),
+  }
+  
+  console.log(JSON.stringify(donnees));
+    
+    e.preventDefault();
 
-    fetch("http://localhost:7000/api/posts", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(donnees),
-      })
-      .then((response) => response.json())
-      .then((resultat) => {
-        localStorage.setItem("ReponseServeur", JSON.stringify(resultat));
-        if(resultat.error) {
-            postError.innerHTML = resultat.error;
-        } else {
-            window.location='/home';
-        }
-      })
-      .catch((error) => {
-        console.error("Erreur de fetch POST:", error);
-      });
+    fetch('http://localhost:7000/api/posts', reqOptions)
+    .then(function(response) {
+    return response.json();
+  }).then(function(data) {
+  });
   };
 
   return (

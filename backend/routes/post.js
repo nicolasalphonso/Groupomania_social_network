@@ -15,7 +15,7 @@ const postCtrl = require('../controlers/post');
 router.get('/', auth, postCtrl.getAllPosts);
 //route to create a post
 //router.post('/', auth, multer, postCtrl.createPost);
-router.post('/', auth, postCtrl.createPost);
+router.post('/', postCtrl.createPost);
 // route to modify a post
 router.put('/:id', auth, multer, postCtrl.modifyPost);
 // route to delete a post

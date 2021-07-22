@@ -6,77 +6,68 @@ const models = require("../models");
 const fs = require("fs");
 //const { where } = require("sequelize/types");
 
-exports.createPost = (req, res, next) => {
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config({ path: "../" });
+
+// Create a post
+exports.createPost = async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+
+  console.log("token : " + token);
+  console.log("decoded Token userd Id : " + decodedToken.userId);
+
   // analyse de la requête pour obtenir un objet utilisable
   //const postObject = JSON.parse(req.body.post);
-  const postObject = req.body.post;
-  console.log(req.body.post);
+  const postObject = req.body;
+  console.log(req.body.attachment);
 
-  // instance du modèle Sauce
-  // ...sauceObject = opérateur spread : copie les champs dans le body
-  // de la request
-  // on modifie url de l'image avec une adresse dynamique valable aussi
-  // en production
-  /*const post = new Sauce({
-    ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
+  const newPost = await models.Post.create({
+    ...postObject,
+    attachment: `${req.protocol}://${req.get("host")}/images/${
+      req.body.post.attachment
     }`,
+  })
+  .catch((error) => res.status(400).json({ error }));
+
+  return res.status(201).json({
+    postId: newPost.id,
   });
-  sauce
-    .save() // enregistre l'objet dans la base et retourne un promise
-    .then(() => res.status(201).json({ sauce: sauce })) // réponse obligatoire
-    .catch((error) => res.status(400).json({ error })); // error seul = error: error
-  */
-    const post = models.Post.create({
-      ...postObject,
-      attachment: `${req.protocol}://${req.get("host")}/images/${
-        req.body.post.attachment
-      }`
-    })
-      .then(function (post) {
-        return res.status(201).json({
-          postId: post.id,
-        });
-      })
-      .catch((error) => res.status(400).json({ error }));
+
+  
 };
-
-
 
 // get all posts
 exports.getAllPosts = async (req, res, next) => {
   try {
-		const fields = req.query.fields;
-		const order = req.query.order;
+    const fields = req.query.fields;
+    const order = req.query.order;
 
-		const posts = await models.Post.findAll({
-			order: [order != null ? order.split(':') : ['createdAt', 'DESC']],
-			attributes: fields != '*' && fields != null ? fields.split(',') : null,
-			include: [
-				{
-					model: models.User,
-					attributes: ['username', 'firstname', 'lastname'],
-				},
-			],
-		});
-		if (!posts) {
-			throw new Error(' Nothing to fetch');
-		}
-		res.status(200).send(posts);
-	} catch (error) {
-		res.status(400).json({ error: error.message });
-	}
+    const posts = await models.Post.findAll({
+      order: [order != null ? order.split(":") : ["createdAt", "DESC"]],
+      attributes: fields != "*" && fields != null ? fields.split(",") : null,
+      include: [
+        {
+          model: models.User,
+          attributes: ["username", "firstname", "lastname"],
+        },
+      ],
+    });
+    if (!posts) {
+      throw new Error(" Nothing to fetch");
+    }
+    res.status(200).send(posts);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
-
-
 
 // modification de la sauce correspondant à l'id dans la base de données
 // méthodes findOne et updateOne
 // si on a un req.file = on a une image à traiter
 // sinon on peut traiter la requête comme objet directement
 exports.modifyPost = (req, res, next) => {
-    /*
+  /*
   // l'image actuelle doit elle être effacée après remplacement ?
   const effacementAncienneImage = req.file ? true : false;
 
@@ -117,11 +108,10 @@ exports.modifyPost = (req, res, next) => {
     */
 };
 
-
 // supression d'une sauce
 // méthode deleteOne ( objet de comparaison)
 exports.deletePost = (req, res, next) => {
-    /*
+  /*
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       // j'efface l'image et je supprime la sauce
@@ -135,10 +125,9 @@ exports.deletePost = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));*/
 };
 
-
 // management des likes
 exports.likesManagement = (req, res, next) => {
-    /*
+  /*
   const like = req.body.like;
   const userId = req.body.userId;
 
