@@ -37,7 +37,7 @@ const RegisterForm = () => {
         if(resultat.error) {
             registerError.innerHTML = resultat.error;
         } else {
-            window.location='/home';
+            window.location='/';
         }
       })
       .catch((error) => {
