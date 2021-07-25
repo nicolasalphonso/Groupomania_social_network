@@ -1,55 +1,8 @@
-// import of models
-const models = require("../models");
-
-// importation de FS pour la modification du système de fichiers
-// ici pour la suppression
-const fs = require("fs");
+const models = require("../models"); // import of models
+const fs = require("fs"); // import of FS to modify the file system
+const jwt = require("jsonwebtoken"); // import of JSON web token
 //const { where } = require("sequelize/types");
-
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv").config({ path: "../" });
-
-// Create a post
-exports.createPost = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-
-  console.log("token : " + token);
-  console.log("decoded Token userd Id : " + decodedToken.userId);
-
-  // analyse de la requête pour obtenir un objet utilisable
-  //const postObject = JSON.parse(req.body.post);
-  const postObject = req.body.post;
-  console.log(req.body.post);
-
-  if (!req.body.post.attachment) {
-    var attachment = "NULL"
-  } else {
-    var attachment = `${req.protocol}://${req.get("host")}/images/${
-      req.body.post.attachment
-    }`
-  }
-  
-  const newPost = await models.Post.create({
-    ...postObject,
-    attachment: attachment,
-  })
-  .catch((error) => res.status(400).json({ error }));
-
-  /*const newPost = await models.Post.create({
-    ...postObject,
-    attachment: `${req.protocol}://${req.get("host")}/images/${
-      req.body.post.attachment
-    }`,
-  })
-  .catch((error) => res.status(400).json({ error }));*/
-
-  return res.status(201).json({
-    postId: newPost.id,
-  });
-
-  
-};
+const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 
 // get all posts
 exports.getAllPosts = async (req, res, next) => {
@@ -57,6 +10,8 @@ exports.getAllPosts = async (req, res, next) => {
     const fields = req.query.fields;
     const order = req.query.order;
 
+    // use of sequelize syntax, on table posts using a left outer join on users
+    // retrieving in it username, firstname and lastname
     const posts = await models.Post.findAll({
       order: [order != null ? order.split(":") : ["createdAt", "DESC"]],
       attributes: fields != "*" && fields != null ? fields.split(",") : null,
@@ -76,67 +31,94 @@ exports.getAllPosts = async (req, res, next) => {
   }
 };
 
-// modification de la sauce correspondant à l'id dans la base de données
-// méthodes findOne et updateOne
-// si on a un req.file = on a une image à traiter
-// sinon on peut traiter la requête comme objet directement
-exports.modifyPost = (req, res, next) => {
-  /*
-  // l'image actuelle doit elle être effacée après remplacement ?
-  const effacementAncienneImage = req.file ? true : false;
+// Create a post
+exports.createPost = async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
 
-  // on récupère le nom de l'image actuelle
-  // deuxième élément de sauce.imageUrl
-  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
-    nomImageActuelle = sauce.imageUrl.split("/images/")[1]; // var globale
-  });
+  //if the req doesn't have a file -> attachment = NULL
+  var attachment = req.file
+    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+    : "NULL";
 
-  // si l'objet est un fichier cela veut dire qu'on remplace l'image
-  // il faut alors récupérer cette image et indiquer son adresse
-  // d'enregistrement sur le serveur local
-  const sauceObject = req.file
-    ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`,
-      }
-    : //sinon on récupère juste les éléments de la réponse
-      { ...req.body };
+  // create the post with sequelize syntax
+  const newPost = await models.Post.create({
+    userId: decodedToken.userId,
+    content: req.body.content,
+    attachment: attachment,
+  })
+    .then(() =>
+      res.status(201).json({
+        postId: newPost.id,
+      })
+    )
+    .catch((error) => res.status(400).json({ error }));
+};
 
-  // On met à jour la sauce
-  Sauce.updateOne(
-    { _id: req.params.id },
-    { ...sauceObject, _id: req.params.id }
+// modify post with id postId
+// use of methods findOne and update
+// if req.file, there's an image to compute
+// else req is computed as a simple object
+exports.modifyPost = async (req, res, next) => {
+  // previous image should be deleted if req.file
+  // if it exists
+
+  // const temp = await models.Post.findOne({ where: { id: req.params.id } });
+  // previousImageName = temp.attachment.split("/images/")[1];
+
+  // we retrieve the name of the present image
+  await models.Post.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      previousImageName = post.attachment
+        ? post.attachment.split("/images/")[1]
+        : null; // global variable
+    })
+    .then(() => console.log(previousImageName));
+
+  // if req is a file then we need to update the image
+  // we store its address on the server storage
+  const attachmentUrl = req.file
+    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+    : "NULL";
+
+  // We update the post
+  await models.Post.update(
+    { content: req.body.content, attachment: attachmentUrl },
+    {
+      where: {
+        id: req.params.id,
+      },
+    }
   )
     .then(() => {
-      res.status(200).json({ post: "Sauce modifiée !" });
-      // on efface l'ancienne image si elle a été remplacée
-      if (effacementAncienneImage) {
-        fs.unlink(`images/${nomImageActuelle}`, (err) => {
+      res.status(200).json({ post: "Post updated !" });
+      // we delete the provious image if it was updated
+      if (req.file) {
+        fs.unlink(`images/${previousImageName}`, (err) => {
           if (err) throw err;
         });
       }
     })
     .catch((error) => res.status(400).json({ error }));
-    */
 };
 
-// supression d'une sauce
-// méthode deleteOne ( objet de comparaison)
-exports.deletePost = (req, res, next) => {
-  /*
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      // j'efface l'image et je supprime la sauce
-      const filename = sauce.imageUrl.split("/images/")[1];
+// deleting a post
+// method deleteOne ( objet de comparaison)
+exports.deletePost = async (req, res, next) => {
+  await models.Post.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      const filename = post.attachment.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ post: "Sauce supprimée !" }))
+        models.Post.destroy({
+          where: {
+            id: req.params.id,
+          },
+        })
+          .then(() => res.status(200).json({ post: "Post deleted !" }))
           .catch((error) => res.status(400).json({ error }));
       });
     })
-    .catch((error) => res.status(500).json({ error }));*/
+    .catch((error) => res.status(500).json({ error }));
 };
 
 // management des likes

@@ -23,7 +23,6 @@ const Thread = () => {
         for (let jsonPost of jsonListPosts) {
           let post = new Post(jsonPost);
           //display of each post
-          if (post.attachment != "NULL") {
           document.getElementById("threadDisplay").innerHTML += `
             <div class="posts" >
             <div class="postContent">
@@ -31,21 +30,9 @@ const Thread = () => {
                 <p> ${new Date(post.createdAt).toLocaleDateString(undefined, dateOptions)}</p>
                 <p>${post.content}</p>
             </div>
-                <img src="${post.attachment}" alt="Photo du post"/>
+               ${ post.attachment !== "NULL" ? `<img src=${post.attachment} alt="Photo du post"/>` : ''}
             </div>
             `;
-          } else {
-            document.getElementById("threadDisplay").innerHTML += `
-            <div class="posts" >
-            <div class="postContent">
-                <p><span class="username">${post.User.username}</span> (${post.User.firstname} ${post.User.lastname})</p>
-                <p> ${new Date(post.createdAt).toLocaleDateString(undefined, dateOptions)}</p>
-                <p>${post.content}</p>
-            </div>
-                
-            </div>
-            `;
-          }
 
         }
       });

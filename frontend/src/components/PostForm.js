@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 
 const PostForm = () => {
   const [content, setContent] = useState("");
@@ -13,41 +14,34 @@ const PostForm = () => {
 
   let myHeaders = new Headers();
 
-  myHeaders.append("authorization", "bearer " + data.token);
+  myHeaders.append("Authorization", "bearer " + data.token);
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Accept", "application/json");
+  //  myHeaders.append("Accept", "application/json");
 
   const handlePost = (e) => {
-    let donnees = {
-      post: {
-        userId: data.userId,
-        content: content,
-        attachment: attachment,
-      },
-    };
-
-    const reqOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(donnees),
-    };
-
-    e.preventDefault();
-
-    console.log(content.trim());
+    content.trim();
+    var formData = new FormData();
+    formData.append("content", content);
+    formData.append("attachment", attachment);
 
     if (!content) {
       contentError.innerHTML = "The content of the post is required";
     } else {
-      fetch("http://localhost:7000/api/posts", reqOptions)
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {});
+    axios
+      .post("http://localhost:7000/api/posts", formData, {
+        headers: {
+          Authorization: `bearer ${data.token}`,
+        },
+      })
+      .then((res) => console.log(res.data))
+      .catch((error) => console.error(error));
     }
-  };
 
-  
+    e.preventDefault();
+
+    window.location = "/home";
+    }
+
   return (
     <div className="posts form">
       <form action="" onSubmit={handlePost} id="postForm">
@@ -69,9 +63,8 @@ const PostForm = () => {
           type="file"
           name="attachment"
           id="attachment"
-          onChange={(e) => setAttachment(e.target.value)}
           accept="image/png, image/jpeg"
-          value={attachment}
+          onChange={(e) => setAttachment(e.target.files[0])}
         />
         <div id="imageError" />
         <input type="submit" value="post" />

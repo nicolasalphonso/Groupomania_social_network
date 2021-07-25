@@ -1,5 +1,6 @@
 // importation de multer pour la gestion des fichiers
 const multer = require('multer');
+const upload = multer();
 
 // Mime types potentiels des fichiers reçus
 const MIME_TYPES = {
@@ -7,7 +8,6 @@ const MIME_TYPES = {
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
-
 
 // objet de configuration pour multer
 const storage = multer.diskStorage({
@@ -24,5 +24,6 @@ const storage = multer.diskStorage({
   }
 });
 
+
 // export du middleware multer configuré
-module.exports = multer({storage: storage}).single('image');
+module.exports = multer({storage: storage}).single('attachment');
