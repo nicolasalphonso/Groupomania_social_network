@@ -20,12 +20,12 @@
   text-decoration: none;
 }
 *::selection {
-  background: #fc5671;
+  background: #344D59;
 }
 
 a,
 a:visited {
-  color: #00162c;
+  color: #101316;
 }
 
 input,
@@ -43,8 +43,8 @@ textarea:focus {
 
 button,
 input[type=submit] {
-  background: #f8acbd;
-  color: #fc5671;
+  background: #B8CBD0;
+  color: #344D59;
   font-family: "font-3", serif;
   cursor: pointer;
   transition: 0.2s;
@@ -55,8 +55,8 @@ input[type=submit] {
 }
 button:hover,
 input[type=submit]:hover {
-  background: #fc5671;
-  color: #f8acbd;
+  background: #344D59;
+  color: #B8CBD0;
 }
 
 input[type=checkbox] {
@@ -76,7 +76,7 @@ body {
   font-family: "font-2", serif;
   line-height: 1.4rem;
   background: #fdfdfd;
-  color: #00162c;
+  color: #101316;
 }
 
 .error {
@@ -90,7 +90,7 @@ body {
 }
 
 .loginForm {
-  background-color: #fde9ee;
+  background-color: #e0e8ea;
   width: auto;
   margin: 0;
   padding: 15px 10px;
@@ -108,7 +108,7 @@ body {
 }
 .loginForm ul li {
   margin: 10px 0;
-  background: #f8acbd;
+  background: #B8CBD0;
   color: #282828;
   width: 100%;
   padding: 10px 0;
@@ -117,11 +117,11 @@ body {
   box-shadow: 3px 3px 1px rgba(51, 51, 51, 0.418);
 }
 .loginForm ul li:hover {
-  background: #fc5671;
+  background: #344D59;
   box-shadow: none;
 }
 .loginForm .active-btn {
-  background: #fc5671;
+  background: #344D59;
   box-shadow: none;
 }
 .loginForm form {
@@ -148,7 +148,7 @@ nav {
   position: fixed;
   width: 100%;
   height: 60px;
-  box-shadow: 0px 1px #fc5671, 0px 4px #dbdada;
+  box-shadow: 0px 1px #344D59, 0px 4px #dbdada;
 }
 
 .postsContainer {
@@ -165,7 +165,7 @@ nav {
 }
 
 .posts {
-  background-color: #fde9ee;
+  background-color: #e0e8ea;
   max-width: 100%;
   margin: 30px;
   padding: 30px;
@@ -179,7 +179,7 @@ nav {
 }
 .posts ul li {
   margin: 10px 0;
-  background: #f8acbd;
+  background: #B8CBD0;
   color: #282828;
   width: 100%;
   padding: 10px 0;
@@ -188,7 +188,7 @@ nav {
   box-shadow: 3px 3px 1px rgba(51, 51, 51, 0.418);
 }
 .posts ul li:hover {
-  background: #fc5671;
+  background: #344D59;
   box-shadow: none;
 }
 .posts form label {
@@ -206,6 +206,9 @@ nav {
 }
 .posts img {
   max-width: 100%;
+}
+.posts__icon {
+  height: 50px;
 }
 
 /*# sourceMappingURL=index.css.map */

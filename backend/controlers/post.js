@@ -59,12 +59,8 @@ exports.createPost = async (req, res, next) => {
 // use of methods findOne and update
 // if req.file, there's an image to compute
 // else req is computed as a simple object
+// previous image should be deleted
 exports.modifyPost = async (req, res, next) => {
-  // previous image should be deleted if req.file
-  // if it exists
-
-  // const temp = await models.Post.findOne({ where: { id: req.params.id } });
-  // previousImageName = temp.attachment.split("/images/")[1];
 
   // we retrieve the name of the present image
   await models.Post.findOne({ where: { id: req.params.id } })
@@ -103,7 +99,7 @@ exports.modifyPost = async (req, res, next) => {
 };
 
 // deleting a post
-// method deleteOne ( objet de comparaison)
+// method destroy
 exports.deletePost = async (req, res, next) => {
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
