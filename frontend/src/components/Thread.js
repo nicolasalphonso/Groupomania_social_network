@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { getAllPosts } from "../actions/post.actions";
+import PostCard from "./PostCard";
 
 
 function isEmpty(obj) {
@@ -29,8 +30,8 @@ const Thread = () => {
   return (
     <div className="thread-container">
       <ul>
-        {posts.map((post) => {
-          return <li>{post.id}</li>
+        {(!isEmpty(posts)) && posts.map((post) => {
+          return <PostCard post={post} key={post.id} />;
         })}
       </ul>
     </div>
