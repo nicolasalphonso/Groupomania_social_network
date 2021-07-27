@@ -18,7 +18,7 @@ exports.getAllPosts = async (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["username", "firstname", "lastname"],
+          attributes: ["username", "id"],
         },
       ],
     });

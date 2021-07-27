@@ -5,6 +5,7 @@ import axios from "axios";
 
 // actions sur les posts
 export const GET_ALL_POSTS = "GET_ALL_POSTS";
+export const DELETE_POST = "DELETE_POST"
 
 export const getAllPosts = () => {
     return(dispatch) => {
@@ -19,4 +20,20 @@ export const getAllPosts = () => {
             })
             .catch((error) => console.log(error));
     }
+}
+
+export const deletePost = (id) => {
+  const url = "http://localhost:7000/api/posts/" + id;
+  return(dispatch) => {
+    return axios
+          .delete(url, {
+              headers: {
+                Authorization: `bearer ${data.token}`,
+              },
+            })
+          .then((res) => {
+              dispatch({type: DELETE_POST, payload: res.data});
+          })
+          .catch((error) => console.log(error));
+  }
 }
