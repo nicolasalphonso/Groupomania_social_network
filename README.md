@@ -1,4 +1,4 @@
-This project represents the last part of my training as a junior web developer. I created the frontend and the backend.
+This project represents the last part of my training as a junior web developer. I created the frontend and the backend (fullstack)
 
 Instructions
 Backend: (/backend)
@@ -19,5 +19,10 @@ Backend: (/backend)
 * Populate the tables with fake data : npx sequelize-cli db:seed:all
     - users informations : in the seeders forlder (...-demo-users.js)
 * start the server      : nodemon server ( or node server)
+
+Frontend: (/frontend)
+* install all depedencies : npm install
+* start the project : npm start
+* if your browser doesn't open itself, go to http://localhost:3000/
 
 Development in progress ...
