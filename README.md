@@ -2,6 +2,7 @@ This project represents the last part of my training as a junior web developer. 
 
 Instructions
 Backend: (/backend)
+* go to backend directory
 * install, configure and run mysql
 * install all depedencies : npm install
 * configure the credentials in a .env file in /backend (cf. dotenv):
@@ -21,6 +22,7 @@ Backend: (/backend)
 * start the server      : nodemon server ( or node server)
 
 Frontend: (/frontend)
+* go to frontend directory : cd frontend
 * install all depedencies : npm install
 * start the project : npm start
 * if your browser doesn't open itself, go to http://localhost:3000/
