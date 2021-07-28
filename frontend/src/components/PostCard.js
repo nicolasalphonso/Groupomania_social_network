@@ -2,9 +2,10 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { deletePost } from "../actions/post.actions";
-import { useDispatch} from "react-redux";
+import axios from "axios";
 
+
+// function to verify that an objet is empty
 function isEmpty(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) return false;
@@ -26,11 +27,39 @@ const dateOptions = {
 let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 let userId = data.userId;
 
-console.log(userId);
 
-const PostCard = ({ post }) => {
+////////////
+const PostCard = ({ post, setLoadPosts, posts }) => {
+  //function to delete the post
+  function deletePost(id) {
+    // delete the post from the database
+    // verify again that the user is the correct one
+    if (userId === post.User.id) {
+      if (window.confirm("Delete your post ?")) {
+        axios
+          .delete(`http://localhost:7000/api/posts/${id}`, {
+            headers: {
+              Authorization: `bearer ${data.token}`,
+            },
+          })
+          .then((res) => res.status(200).json(`posts ${id} deleted`))
+          .catch((error) => console.log(error));
 
-const dispatch = useDispatch();
+        // rerender le thread
+        setLoadPosts(delete posts.post);
+      }
+    } else {
+      //force the user to relog
+      alert("Session issue, please sign in again");
+      window.location("/");
+    }
+  }
+
+  //function to modify the post
+  function modifyPost(id) {
+    alert(`Modifying post ${id}`);
+  }
+
   return (
     <li key={post.id}>
       <p>
@@ -49,14 +78,14 @@ const dispatch = useDispatch();
                 )}
               </Col>
               <Col xs="4" md="2">
-              {post.User.id === userId ? (
-                
+                {post.User.id === userId && (
                   <Row>
                     <Col xs="6">
                       <img
                         src="icones/modify.png"
                         alt="Modify post"
                         class="posts__icon btn-modify"
+                        onClick={() => modifyPost(post.id)}
                       />
                     </Col>
                     <Col xs="6">
@@ -64,14 +93,11 @@ const dispatch = useDispatch();
                         src="icones/delete.png"
                         alt="Delete post"
                         class="posts__icon btn-delete"
-                        onClick={deletePost(post.id)}
+                        onClick={() => deletePost(post.id)}
                       />
                     </Col>
                   </Row>
-                
-              ) : (
-                ""
-              )}
+                )}
               </Col>
             </Row>
           </Card.Title>
@@ -80,7 +106,7 @@ const dispatch = useDispatch();
             {post.content}
           </Card.Text>
         </Card.Body>
-        {post.attachment !== "NULL" ? <Card.Img src={post.attachment} /> : ""}
+        {post.attachment !== "NULL" && <Card.Img src={post.attachment} />}
         <Card.Footer>
           <Row>
             <Col className="text-center">

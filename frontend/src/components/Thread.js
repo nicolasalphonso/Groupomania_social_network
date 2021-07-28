@@ -1,38 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector} from "react-redux";
-import { getAllPosts } from "../actions/post.actions";
 import PostCard from "./PostCard";
-
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 function isEmpty(obj) {
-  for(var key in obj) {
-      if(obj.hasOwnProperty(key))
-          return false;
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
   }
   return true;
 }
 
 const Thread = () => {
-  // I use this state to load the posts only once
-  const [loadPost, setLoadPost] = useState(true);
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.postReducer);
+  // setting the options for the authenticated request
+  let data = JSON.parse(localStorage.getItem("ReponseServeur"));
+
+  const [posts, setPosts] = useState({});
+  const [loadPosts, setLoadPosts] = useState(true);
 
   useEffect(() => {
-    if (loadPost) {
-      // I fulfill the store
-      dispatch(getAllPosts());
-      // I avoid the dispatch of GetAllPosts
-      setLoadPost(false);
+    if (loadPosts) {
+      axios
+        .get("http://localhost:7000/api/posts", {
+          headers: {
+            Authorization: `bearer ${data.token}`,
+          },
+        })
+        .then((res) => setPosts(res.data))
+        .catch((error) => console.log(error));
     }
-  }, [loadPost, dispatch]);
+    setLoadPosts(false);
+  }, [loadPosts]);
 
   return (
     <div className="thread-container">
       <ul>
-        {(!isEmpty(posts)) && posts.map((post) => {
-          return <PostCard post={post} key={post.id} />;
-        })}
+        {!isEmpty(posts) &&
+          posts.map((post) => {
+            return <PostCard post={post} key={post.id} setLoadPosts={setLoadPosts} posts={posts}/>;
+          })}
       </ul>
     </div>
   );
