@@ -29,3 +29,6 @@
 # logs
 backend/seeders/.env
 backend/requetes.log
+
+# photos des posts
+backend/images
