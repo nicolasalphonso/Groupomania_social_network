@@ -19,6 +19,7 @@ module.exports = {
         attachment: "images/1.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[2,3,4,5]"
       },
       {
         id: 2,
@@ -27,6 +28,7 @@ module.exports = {
         attachment: "images/2.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[1,3,4,5]"
       },
       {
         id: 3,
@@ -35,6 +37,7 @@ module.exports = {
         attachment: "images/3.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[1,2,4,5]"
       },
       {
         id: 4,
@@ -43,6 +46,7 @@ module.exports = {
         attachment: "images/4.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[1,2]"
       },
       {
         id: 5,
@@ -51,6 +55,7 @@ module.exports = {
         attachment: "images/5.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[5]"
       },
       {
         id: 6,
@@ -59,6 +64,7 @@ module.exports = {
         attachment: "images/6.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[8,9,3,4,5]"
       },
       {
         id: 7,
@@ -67,6 +73,7 @@ module.exports = {
         attachment: "images/7.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[1,4,5]"
       },
       {
         id: 8,
@@ -75,6 +82,7 @@ module.exports = {
         attachment: "images/8.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[8,5]"
       },
       {
         id: 9,
@@ -83,6 +91,7 @@ module.exports = {
         attachment: "images/9.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[10,4,5]"
       },
       {
         id: 10,
@@ -91,6 +100,7 @@ module.exports = {
         attachment: "images/10.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
+        likers: "[7,8,9]"
       },
     ]);
   },

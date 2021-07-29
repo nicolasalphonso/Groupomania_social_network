@@ -1,6 +1,7 @@
 const models = require("../models"); // import of models
 const fs = require("fs"); // import of FS to modify the file system
 const jwt = require("jsonwebtoken"); // import of JSON web token
+const post = require("../models/post");
 //const { where } = require("sequelize/types");
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 
@@ -55,18 +56,18 @@ exports.createPost = async (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-// modify post with id postId
-// use of methods findOne and update
-// if req.file, there's an image to compute
-// else req is computed as a simple object
-// previous image should be deleted
+/*  modify post with id postId
+  use of methods findOne and update
+  if req.file, there's an image to compute
+  else req is computed as a simple object
+  previous image should be deleted
+*/
 exports.modifyPost = async (req, res, next) => {
-
   // we retrieve the name of the present image
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
       previousImageName = post.attachment
-        ? post.attachment.split("/images/")[1]
+        ? post.attachment.split("/images/")[0]
         : null; // global variable
     })
     .then(() => console.log(previousImageName));
@@ -79,7 +80,11 @@ exports.modifyPost = async (req, res, next) => {
 
   // We update the post
   await models.Post.update(
-    { content: req.body.content, attachment: attachmentUrl },
+    {
+      content: req.body.content,
+      attachment: attachmentUrl,
+      likers: req.body.likers,
+    },
     {
       where: {
         id: req.params.id,
@@ -118,77 +123,51 @@ exports.deletePost = async (req, res, next) => {
 };
 
 // management des likes
-exports.likesManagement = (req, res, next) => {
-  /*
-  const like = req.body.like;
-  const userId = req.body.userId;
+exports.likesManagement = async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  let userLiked = false;
+  let newLikers = null;
 
-  // pour la sauce concernée
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      const usersWhoLiked = sauce.usersLiked;
-      const usersWhoDisliked = sauce.usersDisliked;
-       updateValues = {
-        likes: 0,
-        dislikes: 0,
-        usersLiked: usersWhoLiked,
-        usersDisliked: usersWhoDisliked,
-      };
+  await models.Post.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      const likersString = JSON.parse(post.likers);
 
-      switch (like) {
-        // on étudie 3 cas
-        case 0: // l'utilisateur a annulé son avis
-          // s'il était dans la liste des likers
-          if (usersWhoLiked.indexOf(userId) !== -1) {
-            updateValues.usersLiked.pull(userId);
-          }
-          // s'il est dans la liste des unlikers on l'enlève de la liste des unlikers et on enlève un dislike
-          if (usersWhoDisliked.indexOf(userId) !== -1) {
-            updateValues.usersDisliked.pull(userId);
-          }
-          break;
-
-        case 1: // l'utilisateur a liké la sauce
-          // s'il n'est ni dans la liste des likers ou dislikers
-          // on ajoute l'utilisateur à la liste des likers et
-          // on ajoute un like
-          if (
-            usersWhoDisliked.indexOf(userId) !== -1 ||
-            usersWhoLiked.indexOf(userId) !== -1
-          ) {
-            console.log("l'utilisateur ne peut effectuer cette action");
-          } else {
-            updateValues.usersLiked.push(userId);
-          }
-          break;
-
-        case -1: // l'utilisateur a disliké la sauce
-          // s'il n'est ni dans la liste des likers ou dislikers
-          // on ajoute l'utilisateur à la liste des dislikers
-          // on ajoute un dislike
-          if (
-            usersWhoDisliked.indexOf(userId) !== -1 ||
-            usersWhoLiked.indexOf(userId) !== -1
-          ) {
-            console.log("l'utilisateur ne peut effectuer cette action");
-          } else {
-            updateValues.usersDisliked.push(userId);
-          }
-          break;
+      let tabLikersRaw = [];
+      // creating a table with id of all likers
+      for (let i = 0; i < likersString.length; i++) {
+        tabLikersRaw.push(likersString[i]);
       }
-      // Nouveau nombre de likes et dislikes
-      updateValues.likes = updateValues.usersLiked.length;
-      updateValues.dislikes = updateValues.usersDisliked.length;
- 
-      // Update de la sauce
-      Sauce.updateOne({ _id: req.params.id }, updateValues)
-        .then(() =>
-          res
-            .status(200)
-            .json({ post: "La notation de la sauce a été mise à jour" })
-        )
-        .catch((error) => res.status(400).json({ error }));
-    })
 
-    .catch((error) => res.status(500).json({ error }));*/
+      // creating a table without duplicate
+      var tabLikers = tabLikersRaw.reduce(function (acc, currentValue) {
+        if (acc.indexOf(currentValue) === -1) {
+          acc.push(currentValue);
+        }
+        return acc;
+      }, []);
+
+      // if the user is in the table, remove him/her
+      // else, add her/him
+      if (tabLikers.includes(userId)) {
+        for (var i = 0; i < tabLikers.length; i++) {
+          if (tabLikers[i] == userId) {
+            tabLikers.splice(i, 1);
+          }
+        }
+
+        userLiked = false;
+      } else {
+        tabLikers.push(userId);
+        userLiked = true;
+      }
+
+      // updating the likers
+      post.likers = tabLikers;
+      newLikers = JSON.stringify(post.likers);
+      post.save();
+    })
+    .then(() => res.status(200).json({ "newLikers": newLikers, "Liked": userLiked }))
+    .catch((error) => res.status(500).json({error}));
 };

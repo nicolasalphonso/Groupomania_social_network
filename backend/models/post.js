@@ -19,8 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.TEXT,
       attachment: DataTypes.STRING,
       likers: {
-        type: DataTypes.STRING,
-      }
+        type: DataTypes.JSON,
+        defaultValue: [],
+        
+      },
     },
     {
       sequelize,

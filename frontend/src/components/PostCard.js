@@ -6,14 +6,6 @@ import axios from "axios";
 import { useState } from "react";
 import ModifyForm from "./Modal/ModifyForm";
 
-// function to verify that an objet is empty
-function isEmpty(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
-
 // setting the options for the dates display
 const dateOptions = {
   //  weekday: "long",
@@ -28,11 +20,52 @@ const dateOptions = {
 let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 let userId = data.userId;
 
+// function to verify that an objet is empty
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+}
+
 ////////////
 const PostCard = ({ post, setLoadPosts, posts }) => {
+  let likersIdString = JSON.parse(post.likers);
+  let likersArray = [];
+  for (let i = 0; i < likersIdString.length; i++) {
+    likersArray.push(likersIdString[i]);
+  }
+  console.log(likersArray);
+  console.log(userId);
+  console.log(likersArray.includes(userId));
+
   // usestate for the display of the modify form
   const [showModifyForm, setShowModifyForm] = useState(false);
   const [newContent, setNewContent] = useState(post.content);
+  const [userLiked, setUserLiked] = useState(
+    likersArray.includes(userId)
+  );
+
+  // function to handle click on "like" button
+  async function handleLike() {
+    //    const likersJson = JSON.stringify(likersArray);
+
+    let data = JSON.parse(localStorage.getItem("ReponseServeur"));
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `bearer ${data.token}`);
+    //myHeaders.append("Content-Type", "application/json");
+    //myHeaders.append("Accept", "application/json");
+
+    var myInit = {
+      method: "POST",
+      headers: myHeaders,
+    };
+
+    await fetch(`http://localhost:7000/api/posts/${post.id}/like`, myInit)
+      .then((res) => res.json())
+      .then((res) => {post.likers = res.newLikers;
+      setUserLiked(res.Liked)});
+  }
 
   //function to delete the post
   async function deletePost(id) {
@@ -110,10 +143,16 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           <Row>
             <Col className="text-center">
               <img
-                src="icones/heart_liked.png"
+                src={
+                  userLiked
+                    ? "icones/heart_liked.png"
+                    : "icones/heart_unliked.png"
+                }
                 alt="Like post"
                 className="posts__icon btn-like"
+                onClick={() => handleLike()}
               />
+              <span>{likersArray.length}</span>
             </Col>
             <Col className="text-center">
               <img
