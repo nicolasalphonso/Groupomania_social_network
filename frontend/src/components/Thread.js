@@ -1,6 +1,7 @@
 import PostCard from "./PostCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import PostForm from "./PostForm";
 
 function isEmpty(obj) {
   for (var key in obj) {
@@ -28,10 +29,11 @@ const Thread = () => {
         .catch((error) => console.log(error));
     }
     setLoadPosts(false);
-  }, [loadPosts]);
+  }, [loadPosts, data.token]);
 
   return (
     <div className="thread-container">
+      <PostForm setLoadPosts={setLoadPosts}/>
       <ul>
         {!isEmpty(posts) &&
           posts.map((post) => {

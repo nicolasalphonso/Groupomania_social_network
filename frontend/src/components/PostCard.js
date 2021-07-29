@@ -3,7 +3,8 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
-
+import { useState } from "react";
+import ModifyForm from "./Modal/ModifyForm";
 
 // function to verify that an objet is empty
 function isEmpty(obj) {
@@ -27,16 +28,19 @@ const dateOptions = {
 let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 let userId = data.userId;
 
-
 ////////////
 const PostCard = ({ post, setLoadPosts, posts }) => {
+  // usestate for the display of the modify form
+  const [showModifyForm, setShowModifyForm] = useState(false);
+  const [newContent, setNewContent] = useState(post.content);
+
   //function to delete the post
-  function deletePost(id) {
+  async function deletePost(id) {
     // delete the post from the database
     // verify again that the user is the correct one
     if (userId === post.User.id) {
       if (window.confirm("Delete your post ?")) {
-        axios
+        await axios
           .delete(`http://localhost:7000/api/posts/${id}`, {
             headers: {
               Authorization: `bearer ${data.token}`,
@@ -45,7 +49,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           .then((res) => res.status(200).json(`posts ${id} deleted`))
           .catch((error) => console.log(error));
 
-        // rerender le thread
+        // rerender the thread
         setLoadPosts(delete posts.post);
       }
     } else {
@@ -53,11 +57,6 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
       alert("Session issue, please sign in again");
       window.location("/");
     }
-  }
-
-  //function to modify the post
-  function modifyPost(id) {
-    alert(`Modifying post ${id}`);
   }
 
   return (
@@ -84,15 +83,15 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
                       <img
                         src="icones/modify.png"
                         alt="Modify post"
-                        class="posts__icon btn-modify"
-                        onClick={() => modifyPost(post.id)}
+                        className="posts__icon btn-modify"
+                        onClick={() => setShowModifyForm(true)}
                       />
                     </Col>
                     <Col xs="6">
                       <img
                         src="icones/delete.png"
                         alt="Delete post"
-                        class="posts__icon btn-delete"
+                        className="posts__icon btn-delete"
                         onClick={() => deletePost(post.id)}
                       />
                     </Col>
@@ -113,19 +112,30 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
               <img
                 src="icones/heart_liked.png"
                 alt="Like post"
-                class="posts__icon btn-like"
+                className="posts__icon btn-like"
               />
             </Col>
             <Col className="text-center">
               <img
                 src="icones/comment.png"
                 alt="Comment post"
-                class="posts__icon btn-comment"
+                className="posts__icon btn-comment"
               />
             </Col>
           </Row>
         </Card.Footer>
       </Card>
+      {showModifyForm && (
+        <ModifyForm
+          setShowModifyForm={setShowModifyForm}
+          showModifyForm={showModifyForm}
+          newContent={newContent}
+          setNewContent={setNewContent}
+          postContent={post.content}
+          postId={post.id}
+          setLoadPosts={setLoadPosts}
+        />
+      )}
     </li>
   );
 };

@@ -1,24 +1,19 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import emptyPreview from "../images/empty_preview.png";
 
-const PostForm = () => {
+const PostForm = ({ setLoadPosts }) => {
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState("");
-  const postError = document.getElementById("postError");
+  const [showingPostform, setShowingPostform] = useState(false);
   const contentError = document.getElementById("contentError");
-  const imageError = document.getElementById("imageError");
 
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
-  let myHeaders = new Headers();
-
-  myHeaders.append("Authorization", "bearer " + data.token);
-  myHeaders.append("Content-Type", "application/json");
-  //  myHeaders.append("Accept", "application/json");
-
-  const handlePost = (e) => {
+  async function handlePost(e) {
+    e.preventDefault();
     content.trim();
     var formData = new FormData();
     formData.append("content", content);
@@ -27,24 +22,38 @@ const PostForm = () => {
     if (!content) {
       contentError.innerHTML = "The content of the post is required";
     } else {
-    axios
-      .post("http://localhost:7000/api/posts", formData, {
-        headers: {
-          Authorization: `bearer ${data.token}`,
-        },
-      })
-      .then((res) => console.log(res.data))
-      .catch((error) => console.error(error));
+      await axios
+        .post("http://localhost:7000/api/posts", formData, {
+          headers: {
+            Authorization: `bearer ${data.token}`,
+          },
+        })
+        .then((res) => console.log(res.data))
+        .catch((error) => console.error(error));
     }
 
-    e.preventDefault();
+    // rerender the thread
+    setLoadPosts(true);
 
-    window.location = "/home";
+    // empty and close post form
+    setContent("");
+    document.getElementById("imagePreview").src = emptyPreview;
+    setShowingPostform(false);
+  }
+
+  function handlePreview() {
+    const [file] = document.getElementById("attachment").files;
+    if (file) {
+      document.getElementById("imagePreview").src = URL.createObjectURL(file);
     }
+  }
 
   return (
     <div className="posts form">
+      {showingPostform &&
+  
       <form action="" onSubmit={handlePost} id="postForm">
+        <button onClick={() => setShowingPostform(false)}>Hide</button>
         <label htmlFor="content"></label>
         <textarea
           name="content"
@@ -56,20 +65,23 @@ const PostForm = () => {
           required
         />
         <div id="contentError" />
-        <label htmlFor="attachment">
-          Add a picture to your post (jpg, jpeg, png):
-        </label>
+        <label htmlFor="attachment"></label>
         <input
           type="file"
           name="attachment"
           id="attachment"
           accept="image/png, image/jpeg"
-          onChange={(e) => setAttachment(e.target.files[0])}
+          onChange={(e) => {
+            setAttachment(e.target.files[0]);
+            handlePreview();
+          }}
         />
+        <img id="imagePreview" src={emptyPreview} alt="your upload" />
         <div id="imageError" />
         <input type="submit" value="post" />
         <div id="postError"></div>
-      </form>
+      </form>}
+      {!showingPostform && <button onClick={() => setShowingPostform(true)}>What's up !? Click to post</button>}
     </div>
   );
 };

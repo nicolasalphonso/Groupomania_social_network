@@ -9,7 +9,7 @@ const Home = () => {
         <div>
             <Navbar />
             <Container className="postsContainer">
-            <PostForm />
+            
             <Thread />
             </Container>
         </div>

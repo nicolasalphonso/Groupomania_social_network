@@ -195,20 +195,42 @@ nav {
   margin-top: 10px;
 }
 .posts form input {
-  width: 100%;
+  width: 50%;
   margin-top: 15px;
   height: 40px;
   padding: 5px 20px;
 }
 .posts form textarea {
+  margin: 5px;
   width: 100%;
   padding: 15px;
+}
+.posts form img {
+  width: 180px;
+  height: 180px;
+  object-fit: scale-down;
 }
 .posts img {
   max-width: 100%;
 }
 .posts__icon {
   height: 50px;
+}
+
+.modalModifyPost {
+  background-color: #344D59;
+  border-radius: 10px;
+  padding: 10px;
+}
+.modalModifyPost textarea {
+  min-height: 150px;
+  border-radius: 10px;
+  width: 100%;
+}
+.modalModifyPost button {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 10px;
 }
 
 /*# sourceMappingURL=index.css.map */
