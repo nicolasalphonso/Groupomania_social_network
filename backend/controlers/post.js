@@ -57,12 +57,26 @@ exports.createPost = async (req, res, next) => {
 };
 
 /*  modify post with id postId
-  use of methods findOne and update
+  use of methods findOne and save
   if req.file, there's an image to compute
-  else req is computed as a simple object
   previous image should be deleted
+  else only content is updated
 */
 exports.modifyPost = async (req, res, next) => {
+  console.log(req.body.content);
+  const newContent = req.body.content;
+
+  // just the content is updated
+  await models.Post.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      post.content = newContent;
+      post.save();
+    })
+    .then(
+      res.status(200).json({ postUpdate: "Post updated !", updatedContent: newContent })
+    );
+
+  /*
   // we retrieve the name of the present image
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
@@ -71,13 +85,15 @@ exports.modifyPost = async (req, res, next) => {
         : null; // global variable
     })
     .then(() => console.log(previousImageName));
-
+    */
+  /*
   // if req is a file then we need to update the image
   // we store its address on the server storage
   const attachmentUrl = req.file
     ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
     : "NULL";
-
+    */
+  /*
   // We update the post
   await models.Post.update(
     {
@@ -101,10 +117,10 @@ exports.modifyPost = async (req, res, next) => {
       }
     })
     .catch((error) => res.status(400).json({ error }));
+    */
 };
 
-// deleting a post
-// method destroy
+// deleting a post - destroy method
 exports.deletePost = async (req, res, next) => {
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
@@ -168,6 +184,8 @@ exports.likesManagement = async (req, res, next) => {
       newLikers = JSON.stringify(post.likers);
       post.save();
     })
-    .then(() => res.status(200).json({ "newLikers": newLikers, "Liked": userLiked }))
-    .catch((error) => res.status(500).json({error}));
+    .then(() =>
+      res.status(200).json({ newLikers: newLikers, Liked: userLiked })
+    )
+    .catch((error) => res.status(500).json({ error }));
 };

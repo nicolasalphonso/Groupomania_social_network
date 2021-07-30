@@ -12,4 +12,9 @@
         width: 100%;
         border-radius: 10px;
     }
+    #imagePreview {
+        width: 80px;
+        height: 80px;
+        object-fit: scale-down;
+    }
 }

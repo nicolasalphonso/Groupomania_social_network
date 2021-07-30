@@ -21,8 +21,7 @@ router.put('/:id', auth, multer, postCtrl.modifyPost);
 // route to delete a post
 router.delete('/:id', auth, postCtrl.deletePost);
 // route to manage likes
-//router.post('/:id/like', auth, postCtrl.likesManagement);
-router.post('/:id/like', postCtrl.likesManagement);
+router.post('/:id/like', auth, postCtrl.likesManagement);
 
 // export of router
 module.exports = router;

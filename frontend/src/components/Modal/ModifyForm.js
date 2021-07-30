@@ -2,8 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useState } from "react";
-import axios from "axios";
+import emptyPreview from "../../images/empty_preview_modify.png";
 
 // React-modal settings
 const customStyles = {
@@ -14,7 +13,7 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    width: "60%"
+    width: "60%",
   },
 };
 
@@ -25,27 +24,46 @@ const ModifyForm = ({
   showModifyForm,
   newContent,
   setNewContent,
-  setLoadPosts,
+  setNewAttachment,
+  newAttachment,
   postId,
 }) => {
+  const previousContent = newContent;
+  const previousAttachment = newAttachment; 
+
+  function handlePreview() {
+    const [file] = document.getElementById("attachment").files;
+    if (file) {
+      document.getElementById("imagePreview").src = URL.createObjectURL(file);
+    }
+    setNewAttachment(URL.createObjectURL(file))
+  }
+
   async function updatePost(id, e) {
     e.preventDefault();
-    newContent.trim();
-    var formData = new FormData();
-    formData.append("content", newContent);
+
     let data = JSON.parse(localStorage.getItem("ReponseServeur"));
+
+    var formData = new FormData();
+    formData.append("content", newContent.trim());
     //formData.append("attachment", attachment);
 
-    await axios
-      .put(`http://localhost:7000/api/posts/${id}`, formData, {
-        headers: {
-          Authorization: `bearer ${data.token}`,
-        },
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `bearer ${data.token}`);
+
+    var myInit = {
+      method: "PUT",
+      headers: myHeaders,
+      body: formData,
+    };
+
+    await fetch(`http://localhost:7000/api/posts/${id}`, myInit)
+      .then((res) => res.json())
+      .then((res) => {
+        setNewContent(res.updatedContent);
       })
-      .then((res) => res.status(200).json(`posts ${id} updated`))
       .catch((error) => console.log(error));
 
-    setLoadPosts(true);
   }
 
   return (
@@ -59,16 +77,26 @@ const ModifyForm = ({
           <Row>
             <Col>
               <label></label>
-                <textarea
-                  value={newContent}
-                  id="newContent"
-                  onChange={(e) => setNewContent(e.target.value)}
-                />
-              
+              <textarea
+                value={newContent}
+                id="newContent"
+                onChange={(e) => setNewContent(e.target.value)}
+              />
             </Col>
           </Row>
           <Row>
-            <Col className="text-center">Modifier l'image</Col><Col className="text-center">Preview de l'image</Col>
+            <Col className="text-center"><label htmlFor="attachment"></label>
+        <input
+          type="file"
+          name="attachment"
+          id="attachment"
+          accept="image/png, image/jpeg"
+          onChange={(e) => {
+            setNewAttachment(e.target.files[0]);
+            handlePreview();
+          }}
+        /></Col>
+            <Col className="text-center"><img id="imagePreview" src={(newAttachment != "NULL") ? newAttachment : emptyPreview} alt="your upload" /></Col>
           </Row>
           <Row>
             <Col xs="6">
@@ -82,7 +110,9 @@ const ModifyForm = ({
               </button>
             </Col>
             <Col xs="6">
-              <button onClick={() => setShowModifyForm(false)}>Cancel</button>
+              <button onClick={() => {
+                setShowModifyForm(false);
+              } }>Cancel</button>
             </Col>
           </Row>
         </form>

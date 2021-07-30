@@ -30,31 +30,27 @@ function isEmpty(obj) {
 
 ////////////
 const PostCard = ({ post, setLoadPosts, posts }) => {
+  // setting of an array of likers from post.likers
   let likersIdString = JSON.parse(post.likers);
   let likersArray = [];
   for (let i = 0; i < likersIdString.length; i++) {
     likersArray.push(likersIdString[i]);
   }
-  console.log(likersArray);
-  console.log(userId);
-  console.log(likersArray.includes(userId));
 
   // usestate for the display of the modify form
   const [showModifyForm, setShowModifyForm] = useState(false);
+  // usestate for the content update
   const [newContent, setNewContent] = useState(post.content);
-  const [userLiked, setUserLiked] = useState(
-    likersArray.includes(userId)
-  );
+  // usestate for the attachment update
+  const [newAttachment, setNewAttachment] = useState(post.attachment);
+  // usestate for the display of likes
+  const [userLiked, setUserLiked] = useState(likersArray.includes(userId));
 
   // function to handle click on "like" button
   async function handleLike() {
-    //    const likersJson = JSON.stringify(likersArray);
-
     let data = JSON.parse(localStorage.getItem("ReponseServeur"));
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
-    //myHeaders.append("Content-Type", "application/json");
-    //myHeaders.append("Accept", "application/json");
 
     var myInit = {
       method: "POST",
@@ -63,8 +59,10 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
 
     await fetch(`http://localhost:7000/api/posts/${post.id}/like`, myInit)
       .then((res) => res.json())
-      .then((res) => {post.likers = res.newLikers;
-      setUserLiked(res.Liked)});
+      .then((res) => {
+        post.likers = res.newLikers;
+        setUserLiked(res.Liked);
+      });
   }
 
   //function to delete the post
@@ -117,7 +115,11 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
                         src="icones/modify.png"
                         alt="Modify post"
                         className="posts__icon btn-modify"
-                        onClick={() => setShowModifyForm(true)}
+                        onClick={() => {
+                          setShowModifyForm(true);
+                          setNewContent(post.content);
+                          setNewAttachment(post.attachment);
+                        }}
                       />
                     </Col>
                     <Col xs="6">
@@ -135,7 +137,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           </Card.Title>
           <Card.Text>
             <br />
-            {post.content}
+            {newContent}
           </Card.Text>
         </Card.Body>
         {post.attachment !== "NULL" && <Card.Img src={post.attachment} />}
@@ -173,6 +175,8 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           postContent={post.content}
           postId={post.id}
           setLoadPosts={setLoadPosts}
+          setNewAttachment={setNewAttachment}
+          newAttachment={newAttachment}
         />
       )}
     </li>
