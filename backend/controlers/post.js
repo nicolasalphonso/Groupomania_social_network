@@ -63,18 +63,31 @@ exports.createPost = async (req, res, next) => {
   else only content is updated
 */
 exports.modifyPost = async (req, res, next) => {
-  console.log(req.body.content);
+  //console.log(req.body.content);
+  //console.log(req.file ? "fichier" : "texte")
   const newContent = req.body.content;
 
   // just the content is updated
+
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
-      post.content = newContent;
-      post.save();
+      if (req.file) {
+          const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+          post.attachment = attachmentUrl;
+          const previousImageName = req.body.previousImageUrl.split("/images/")[1];
+          fs.unlink(`images/${previousImageName}`, (err) => {
+            if (err) throw err;
+          })
+        }
+
+        post.content = newContent;
+        post.save();
+      
     })
-    .then(
-      res.status(200).json({ postUpdate: "Post updated !", updatedContent: newContent })
-    );
+    .then(res.status(200).json({ postUpdate: "Post updated !", updatedContent: newContent }))
+    .catch((error) => res.status(500).json({error}));
+
+    ;
 
   /*
   // we retrieve the name of the present image
@@ -86,13 +99,7 @@ exports.modifyPost = async (req, res, next) => {
     })
     .then(() => console.log(previousImageName));
     */
-  /*
-  // if req is a file then we need to update the image
-  // we store its address on the server storage
-  const attachmentUrl = req.file
-    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-    : "NULL";
-    */
+  
   /*
   // We update the post
   await models.Post.update(
@@ -111,9 +118,7 @@ exports.modifyPost = async (req, res, next) => {
       res.status(200).json({ post: "Post updated !" });
       // we delete the provious image if it was updated
       if (req.file) {
-        fs.unlink(`images/${previousImageName}`, (err) => {
-          if (err) throw err;
-        });
+        
       }
     })
     .catch((error) => res.status(400).json({ error }));

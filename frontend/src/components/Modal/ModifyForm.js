@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useState } from "react";
 import emptyPreview from "../../images/empty_preview_modify.png";
 
 // React-modal settings
@@ -27,16 +28,17 @@ const ModifyForm = ({
   setNewAttachment,
   newAttachment,
   postId,
+  setLoadPosts
 }) => {
-  const previousContent = newContent;
-  const previousAttachment = newAttachment; 
+  const [updatedNewContent, setUpdatedNewContent] = useState(newContent);
+  const [updatedNewAttachment, setUpdatedNewAttachment] = useState(newAttachment);
 
   function handlePreview() {
     const [file] = document.getElementById("attachment").files;
     if (file) {
       document.getElementById("imagePreview").src = URL.createObjectURL(file);
     }
-    setNewAttachment(URL.createObjectURL(file))
+    setUpdatedNewAttachment(URL.createObjectURL(file))
   }
 
   async function updatePost(id, e) {
@@ -45,11 +47,18 @@ const ModifyForm = ({
     let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
     var formData = new FormData();
-    formData.append("content", newContent.trim());
-    //formData.append("attachment", attachment);
+    formData.append("content", updatedNewContent.trim());
+
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
+
+    const [file] = document.getElementById("attachment").files;
+    if (file) {
+      formData.append("previousImageUrl", newAttachment);
+      formData.append("attachment", file);
+      
+  }
 
     var myInit = {
       method: "PUT",
@@ -61,8 +70,16 @@ const ModifyForm = ({
       .then((res) => res.json())
       .then((res) => {
         setNewContent(res.updatedContent);
+        setUpdatedNewContent(res.updatedContent);
+
+        setNewAttachment(updatedNewAttachment);
       })
       .catch((error) => console.log(error));
+
+      setShowModifyForm(false);
+
+      // render the thread
+      setLoadPosts(true);
 
   }
 
@@ -78,9 +95,9 @@ const ModifyForm = ({
             <Col>
               <label></label>
               <textarea
-                value={newContent}
-                id="newContent"
-                onChange={(e) => setNewContent(e.target.value)}
+                value={updatedNewContent}
+                id="updatedNewContent"
+                onChange={(e) => setUpdatedNewContent(e.target.value)}
               />
             </Col>
           </Row>
@@ -92,18 +109,18 @@ const ModifyForm = ({
           id="attachment"
           accept="image/png, image/jpeg"
           onChange={(e) => {
-            setNewAttachment(e.target.files[0]);
+            setUpdatedNewAttachment(e.target.files[0]);
             handlePreview();
           }}
         /></Col>
-            <Col className="text-center"><img id="imagePreview" src={(newAttachment != "NULL") ? newAttachment : emptyPreview} alt="your upload" /></Col>
+            <Col className="text-center"><img id="imagePreview" src={(updatedNewAttachment != "NULL") ? updatedNewAttachment : emptyPreview} alt="your upload" /></Col>
           </Row>
           <Row>
             <Col xs="6">
               <button
                 onClick={(e) => {
                   updatePost(postId, e);
-                  setShowModifyForm(false);
+                  
                 }}
               >
                 Apply
@@ -111,6 +128,8 @@ const ModifyForm = ({
             </Col>
             <Col xs="6">
               <button onClick={() => {
+                setUpdatedNewContent(newContent);
+                setUpdatedNewAttachment(newAttachment);
                 setShowModifyForm(false);
               } }>Cancel</button>
             </Col>

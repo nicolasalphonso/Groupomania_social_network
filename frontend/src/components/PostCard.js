@@ -117,8 +117,6 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
                         className="posts__icon btn-modify"
                         onClick={() => {
                           setShowModifyForm(true);
-                          setNewContent(post.content);
-                          setNewAttachment(post.attachment);
                         }}
                       />
                     </Col>
