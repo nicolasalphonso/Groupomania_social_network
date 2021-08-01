@@ -11,9 +11,9 @@ const postCtrl = require('../controlers/comment');
 // all request are authentified (auth)
 // route to get all comments
 router.get('/:id', auth, postCtrl.getComments);
-/*
 //route to create a comment
 router.post('/', auth, postCtrl.createComment);
+/*
 // route to modify a comment
 router.put('/:id', auth, postCtrl.modifyComment);
 // route to delete a comment

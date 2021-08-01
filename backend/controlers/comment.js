@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken"); // import of JSON web token
 const comment = require("../models/comment");
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 
-// get all comments
+// get comments of a post
 exports.getComments = async (req, res, next) => {
    
   try {
@@ -37,24 +37,27 @@ exports.getComments = async (req, res, next) => {
   
 };
 
-
-/*
-// Create a post
-exports.createPost = async (req, res, next) => {
+// Create a comment
+exports.createComment = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
 
-  //if the req doesn't have a file -> attachment = NULL
-  var attachment = req.file
-    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-    : "NULL";
-
-  // create the post with sequelize syntax
-  const newPost = await models.Post.create({
+  console.log(req);
+/*
+  // create the comment with sequelize syntax
+  const newComment = await models.Comment.create({
     userId: decodedToken.userId,
-    content: req.body.content,
-    attachment: attachment,
+    postId: req.body.content,
+    content: attachment,
   })
+*/
+
+}
+
+
+/*
+
+  
     .then(() =>
       res.status(201).json({
         postId: newPost.id,

@@ -2,6 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useState } from "react";
 import ModifyForm from "./Modal/ModifyForm";
@@ -38,6 +39,8 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
   const [newAttachment, setNewAttachment] = useState(post.attachment);
   // usestate for the display of likes
   const [userLiked, setUserLiked] = useState(likersArray.includes(userId));
+  // usestate for the comment contents set
+  const [commentContent, setCommentContent] = useState("");
 
   // function to handle click on "like" button
   async function handleLike() {
@@ -81,6 +84,15 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
       alert("Session issue, please sign in again");
       window.location("/");
     }
+  }
+
+  // function to post a comment
+  async function handlePostComment(userId, postId, e) {
+    e.preventDefault();
+    console.log("userId : " + userId);
+    console.log("postId : " + postId);
+    console.log("comment : " + commentContent);
+    
   }
 
   return (
@@ -159,8 +171,10 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             <Comments postId={post.id}/>
           </Row>
           <Row>
+            <Form onSubmit={(e) => handlePostComment (userId, post.id, e)}>
             <Col xs="3"><label for="addComment">Add a comment</label></Col>
-            <Col xs="9"><input type="text" id="addComment" name="addComment"/></Col>
+            <Col xs="9"><input type="text" id="addComment" name="addComment" onChange={(e) => setCommentContent(e.target.value)}/></Col>
+            </Form>
           </Row>
         </Card.Footer>
       </Card>
