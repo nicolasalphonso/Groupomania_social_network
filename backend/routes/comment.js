@@ -16,9 +16,9 @@ router.post('/', auth, postCtrl.createComment);
 /*
 // route to modify a comment
 router.put('/:id', auth, postCtrl.modifyComment);
+*/
 // route to delete a comment
 router.delete('/:id', auth, postCtrl.deleteComment);
-*/
 
 // export of router
 module.exports = router;

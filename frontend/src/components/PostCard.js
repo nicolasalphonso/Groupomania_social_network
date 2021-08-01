@@ -213,7 +213,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             </Col>
           </Row>
           <Row>
-            <Comments postId={post.id} comments={comments} />
+            <Comments postId={post.id} comments={comments} setLoadComments={setLoadComments} userId={userId}/>
           </Row>
           <Row>
             <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>

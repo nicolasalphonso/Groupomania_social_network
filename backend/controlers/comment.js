@@ -15,7 +15,7 @@ exports.getComments = async (req, res, next) => {
       where: {
         postId: req.params.id,
       },
-      order: [order != null ? order.split(":") : ["createdAt", "DESC"]],
+      order: [order != null ? order.split(":") : ["createdAt", "ASC"]],
       attributes: fields != "*" && fields != null ? fields.split(",") : null,
       include: [
         {
@@ -89,74 +89,18 @@ exports.modifyPost = async (req, res, next) => {
 };
 */
 
-/*
-// deleting a post - destroy method
-exports.deletePost = async (req, res, next) => {
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      const filename = post.attachment.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        models.Post.destroy({
-          where: {
-            id: req.params.id,
-          },
-        })
-          .then(() => res.status(200).json({ post: "Post deleted !" }))
-          .catch((error) => res.status(400).json({ error }));
-      });
+
+// deleting a comment - destroy method
+exports.deleteComment = async (req, res, next) => {
+  await models.Comment.findOne({ where: { id: req.params.id } })
+    .then((comment) => {
+      models.Comment.destroy({
+        where: {
+          id: req.params.id,
+        },
+      })
+        .then(() => res.status(200).json({ post: "Comment deleted !" }))
+        .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
 };
-
-// management des likes
-exports.likesManagement = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-  const userId = decodedToken.userId;
-  let userLiked = false;
-  let newLikers = null;
-
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      const likersString = JSON.parse(post.likers);
-
-      let tabLikersRaw = [];
-      // creating a table with id of all likers
-      for (let i = 0; i < likersString.length; i++) {
-        tabLikersRaw.push(likersString[i]);
-      }
-
-      // creating a table without duplicate
-      var tabLikers = tabLikersRaw.reduce(function (acc, currentValue) {
-        if (acc.indexOf(currentValue) === -1) {
-          acc.push(currentValue);
-        }
-        return acc;
-      }, []);
-
-      // if the user is in the table, remove him/her
-      // else, add her/him
-      if (tabLikers.includes(userId)) {
-        for (var i = 0; i < tabLikers.length; i++) {
-          if (tabLikers[i] == userId) {
-            tabLikers.splice(i, 1);
-          }
-        }
-
-        userLiked = false;
-      } else {
-        tabLikers.push(userId);
-        userLiked = true;
-      }
-
-      // updating the likers
-      post.likers = tabLikers;
-      newLikers = JSON.stringify(post.likers);
-      post.save();
-    })
-    .then(() =>
-      res.status(200).json({ newLikers: newLikers, Liked: userLiked })
-    )
-    .catch((error) => res.status(500).json({ error }));
-};
-*/

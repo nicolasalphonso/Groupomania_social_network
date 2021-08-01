@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import axios from "axios";
 
 // function to verify that an objet is empty
 function isEmpty(obj) {
@@ -21,13 +21,31 @@ const dateOptions = {
   minute: "numeric",
 };
 
-function Comments({ postId, comments, }) {
-  
-  
+function Comments({ comments, setLoadComments, userId }) {
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
-  
+  async function handleDeleteComment(comment) {
+    if (userId === comment.User.id) {
+      if (window.confirm("Delete your comment ?")) {
+        await axios
+          .delete(`http://localhost:7000/api/comments/${comment.id}`, {
+            headers: {
+              Authorization: `bearer ${data.token}`,
+            },
+          })
+          .then((res) => res.status(200).json(`Comment ${comment.id} deleted`))
+          .catch((error) => console.log(error));
+
+        // rerender the comments
+        setLoadComments(true);
+      }
+    } else {
+      //force the user to relog
+      alert("Session issue, please sign in again");
+      window.location("/");
+    }
+  }
 
   return (
     <div>
@@ -39,8 +57,9 @@ function Comments({ postId, comments, }) {
                 <Row>
                   <Col xs="2">Photo profil</Col>
                   <Col xs="10">
-                    <div class=" row userAndContent">
+                    <div class="row userAndContent">
                       <Row>
+                        <Col xs="10">
                         {comment.User.username} -
                         <span className="commentDate">
                           {new Date(comment.createdAt).toLocaleDateString(
@@ -48,15 +67,18 @@ function Comments({ postId, comments, }) {
                             dateOptions
                           )}
                         </span>
+                        </Col>
+                        <Col xs="1"><img src="icones/edit.svg" alt="" className="commentIcon" /></Col>
+                        <Col xs="1"><img src="icones/trash.svg" alt="" className="commentIcon" onClick={() => handleDeleteComment(comment)}/></Col>
                       </Row>
-                      <Row>{comment.content}</Row>
+                      <Row>
+                        <Col>{comment.content}</Col>
+                
+                      </Row>
                     </div>
                   </Col>
                   <Row>
-                    <Col
-                      xs={{ span: 3, offset: 3 }}
-                      className="commentDate"
-                    ></Col>
+                    <Col xs={{ span: 3, offset: 3 }}></Col>
                   </Row>
                 </Row>
               </li>
