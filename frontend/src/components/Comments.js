@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 // function to verify that an objet is empty
 function isEmpty(obj) {
@@ -37,22 +39,38 @@ function Comments({ postId }) {
         .catch((error) => console.log(error));
     }
     setLoadComments(false);
-  }, [loadComments, data.token]);
+  }, [loadComments, data.token, postId]);
 
   return (
     <div>
-      Comments
       <ul>
         {!isEmpty(comments) &&
           comments.map((comment) => {
             return (
               <li key={comment.id}>
-                {comment.User.username}
-                {comment.content}
-                {new Date(comment.createdAt).toLocaleDateString(
-                  undefined,
-                  dateOptions
-                )}
+                <Row>
+                  <Col xs="2">Photo profil</Col>
+                  <Col xs="10">
+                    <div class=" row userAndContent">
+                      <Row>
+                        {comment.User.username} -
+                        <span className="commentDate">
+                          {new Date(comment.createdAt).toLocaleDateString(
+                            undefined,
+                            dateOptions
+                          )}
+                        </span>
+                      </Row>
+                      <Row>{comment.content}</Row>
+                    </div>
+                  </Col>
+                  <Row>
+                    <Col
+                      xs={{ span: 3, offset: 3 }}
+                      className="commentDate"
+                    ></Col>
+                  </Row>
+                </Row>
               </li>
             );
           })}

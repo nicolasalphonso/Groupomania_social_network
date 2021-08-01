@@ -244,4 +244,13 @@ nav {
   object-fit: scale-down;
 }
 
+.row .userAndContent {
+  margin: 10px;
+}
+
+.commentDate {
+  font-style: italic;
+  max-width: 45%;
+}
+
 /*# sourceMappingURL=index.css.map */
