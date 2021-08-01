@@ -20,7 +20,7 @@
   text-decoration: none;
 }
 *::selection {
-  background: #344D59;
+  background: #344d59;
 }
 
 a,
@@ -43,8 +43,8 @@ textarea:focus {
 
 button,
 input[type=submit] {
-  background: #B8CBD0;
-  color: #344D59;
+  background: #b8cbd0;
+  color: #344d59;
   font-family: "font-3", serif;
   cursor: pointer;
   transition: 0.2s;
@@ -55,8 +55,8 @@ input[type=submit] {
 }
 button:hover,
 input[type=submit]:hover {
-  background: #344D59;
-  color: #B8CBD0;
+  background: #344d59;
+  color: #b8cbd0;
 }
 
 input[type=checkbox] {
@@ -108,7 +108,7 @@ body {
 }
 .loginForm ul li {
   margin: 10px 0;
-  background: #B8CBD0;
+  background: #b8cbd0;
   color: #282828;
   width: 100%;
   padding: 10px 0;
@@ -117,11 +117,11 @@ body {
   box-shadow: 3px 3px 1px rgba(51, 51, 51, 0.418);
 }
 .loginForm ul li:hover {
-  background: #344D59;
+  background: #344d59;
   box-shadow: none;
 }
 .loginForm .active-btn {
-  background: #344D59;
+  background: #344d59;
   box-shadow: none;
 }
 .loginForm form {
@@ -148,7 +148,7 @@ nav {
   position: fixed;
   width: 100%;
   height: 60px;
-  box-shadow: 0px 1px #344D59, 0px 4px #dbdada;
+  box-shadow: 0px 1px #344d59, 0px 4px #dbdada;
 }
 
 .postsContainer {
@@ -162,6 +162,11 @@ nav {
 .postContent .username {
   font-weight: 800;
   font-size: large;
+}
+
+.card-img {
+  max-height: 450px;
+  object-fit: scale-down;
 }
 
 .posts {
@@ -179,7 +184,7 @@ nav {
 }
 .posts ul li {
   margin: 10px 0;
-  background: #B8CBD0;
+  background: #b8cbd0;
   color: #282828;
   width: 100%;
   padding: 10px 0;
@@ -188,7 +193,7 @@ nav {
   box-shadow: 3px 3px 1px rgba(51, 51, 51, 0.418);
 }
 .posts ul li:hover {
-  background: #344D59;
+  background: #344d59;
   box-shadow: none;
 }
 .posts form label {
@@ -210,15 +215,12 @@ nav {
   height: 180px;
   object-fit: scale-down;
 }
-.posts img {
-  max-width: 100%;
-}
 .posts__icon {
   height: 50px;
 }
 
 .modalModifyPost {
-  background-color: #344D59;
+  background-color: #344d59;
   border-radius: 10px;
   padding: 10px;
 }

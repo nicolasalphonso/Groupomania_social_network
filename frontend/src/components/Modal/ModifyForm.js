@@ -113,7 +113,7 @@ const ModifyForm = ({
             handlePreview();
           }}
         /></Col>
-            <Col className="text-center"><img id="imagePreview" src={(updatedNewAttachment != "NULL") ? updatedNewAttachment : emptyPreview} alt="your upload" /></Col>
+            <Col className="text-center"><img id="imagePreview" src={(updatedNewAttachment !== "NULL") ? updatedNewAttachment : emptyPreview} alt="your upload" /></Col>
           </Row>
           <Row>
             <Col xs="6">

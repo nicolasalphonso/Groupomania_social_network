@@ -11,6 +11,11 @@
   }
 }
 
+.card-img {
+  max-height: 450px;
+  object-fit: scale-down;
+}
+
 .posts {
     background-color: lighten($color-2, 13%);
     max-width: 100%;
@@ -64,9 +69,7 @@
   
     }
 
-    img {
-      max-width: 100%;
-    }
+    
 
     &__icon {
       height: 50px;
