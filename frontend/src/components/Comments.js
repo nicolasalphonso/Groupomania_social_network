@@ -81,7 +81,7 @@ function Comments({ comments, setLoadComments, userId }) {
       setLoadComments(true);
 
       // reset the form used et modify the comment
-      setNewComment("");
+      //setNewComment("");
 
       // hide the form
       setdisplayModifyComment(false);
@@ -143,7 +143,7 @@ function Comments({ comments, setLoadComments, userId }) {
                       <Row>
                         <Col>{comment.content}</Col>
                       </Row>
-                      {comment.User.id === userId && displayModifyComment && (
+                      {comment.User.id === userId && displayModifyComment && /*comment.id === && */ (
                         <Form onSubmit={(e) => handleModifyComment(e, comment)}>
                           <Row>
                             <input
