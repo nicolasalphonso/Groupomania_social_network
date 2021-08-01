@@ -15,7 +15,7 @@ module.exports = {
       {
         id: 1,
         userId: 1,
-        content: "premier post de 1",
+        content: "C'est là que je rève d'aller !!! Me préparer une cagnotte serait une super idée surprise !!! (On peut toujours réver)",
         attachment: "images/1.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -24,7 +24,7 @@ module.exports = {
       {
         id: 2,
         userId: 2,
-        content: "premier post de 2",
+        content: "La lune est belle ce soir !",
         attachment: "images/2.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -33,7 +33,7 @@ module.exports = {
       {
         id: 3,
         userId: 3,
-        content: "premier post de 3",
+        content: "Majestueux ! Les grands hommes et les grandes femmes du passé nous saluent.",
         attachment: "images/3.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -42,7 +42,7 @@ module.exports = {
       {
         id: 4,
         userId: 4,
-        content: "premier post de 4",
+        content: "Ma femme est magnifique ! Rien de professionnel mais j'avais envie de partager !",
         attachment: "images/4.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -51,7 +51,7 @@ module.exports = {
       {
         id: 5,
         userId: 5,
-        content: "premier post de 5",
+        content: "Limpide,sereine mais un peu dispersée... Cette eau me ressemble",
         attachment: "images/5.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -60,7 +60,7 @@ module.exports = {
       {
         id: 6,
         userId: 6,
-        content: "premier post de 6",
+        content: "J'avais l'âme d'un poète ce matin, mais je vais vous épargner ma prose :)",
         attachment: "images/6.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -69,7 +69,7 @@ module.exports = {
       {
         id: 7,
         userId: 7,
-        content: "premier post de 7",
+        content: "Papillon du matin, journée qui commence bien",
         attachment: "images/7.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -78,7 +78,7 @@ module.exports = {
       {
         id: 8,
         userId: 8,
-        content: "premier post de 8",
+        content: "La vie est très belle ici !",
         attachment: "images/8.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -87,7 +87,7 @@ module.exports = {
       {
         id: 9,
         userId: 9,
-        content: "premier post de 9",
+        content: "Traversée du bosphore pour nous ce matin. Grosses pensées à ceux qui travaillent !!!",
         attachment: "images/9.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -96,7 +96,7 @@ module.exports = {
       {
         id: 10,
         userId: 10,
-        content: "premier post de 10",
+        content: "Un regard profond...         J'aime",
         attachment: "images/10.jpg",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -112,6 +112,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-     return queryInterface.bulkDelete("Posts", null, {});
+     return await queryInterface.bulkDelete("Posts", null, {});
   },
 };
