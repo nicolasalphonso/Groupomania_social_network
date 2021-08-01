@@ -5,7 +5,6 @@ const dotenv = require("dotenv").config({ path: "../" }); // import of environme
 
 // get comments of a post
 exports.getComments = async (req, res, next) => {
-   
   try {
     const fields = req.query.fields;
     const order = req.query.order;
@@ -13,9 +12,9 @@ exports.getComments = async (req, res, next) => {
     // use of sequelize syntax, on table posts using a left outer join on users
     // retrieving in it username, firstname and lastname
     const comments = await models.Comment.findAll({
-        where: {
-            postId: req.params.id
-        },
+      where: {
+        postId: req.params.id,
+      },
       order: [order != null ? order.split(":") : ["createdAt", "DESC"]],
       attributes: fields != "*" && fields != null ? fields.split(",") : null,
       include: [
@@ -24,17 +23,15 @@ exports.getComments = async (req, res, next) => {
           attributes: ["username", "id"],
         },
         {
-            model: models.Post,
-            attributes: ["id"],
-          },
+          model: models.Post,
+          attributes: ["id"],
+        },
       ],
     });
     res.status(200).send(comments);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-
-  
 };
 
 // Create a comment
@@ -42,18 +39,20 @@ exports.createComment = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
 
-  console.log(req);
-/*
+  console.log(req.body);
+  if (decodedToken.userId === req.body.userId) {
+    await models.Comment.create({
+      userId: decodedToken.userId,
+      postId: req.body.postId,
+      content: req.body.commentContent,
+    });
+  }
+
+  /*
   // create the comment with sequelize syntax
-  const newComment = await models.Comment.create({
-    userId: decodedToken.userId,
-    postId: req.body.content,
-    content: attachment,
-  })
+  
 */
-
-}
-
+};
 
 /*
 

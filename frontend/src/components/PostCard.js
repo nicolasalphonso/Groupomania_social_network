@@ -44,11 +44,11 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
 
   // function to handle click on "like" button
   async function handleLike() {
-    let data = JSON.parse(localStorage.getItem("ReponseServeur"));
-    var myHeaders = new Headers();
+    
+    let myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
 
-    var myInit = {
+    let myInit = {
       method: "POST",
       headers: myHeaders,
     };
@@ -91,8 +91,32 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
     e.preventDefault();
     console.log("userId : " + userId);
     console.log("postId : " + postId);
-    console.log("comment : " + commentContent);
+    console.log("commentContent : " + commentContent);
+
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", `bearer ${data.token}`);
+    myHeaders.append("Accept", "application/json")
+    myHeaders.append("Content-Type", "application/json");
+
     
+    let dataPostContent = {
+      "userId": userId,
+      "postId": post.id,
+      "commentContent": commentContent,
+    }
+
+    let myInit = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(dataPostContent),
+    };
+    
+    await fetch(`http://localhost:7000/api/comments/`, myInit)
+      .then((res) => res.json())
+      .then((res) => {
+        //post.likers = res.newLikers;
+        //setUserLiked(res.Liked);
+      });
   }
 
   return (
