@@ -63,66 +63,31 @@ exports.createPost = async (req, res, next) => {
   else only content is updated
 */
 exports.modifyPost = async (req, res, next) => {
-  //console.log(req.body.content);
-  //console.log(req.file ? "fichier" : "texte")
   const newContent = req.body.content;
 
-  // just the content is updated
-
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
       if (req.file) {
-          const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-          post.attachment = attachmentUrl;
-          const previousImageName = req.body.previousImageUrl.split("/images/")[1];
-          fs.unlink(`images/${previousImageName}`, (err) => {
-            if (err) throw err;
-          })
-        }
-
-        post.content = newContent;
-        post.save();
-      
-    })
-    .then(res.status(200).json({ postUpdate: "Post updated !", updatedContent: newContent }))
-    .catch((error) => res.status(500).json({error}));
-
-    ;
-
-  /*
-  // we retrieve the name of the present image
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      previousImageName = post.attachment
-        ? post.attachment.split("/images/")[0]
-        : null; // global variable
-    })
-    .then(() => console.log(previousImageName));
-    */
-  
-  /*
-  // We update the post
-  await models.Post.update(
-    {
-      content: req.body.content,
-      attachment: attachmentUrl,
-      likers: req.body.likers,
-    },
-    {
-      where: {
-        id: req.params.id,
-      },
-    }
-  )
-    .then(() => {
-      res.status(200).json({ post: "Post updated !" });
-      // we delete the provious image if it was updated
-      if (req.file) {
-        
+        const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+        post.attachment = attachmentUrl;
+        const previousImageName =
+          req.body.previousImageUrl.split("/images/")[1];
+        fs.unlink(`images/${previousImageName}`, (err) => {
+          if (err) throw err;
+        });
       }
+
+      post.content = newContent;
+      post.save();
     })
-    .catch((error) => res.status(400).json({ error }));
-    */
+    .then(
+      res
+        .status(200)
+        .json({ postUpdate: "Post updated !", updatedContent: newContent })
+    )
+    .catch((error) => res.status(500).json({ error }));
 };
 
 // deleting a post - destroy method

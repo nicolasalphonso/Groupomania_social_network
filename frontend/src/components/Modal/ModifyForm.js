@@ -71,11 +71,12 @@ const ModifyForm = ({
       .then((res) => {
         setNewContent(res.updatedContent);
         setUpdatedNewContent(res.updatedContent);
-
         setNewAttachment(updatedNewAttachment);
       })
       .catch((error) => console.log(error));
 
+
+      // Hide the modify form
       setShowModifyForm(false);
 
       // render the thread
