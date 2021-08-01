@@ -41,30 +41,17 @@ exports.createComment = async (req, res, next) => {
 
   console.log(req.body);
   if (decodedToken.userId === req.body.userId) {
-    await models.Comment.create({
+    const newComment = await models.Comment.create({
       userId: decodedToken.userId,
       postId: req.body.postId,
       content: req.body.commentContent,
-    });
+    })
+      .catch((error) => res.status(400).json({ error }));
+
+      res.status(201).json({newCommentId: newComment.id})
   }
-
-  /*
-  // create the comment with sequelize syntax
-  
-*/
 };
 
-/*
-
-  
-    .then(() =>
-      res.status(201).json({
-        postId: newPost.id,
-      })
-    )
-    .catch((error) => res.status(400).json({ error }));
-};
-*/
 
 /*  modify post with id postId
   use of methods findOne and save

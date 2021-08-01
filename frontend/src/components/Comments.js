@@ -21,25 +21,13 @@ const dateOptions = {
   minute: "numeric",
 };
 
-function Comments({ postId }) {
-  const [loadComments, setLoadComments] = useState(true);
-  const [comments, setComments] = useState("");
+function Comments({ postId, comments, }) {
+  
+  
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
-  useEffect(() => {
-    if (loadComments) {
-      axios
-        .get(`http://localhost:7000/api/comments/${postId}`, {
-          headers: {
-            Authorization: `bearer ${data.token}`,
-          },
-        })
-        .then((res) => setComments(res.data))
-        .catch((error) => console.log(error));
-    }
-    setLoadComments(false);
-  }, [loadComments, data.token, postId]);
+  
 
   return (
     <div>

@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModifyForm from "./Modal/ModifyForm";
 import Comments from "./Comments";
 
@@ -41,10 +41,14 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
   const [userLiked, setUserLiked] = useState(likersArray.includes(userId));
   // usestate for the comment contents set
   const [commentContent, setCommentContent] = useState("");
+// usestates to update and re-render the comments
+  const [loadComments, setLoadComments] = useState(true);
+  const [comments, setComments] = useState("");
+
+  
 
   // function to handle click on "like" button
   async function handleLike() {
-    
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
 
@@ -86,6 +90,21 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
     }
   }
 
+// useEffect to re-render the comments
+  useEffect(() => {
+    if (loadComments) {
+      axios
+        .get(`http://localhost:7000/api/comments/${post.id}`, {
+          headers: {
+            Authorization: `bearer ${data.token}`,
+          },
+        })
+        .then((res) => setComments(res.data))
+        .catch((error) => console.log(error));
+    }
+    setLoadComments(false);
+  }, [loadComments, data.token, post.id]);
+
   // function to post a comment
   async function handlePostComment(userId, postId, e) {
     e.preventDefault();
@@ -95,27 +114,29 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
 
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
-    myHeaders.append("Accept", "application/json")
+    //myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
+    console.log(myHeaders);
 
-    
     let dataPostContent = {
-      "userId": userId,
-      "postId": post.id,
-      "commentContent": commentContent,
-    }
+      userId: userId,
+      postId: post.id,
+      commentContent: commentContent,
+    };
 
     let myInit = {
       method: "POST",
       headers: myHeaders,
       body: JSON.stringify(dataPostContent),
     };
-    
+
     await fetch(`http://localhost:7000/api/comments/`, myInit)
       .then((res) => res.json())
       .then((res) => {
-        //post.likers = res.newLikers;
-        //setUserLiked(res.Liked);
+        console.log("new comment id : " + res.newCommentId);
+        console.log(res);
+        setCommentContent("");
+        setLoadComments(true);
       });
   }
 
@@ -192,12 +213,22 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             </Col>
           </Row>
           <Row>
-            <Comments postId={post.id}/>
+            <Comments postId={post.id} comments={comments} />
           </Row>
           <Row>
-            <Form onSubmit={(e) => handlePostComment (userId, post.id, e)}>
-            <Col xs="3"><label for="addComment">Add a comment</label></Col>
-            <Col xs="9"><input type="text" id="addComment" name="addComment" onChange={(e) => setCommentContent(e.target.value)}/></Col>
+            <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>
+              <Col xs="3">
+                <label for="addComment">Add a comment</label>
+              </Col>
+              <Col xs="9">
+                <input
+                  type="text"
+                  id="addComment"
+                  name="addComment"
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                />
+              </Col>
             </Form>
           </Row>
         </Card.Footer>
