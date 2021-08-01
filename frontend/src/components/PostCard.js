@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { useState } from "react";
 import ModifyForm from "./Modal/ModifyForm";
+import Comments from "./Comments";
 
 // setting the options for the dates display
 const dateOptions = {
@@ -19,14 +20,6 @@ const dateOptions = {
 // setting the options for the authenticated request
 let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 let userId = data.userId;
-
-// function to verify that an objet is empty
-function isEmpty(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
 
 ////////////
 const PostCard = ({ post, setLoadPosts, posts }) => {
@@ -161,6 +154,13 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
                 className="posts__icon btn-comment"
               />
             </Col>
+          </Row>
+          <Row>
+            <Comments postId={post.id}/>
+          </Row>
+          <Row>
+            <Col xs="3"><label for="addComment">Add a comment</label></Col>
+            <Col xs="9"><input type="text" id="addComment" name="addComment"/></Col>
           </Row>
         </Card.Footer>
       </Card>

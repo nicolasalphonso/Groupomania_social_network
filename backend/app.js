@@ -29,6 +29,7 @@ const path = require('path');
 // Routeurs pour les "posts" et les "utilisateurs"
 const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
+const commentRoutes = require('./routes/comment');
 
 const app = express(); // notre application
 
@@ -76,9 +77,11 @@ app.use(function(req, res, next) {
   // répond aux requêtes à /images en rendant notre dossier images statique 
   app.use('/images', express.static(path.join(__dirname, 'images')));
 
-  // routes de base du chemin des routeurs
+  // routes of basic routeurs
   app.use('/api/posts', postRoutes); 
   app.use('/api/auth', userRoutes);
+  app.use('/api/comments', commentRoutes);
+  
 
 // exportation de l'application pour pouvoir y accéder depuis
 // d'autres fichiers notamment le serveur node
