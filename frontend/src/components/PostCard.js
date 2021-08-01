@@ -103,7 +103,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
         .catch((error) => console.log(error));
     }
     setLoadComments(false);
-  }, [loadComments, data.token, post.id]);
+  }, [loadComments, post.id]);
 
   // function to post a comment
   async function handlePostComment(userId, postId, e) {
@@ -116,7 +116,6 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
     myHeaders.append("Authorization", `bearer ${data.token}`);
     //myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
-    console.log(myHeaders);
 
     let dataPostContent = {
       userId: userId,

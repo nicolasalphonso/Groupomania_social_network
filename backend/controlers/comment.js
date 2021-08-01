@@ -53,41 +53,23 @@ exports.createComment = async (req, res, next) => {
 };
 
 
-/*  modify post with id postId
-  use of methods findOne and save
-  if req.file, there's an image to compute
-  previous image should be deleted
-  else only content is updated
-*/
-/*
-exports.modifyPost = async (req, res, next) => {
+//  modify comment
+exports.modifyComment = async (req, res, next) => {
+
   const newContent = req.body.content;
 
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      if (req.file) {
-        const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`;
-        post.attachment = attachmentUrl;
-        const previousImageName =
-          req.body.previousImageUrl.split("/images/")[1];
-        fs.unlink(`images/${previousImageName}`, (err) => {
-          if (err) throw err;
-        });
-      }
-
-      post.content = newContent;
-      post.save();
+  await models.Comment.findOne({ where: { id: req.params.id } })
+    .then((comment) => {
+      comment.content = newContent;
+      comment.save();
     })
     .then(
       res
         .status(200)
-        .json({ postUpdate: "Post updated !", updatedContent: newContent })
+        .json({ commentUpdate: "Comment updated !", updatedContent: newContent })
     )
     .catch((error) => res.status(500).json({ error }));
 };
-*/
 
 
 // deleting a comment - destroy method
