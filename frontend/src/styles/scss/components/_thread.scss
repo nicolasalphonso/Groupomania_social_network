@@ -16,6 +16,10 @@
   object-fit: scale-down;
 }
 
+.displayLineBreak {
+  white-space: pre-line;
+}
+
 .posts {
     background-color: lighten($color-2, 13%);
     max-width: 100%;

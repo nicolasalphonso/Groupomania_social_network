@@ -133,7 +133,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
               </Col>
             </Row>
           </Card.Title>
-          <Card.Text>
+          <Card.Text className="displayLineBreak">
             <br />
             {newContent}
           </Card.Text>

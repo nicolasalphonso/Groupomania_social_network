@@ -169,6 +169,10 @@ nav {
   object-fit: scale-down;
 }
 
+.displayLineBreak {
+  white-space: pre-line;
+}
+
 .posts {
   background-color: #e0e8ea;
   max-width: 100%;
