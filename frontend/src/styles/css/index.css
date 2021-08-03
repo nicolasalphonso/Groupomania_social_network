@@ -119,10 +119,12 @@ body {
 .loginForm ul li:hover {
   background: #344d59;
   box-shadow: none;
+  color: white;
 }
 .loginForm .active-btn {
   background: #344d59;
   box-shadow: none;
+  color: white;
 }
 .loginForm form {
   width: 100%;
@@ -249,6 +251,9 @@ nav {
   width: 80px;
   height: 80px;
   object-fit: scale-down;
+}
+.modalModifyPost label {
+  color: white;
 }
 
 .row .userAndContent {

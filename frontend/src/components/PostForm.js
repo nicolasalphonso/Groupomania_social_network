@@ -53,8 +53,9 @@ const PostForm = ({ setLoadPosts }) => {
       {showingPostform &&
   
       <form action="" onSubmit={handlePost} id="postForm">
-        <button onClick={() => setShowingPostform(false)}>Hide</button>
-        <label htmlFor="content"></label>
+        <button aria-label="hide post form" onClick={() => setShowingPostform(false)}>Hide</button>
+        <br/>
+        <label htmlFor="content">Something to share !?</label>
         <textarea
           name="content"
           id="content"
@@ -65,7 +66,7 @@ const PostForm = ({ setLoadPosts }) => {
           required
         />
         <div id="contentError" />
-        <label htmlFor="attachment"></label>
+        <label htmlFor="attachment" aria-label="add a photo to your post">Add a photo</label>
         <input
           type="file"
           name="attachment"

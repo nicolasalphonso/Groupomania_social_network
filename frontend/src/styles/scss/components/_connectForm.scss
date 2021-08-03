@@ -30,12 +30,14 @@
         &:hover {
           background: $color-1;
           box-shadow: none;
+          color: white;
         }
       }
     }
     .active-btn {
       background: $color-1;
       box-shadow: none;
+      color: white;
       
     }
     form {

@@ -94,7 +94,7 @@ const ModifyForm = ({
         <form className="modalModifyPost">
           <Row>
             <Col>
-              <label></label>
+              <label htmlFor="updatedNewContent">What's new ?</label>
               <textarea
                 value={updatedNewContent}
                 id="updatedNewContent"
@@ -103,7 +103,7 @@ const ModifyForm = ({
             </Col>
           </Row>
           <Row>
-            <Col className="text-center"><label htmlFor="attachment"></label>
+            <Col className="text-center"><label htmlFor="attachment">New photo ?</label>
         <input
           type="file"
           name="attachment"

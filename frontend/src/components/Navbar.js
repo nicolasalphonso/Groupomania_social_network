@@ -9,7 +9,7 @@ const NavigationBar = () => {
     <Navbar collapseOnSelect expand="lg" bg="light" fixed="top">
     <Container>
     <Nav.Link href="">
-    <Navbar.Brand href="">
+    <Navbar.Brand href="/home">
           <img
             alt="groupomania logo"
             src="./images/icon-nav.png"

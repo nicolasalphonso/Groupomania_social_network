@@ -6,8 +6,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import of cryptojs
-const cryptojs = require("crypto-js");
 
 function isEmpty(obj) {
   for (var key in obj) {
@@ -149,10 +147,6 @@ function PersonalProfile() {
     }
   }
 
-  function unhashMail(mail) {
-    return cryptojs.HmacSHA256(mail, process.env.EMAIL_KEY_SECRET).toString();
-  }
-
   return (
     !isEmpty(userToDisplay) && (
       <Container className="profileCard">
@@ -177,7 +171,7 @@ function PersonalProfile() {
                 className="formPhoto"
                 onSubmit={(e) => updatePhoto(e)}
               >
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3" controlId="newPhoto">
                   <Form.Label>Choose a new photo </Form.Label>
                   <Form.Control
                     onChange={(e) => {
@@ -186,12 +180,11 @@ function PersonalProfile() {
                     }}
                     type="file"
                     size="sm"
-                    id="newPhoto"
                     accept="image/png, image/jpeg"
                   />
                 </Form.Group>
                 <Button variant="secondary" type="submit">
-                  Confirm update photo
+                  Confirm photo update
                 </Button>
                 <Button
                   variant="secondary"
@@ -216,17 +209,16 @@ function PersonalProfile() {
             offFocus(document.getElementById("username"));
           }}
         >
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="username">
             <Form.Label
               onClick={() => {
                 onFocus(document.getElementById("username"));
               }}
             >
               Username{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" />
+              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify username" />
             </Form.Label>
             <Form.Control
-              id="username"
               type="input"
               value={newUsername}
               readOnly
@@ -248,17 +240,16 @@ function PersonalProfile() {
             offFocus(document.getElementById("firstname"));
           }}
         >
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="firstname">
             <Form.Label
               onClick={() => {
                 onFocus(document.getElementById("firstname"));
               }}
             >
               Firstname{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" />
+              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify firstname"/>
             </Form.Label>
             <Form.Control
-              id="firstname"
               type="input"
               value={newFirstname}
               readOnly
@@ -280,17 +271,17 @@ function PersonalProfile() {
             offFocus(document.getElementById("lastname"));
           }}
         >
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="lastname">
             <Form.Label
               onClick={() => {
                 onFocus(document.getElementById("lastname"));
               }}
             >
               Lastname{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" />
+              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify lastname"/>
             </Form.Label>
             <Form.Control
-              id="lastname"
+              
               type="input"
               value={newLastname}
               readOnly
@@ -312,7 +303,7 @@ function PersonalProfile() {
             </Form.Group>
             <div id="emailErrors" className="formErrors"></div>
 
-            <Form.Group className="mb-3" controlId="formConirmEmail">
+            <Form.Group className="mb-3" controlId="formConfirmEmail">
               <Form.Label>Confirm new email</Form.Label>
               <Form.Control type="email" placeholder="Confirm new email" />
             </Form.Group>
@@ -335,7 +326,7 @@ function PersonalProfile() {
           </Form>
 
           <Form>
-            <Form.Group className="mb-3" controlId="formPassword">
+            <Form.Group className="mb-3" controlId="formConfirmPassword">
               <Form.Label>Confirm new password</Form.Label>
               <Form.Control
                 type="password"

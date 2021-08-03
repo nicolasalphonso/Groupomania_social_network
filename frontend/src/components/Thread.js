@@ -33,6 +33,7 @@ const Thread = () => {
 
   return (
     <div className="thread-container">
+      <h1>Fresh news of Groupomania network</h1>
       <PostForm setLoadPosts={setLoadPosts}/>
       <ul>
         {!isEmpty(posts) &&

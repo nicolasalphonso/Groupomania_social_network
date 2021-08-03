@@ -190,7 +190,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             {newContent}
           </Card.Text>
         </Card.Body>
-        {post.attachment !== "NULL" && <Card.Img src={post.attachment} />}
+        {post.attachment !== "NULL" && <Card.Img src={post.attachment} alt={`Photo postée par ${post.User.username}`}/>}
         <Card.Footer>
           <Row>
             <Col className="text-center">
@@ -220,13 +220,13 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           <Row>
             <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>
               <Col xs="3">
-                <label for="addComment">Add a comment</label>
+                <label for={`addComment${post.id}`}>Add a comment</label>
               </Col>
               <Col xs="9">
                 <input
                   type="text"
-                  id="addComment"
-                  name="addComment"
+                  id={`addComment${post.id}`}
+                  name={`addComment${post.id}`}
                   value={commentContent}
                   onChange={(e) => setCommentContent(e.target.value)}
                 />

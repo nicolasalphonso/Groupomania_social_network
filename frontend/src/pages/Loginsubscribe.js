@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 
 const Loginsubscribe = () => {
   return (
+    <main>
     <div className="loginPage">
       <Container>
         <Row>
@@ -18,6 +19,7 @@ const Loginsubscribe = () => {
         </Row>
       </Container>
     </div>
+    </main>
   );
 };
 
