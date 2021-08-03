@@ -100,8 +100,14 @@ function Comments({ comments, setLoadComments, userId }) {
             return (
               <li key={comment.id}>
                 <Row>
-                  <Col xs="2">Photo profil</Col>
-                  <Col xs="10">
+                  <Col xs="1" className="m-auto">
+                    <img
+                      className="commentPhotoProfile"
+                      src={comment.User.attachment}
+                      alt={`Profile photo of ${comment.User.username}`}
+                    />
+                  </Col>
+                  <Col xs="11">
                     <div class="row userAndContent">
                       <Row>
                         <Col xs="9">
@@ -143,8 +149,10 @@ function Comments({ comments, setLoadComments, userId }) {
                       <Row>
                         <Col>{comment.content}</Col>
                       </Row>
-                      {comment.User.id === userId && displayModifyComment && /*comment.id === && */ (
-                        <Form onSubmit={(e) => handleModifyComment(e, comment)}>
+                      {comment.User.id === userId && displayModifyComment && (
+                        /*comment.id === && */ <Form
+                          onSubmit={(e) => handleModifyComment(e, comment)}
+                        >
                           <Row>
                             <input
                               type="text"

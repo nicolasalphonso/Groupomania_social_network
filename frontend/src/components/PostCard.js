@@ -148,7 +148,10 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
         <Card.Body>
           <Card.Title as="p">
             <Row>
-              <Col xs="8" md="10">
+              <Col xs="1" md="1">
+                <img src={post.User.attachment} className="threadIconProfile" />
+              </Col>
+              <Col xs="7" md="9">
                 {post.User.username}
                 <br />
                 {new Date(post.createdAt).toLocaleDateString(

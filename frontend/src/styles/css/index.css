@@ -164,6 +164,13 @@ nav {
   font-size: large;
 }
 
+.threadIconProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .card-img {
   max-height: 450px;
   object-fit: scale-down;
@@ -256,6 +263,13 @@ nav {
 .commentIcon {
   width: 13px;
   height: 13px;
+}
+
+.commentPhotoProfile {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 0;
 }
 
 .profileCard {
