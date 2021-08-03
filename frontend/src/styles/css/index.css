@@ -284,16 +284,30 @@ nav {
 }
 .profileCard .formProfile {
   margin: 15px 20px;
+  border-bottom: solid 1px #b8cbd0;
+  padding-bottom: 15px;
 }
 .profileCard .formErrors {
   color: red;
   margin-bottom: 10px;
+}
+.profileCard .profileModifyIcon {
+  height: 15px;
+  width: 20px;
 }
 .profileCard .nameDisplay {
   font-size: x-large;
 }
 .profileCard .btn {
   margin-left: 15px;
+}
+.profileCard .onFocus {
+  border: 5px solid #228540;
+  border-radius: 4px;
+}
+.profileCard .confirmPhotoProfileChange {
+  height: 15px;
+  width: 15px;
 }
 
 /*# sourceMappingURL=index.css.map */

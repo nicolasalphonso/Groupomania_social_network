@@ -151,8 +151,6 @@ exports.getUserProfile = async (req, res, next) => {
 };
 
 exports.updateUserPhotoProfile = async (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
   await models.User.findOne({ where: { id: req.params.id } })
     .then((user) => {
       const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
@@ -177,6 +175,34 @@ exports.updateUserPhotoProfile = async (req, res) => {
     })
     .then((res) => res.status(200).json({ photoProfile: "updated" }))
     .catch((err) => res.status(500).json({ err }));
+};
+
+exports.updateUserInfoProfile = async (req, res) => {
+  await models.User.findOne({ where: { id: req.params.id } })
+    .then((user) => {
+      console.log(req.body);
+      const value = req.body.value;
+      switch (req.body.type) {
+        case "username":
+          user.username = value;
+          break;
+
+          case "firstname":
+          user.firstname = value;
+          break;
+
+          case "lastname":
+          user.lastname = value;
+          break;
+      
+        default:
+          res.status(500).json({ "Fetch error": "the data can not be updated"})
+          break;
+      }
+      user.save();
+    })
+    .then((res) => res.status(200).json({ photoProfile: "updated" }))
+    .catch((err) => res.status(600).json({ err }));
 };
 
 /*

@@ -149,7 +149,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           <Card.Title as="p">
             <Row>
               <Col xs="1" md="1">
-                <img src={post.User.attachment} className="threadIconProfile" />
+                <img src={post.User.attachment} className="threadIconProfile" alt={`Profile of ${post.User.username}`}/>
               </Col>
               <Col xs="7" md="9">
                 {post.User.username}

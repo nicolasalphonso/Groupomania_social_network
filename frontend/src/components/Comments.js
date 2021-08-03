@@ -22,8 +22,6 @@ const dateOptions = {
   minute: "numeric",
 };
 
-let data = JSON.parse(localStorage.getItem("ReponseServeur"));
-
 function Comments({ comments, setLoadComments, userId }) {
   // usestate to set the display of the modify comment div
   const [displayModifyComment, setdisplayModifyComment] = useState(false);
@@ -104,7 +102,7 @@ function Comments({ comments, setLoadComments, userId }) {
                     <img
                       className="commentPhotoProfile"
                       src={comment.User.attachment}
-                      alt={`Profile photo of ${comment.User.username}`}
+                      alt={`Profile of ${comment.User.username}`}
                     />
                   </Col>
                   <Col xs="11">
