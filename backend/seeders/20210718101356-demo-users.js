@@ -1,5 +1,5 @@
 "use strict";
-require('dotenv').config();
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { Hash } = require("crypto");
 const cryptojs = require("crypto-js");
@@ -21,14 +21,12 @@ module.exports = {
         firstname: "John",
         lastname: "Doe",
         email: cryptojs
-          .HmacSHA256(
-            "johndoe@groupomania.com",
-            process.env.EMAIL_KEY_SECRET
-          )
+          .HmacSHA256("johndoe@groupomania.com", process.env.EMAIL_KEY_SECRET)
           .toString(),
         username: "johndoe",
         password: await bcrypt.hash("password", 10),
-        bio: "lorem ipsum",
+        attachment: "images/John.jpg",
+        bio: "Call me Mr X",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -45,7 +43,8 @@ module.exports = {
           .toString(),
         username: "nicolasalphonso",
         password: await bcrypt.hash("password", 10),
-        bio: "lorem ipsum",
+        bio: "Admin depuis toujours",
+        attachment: "images/Nicolas.jpg",
         isAdmin: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -62,7 +61,8 @@ module.exports = {
           .toString(),
         username: "nancyalphonso",
         password: await bcrypt.hash("password", 10),
-        bio: "lorem ipsum",
+        bio: "La beauté au naturel !!!! :D",
+        attachment: "images/Nancy.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -79,7 +79,8 @@ module.exports = {
           .toString(),
         username: "jamesbrown",
         password: await bcrypt.hash("password", 10),
-        bio: "lorem ipsum",
+        bio: "Avec un nom comme le mien, je ne pouvais qu'être musicien",
+        attachment: "images/James.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -96,7 +97,8 @@ module.exports = {
           .toString(),
         username: "serenawilliams",
         password: await bcrypt.hash("password", 10),
-        bio: "lorem ipsum",
+        bio: "Le tennis, c'est ma passion",
+        attachment: "images/Serena.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -114,6 +116,7 @@ module.exports = {
         username: "abdoulkachama",
         password: await bcrypt.hash("password", 10),
         bio: "lorem ipsum",
+        attachment: "images/Abdoul.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -131,6 +134,7 @@ module.exports = {
         username: "suzannemakanaki",
         password: await bcrypt.hash("password", 10),
         bio: "lorem ipsum",
+        attachment: "images/Suzanne.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -148,6 +152,7 @@ module.exports = {
         username: "antoinedurand",
         password: await bcrypt.hash("password", 10),
         bio: "lorem ipsum",
+        attachment: "images/Antoine.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -165,6 +170,7 @@ module.exports = {
         username: "delphinecossard",
         password: await bcrypt.hash("password", 10),
         bio: "lorem ipsum",
+        attachment: "images/Delphine.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -182,6 +188,7 @@ module.exports = {
         username: "henriettedupond",
         password: await bcrypt.hash("password", 10),
         bio: "lorem ipsum",
+        attachment: "images/Henriette.jpg",
         isAdmin: 0,
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -34,6 +34,9 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
+      attachment: {
+        type: Sequelize.STRING,
+      },
       isAdmin: {
         allowNull: false,
         defaultValue: 0,

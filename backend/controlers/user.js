@@ -27,6 +27,8 @@ const { getMaxListeners } = require("process");
 // importation de email-validator
 const validator = require("email-validator");
 
+const fs = require("fs"); // import of FS to modify the file system
+
 // enregistrement de nouveaux utilisateurs
 
 exports.signup = async (req, res, next) => {
@@ -56,7 +58,7 @@ exports.signup = async (req, res, next) => {
     .symbols(); // Doit contenir au moins un symbole
 
   const validationMDP = schema.validate(req.body.password);
-  
+
   const validationEmail = validator.validate(req.body.email);
 
   if (validationMDP && validationEmail) {
@@ -107,7 +109,7 @@ exports.login = (req, res, next) => {
     .toString();
 
   // on cherche dans bdd le user correspondant à l'adresse email
-  models.User.findOne({ where: {email: adresseRequeteCryptee }})
+  models.User.findOne({ where: { email: adresseRequeteCryptee } })
     // on vérifie d'abord que l'utilisateur existe
     .then((user) => {
       if (!user) {
@@ -129,29 +131,62 @@ exports.login = (req, res, next) => {
             { userId: user.id, isAdmin: user.isAdmin },
             process.env.RANDOM_TOKEN_SECRET,
             { expiresIn: "4h" }
-            );
-            
-          res
-          .status(200)
-          .cookie("token", token)
-          .json({
+          );
+
+          res.status(200).cookie("token", token).json({
             userId: user.id,
             token: token,
           });
-          
         })
 
         .catch((error) => res.status(500).json({ error }));
-        })
-      .catch((error) => res.status(500).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
 
+exports.getUserProfile = async (req, res, next) => {
+  await models.User.findOne({ where: { id: req.params.id } }).then((data) => {
+    res.status(200).json({ data });
+  });
+};
+
+exports.updateUserPhotoProfile = async (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
+  await models.User.findOne({ where: { id: req.params.id } })
+    .then((user) => {
+      const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`;
+      user.attachment = attachmentUrl;
+      user.save();
+
+      if (
+        req.body.previousImageUrl.split("/images/")[0] ===
+        `${req.protocol}://${req.get("host")}`
+      ) {
+        const previousImageName =
+          req.body.previousImageUrl.split("/images/")[1];
+        console.log(previousImageName);
+        
+        fs.unlink(`images/${previousImageName}`, (err) => {
+          if (err) throw err;
+        });
+        
+      }
+    })
+    .then((res) => res.status(200).json({ photoProfile: "updated" }))
+    .catch((err) => res.status(500).json({ err }));
+};
+
+/*
 // liste de tous utilisateurs existants
 exports.usersList = (req, res, next) => {
 
-  // on cherche dans bdd le user correspondant à l'adresse email
+  // on cherche dans la bdd tous les utilisateurs
   models.User.findAll()
     // on vérifie d'abord que l'utilisateur existe
-    .then((usersList) => res.status(200).json(usersList)) // on retourne le tableau des sauces
+    .then((usersList) => res.status(200).json(usersList)) // on retourne le tableau des utilisateurs
     .catch((error) => res.status(400).json({ error }));
 };
+*/

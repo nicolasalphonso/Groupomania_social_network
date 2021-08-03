@@ -1,9 +1,29 @@
 .profileCard {
-
-    margin-top: 150px;
-  .card-img {
+    margin-top: 100px;
+    max-width: 500px;
+  .img-thumbnail {
     height: 200px;
     width: 200px;
     border-radius: 50%;
+    object-fit:cover;
   }
+
+  .formProfile {
+    margin: 15px 20px;
+  }
+
+  .formErrors {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  .nameDisplay {
+    font-size: x-large;
+  }
+
+  .btn {
+    margin-left: 15px;
+  }
+
+  
 }

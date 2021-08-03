@@ -259,12 +259,27 @@ nav {
 }
 
 .profileCard {
-  margin-top: 150px;
+  margin-top: 100px;
+  max-width: 500px;
 }
-.profileCard .card-img {
+.profileCard .img-thumbnail {
   height: 200px;
   width: 200px;
   border-radius: 50%;
+  object-fit: cover;
+}
+.profileCard .formProfile {
+  margin: 15px 20px;
+}
+.profileCard .formErrors {
+  color: red;
+  margin-bottom: 10px;
+}
+.profileCard .nameDisplay {
+  font-size: x-large;
+}
+.profileCard .btn {
+  margin-left: 15px;
 }
 
 /*# sourceMappingURL=index.css.map */
