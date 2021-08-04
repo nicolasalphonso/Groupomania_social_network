@@ -7,30 +7,28 @@ import Nav from "react-bootstrap/Nav";
 const NavigationBar = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" fixed="top">
-    <Container>
-    <Nav.Link href="">
-    <Navbar.Brand href="/home">
-          <img
-            alt="groupomania logo"
-            src="./images/icon-nav.png"
-            height="40"
-            className="d-inline-block align-center"
-          />
-        </Navbar.Brand>
+      <Container>
+        <Nav.Link href="/home">
+          <Navbar.Brand>
+            <img
+              alt="groupomania logo"
+              src="./images/icon-nav.png"
+              height="40"
+              className="d-inline-block align-center"
+            />
+          </Navbar.Brand>
         </Nav.Link>
-    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-    <Navbar.Collapse id="responsive-navbar-nav">
-      <Nav className="me-auto">
-      </Nav>
-      <Nav>
-      <Nav.Link href="/home">News</Nav.Link>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto"></Nav>
+          <Nav>
+            <Nav.Link href="/home">News</Nav.Link>
             <Nav.Link href="/profile">Profile</Nav.Link>
             <Nav.Link href="/">Logout</Nav.Link>
-      </Nav>
-    </Navbar.Collapse>
-    </Container>
-  </Navbar>
-
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 

@@ -106,7 +106,7 @@ function Comments({ comments, setLoadComments, userId }) {
                     />
                   </Col>
                   <Col xs="11">
-                    <div class="row userAndContent">
+                    <div className="row userAndContent">
                       <Row>
                         <Col xs="9">
                           {comment.User.username} -

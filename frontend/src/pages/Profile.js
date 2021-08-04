@@ -1,13 +1,13 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import PersonalProfile from '../components/PersonalProfile';
+import ProfileContainer from '../components/ProfileContainer';
 
 const Profile = () => {
 
     return (
         <div>
             <Navbar />
-            <PersonalProfile />
+            <ProfileContainer />
         </div>
     );
 };

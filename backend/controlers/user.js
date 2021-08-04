@@ -29,34 +29,33 @@ const validator = require("email-validator");
 
 const fs = require("fs"); // import of FS to modify the file system
 
+// Create a schema
+var schema = new passwordValidator();
+
+// Propriétés du mot de passe
+schema
+  .is()
+  .min(8) // Taille minimale 8
+  .is()
+  .max(12) // Taille maximale 12
+  .has()
+  .uppercase() // Contient au moins une majuscule
+  .has()
+  .lowercase() // Contient au moins une minuscule
+  .has()
+  .digits(2) // Doit contenir au moins 2 chiffres
+  .has()
+  .not()
+  .spaces() // Ne doit pas contenir d'espace
+  .has()
+  .symbols(); // Doit contenir au moins un symbole
+
 // enregistrement de nouveaux utilisateurs
 
 exports.signup = async (req, res, next) => {
   /* Todo validation des inputs utilisateurs (taille des champs, valeurs, 
   ...
   */
-
-  // Create a schema
-  var schema = new passwordValidator();
-
-  // Propriétés du mot de passe
-  schema
-    .is()
-    .min(8) // Taille minimale 8
-    .is()
-    .max(12) // Taille maximale 12
-    .has()
-    .uppercase() // Contient au moins une majuscule
-    .has()
-    .lowercase() // Contient au moins une minuscule
-    .has()
-    .digits(2) // Doit contenir au moins 2 chiffres
-    .has()
-    .not()
-    .spaces() // Ne doit pas contenir d'espace
-    .has()
-    .symbols(); // Doit contenir au moins un symbole
-
   const validationMDP = schema.validate(req.body.password);
 
   const validationEmail = validator.validate(req.body.email);
@@ -95,7 +94,7 @@ exports.signup = async (req, res, next) => {
     } else {
       res.status(400).json({
         error:
-          "Le mot de passe doit contenir au moins une minuscule, une majuscule, un caractère spécial, 2 chiffres. Il doit faire entre 8 et 12 caractères ",
+          "Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
       });
     }
   }
@@ -166,11 +165,10 @@ exports.updateUserPhotoProfile = async (req, res) => {
         const previousImageName =
           req.body.previousImageUrl.split("/images/")[1];
         console.log(previousImageName);
-        
+
         fs.unlink(`images/${previousImageName}`, (err) => {
           if (err) throw err;
         });
-        
       }
     })
     .then((res) => res.status(200).json({ photoProfile: "updated" }))
@@ -187,32 +185,49 @@ exports.updateUserInfoProfile = async (req, res) => {
           user.username = value;
           break;
 
-          case "firstname":
+        case "firstname":
           user.firstname = value;
           break;
 
-          case "lastname":
+        case "lastname":
           user.lastname = value;
           break;
-      
+
+        case "email":
+          const isValidEmail = validator.validate(value);
+          if (isValidEmail) {
+            user.email = cryptojs
+              .HmacSHA256(value, process.env.EMAIL_KEY_SECRET)
+              .toString();
+          } else {
+            res
+              .status(400)
+              .json({ emailerror: "the email address is not valid" });
+          }
+          break;
+
+        case "password":
+          const isValidPassword = schema.validate(value);
+          if (isValidPassword) {
+            user.password = bcrypt.hash(value, 10);
+          } else {
+            res
+              .status(400)
+              .json({
+                passworderror:
+                  "the password is not valid : Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
+              });
+          }
+          break;
+
         default:
-          res.status(500).json({ "Fetch error": "the data can not be updated"})
+          res
+            .status(500)
+            .json({ "error": "the data can not be updated" });
           break;
       }
       user.save();
     })
-    .then((res) => res.status(200).json({ photoProfile: "updated" }))
-    .catch((err) => res.status(600).json({ err }));
+    .then((res) => res.status(200).json({ infoProfile: "updated" }))
+    .catch((err) => res.status(500).json({ err }));
 };
-
-/*
-// liste de tous utilisateurs existants
-exports.usersList = (req, res, next) => {
-
-  // on cherche dans la bdd tous les utilisateurs
-  models.User.findAll()
-    // on vérifie d'abord que l'utilisateur existe
-    .then((usersList) => res.status(200).json(usersList)) // on retourne le tableau des utilisateurs
-    .catch((error) => res.status(400).json({ error }));
-};
-*/

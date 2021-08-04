@@ -146,7 +146,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
       </p>
       <Card>
         <Card.Body>
-          <Card.Title as="p">
+          <Card.Title className="postPosterInfos">
             <Row>
               <Col xs="1" md="1">
                 <img src={post.User.attachment} className="threadIconProfile" alt={`Profile of ${post.User.username}`}/>
@@ -220,7 +220,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
           <Row>
             <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>
               <Col xs="3">
-                <label for={`addComment${post.id}`}>Add a comment</label>
+                <label htmlFor={`addComment${post.id}`}>Add a comment</label>
               </Col>
               <Col xs="9">
                 <input

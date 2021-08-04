@@ -44,6 +44,7 @@ const LoginForm = () => {
         id="email"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
+        autoComplete="email"
       />
       <label htmlFor="password">Password</label>
       <input
@@ -52,6 +53,7 @@ const LoginForm = () => {
         id="password"
         onChange={(e) => setPassword(e.target.value)}
         value={password}
+        autoComplete="current-password"
       />
       <input type="submit" value="login" />
       <div id="loginError"></div>

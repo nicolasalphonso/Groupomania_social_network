@@ -4,8 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 function isEmpty(obj) {
   for (var key in obj) {
@@ -19,42 +18,18 @@ function nameFormat(name) {
   return name[0].toUpperCase() + name.substring(1).toLowerCase();
 }
 
-function PersonalProfile() {
-  const [userToDisplay, setUserToDisplay] = useState(null);
-  const [loadProfile, setLoadProfile] = useState(true);
-  const [newPhoto, setNewPhoto] = useState(null);
+function PersonalProfile({setLoadProfile, userToDisplay}) {
   const [newUsername, setNewUsername] = useState("");
   const [newFirstname, setNewFirstname] = useState("");
   const [newLastname, setNewLastname] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [confirmNewEmail, setConfirmNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
   // setting the options for the authenticated request
   const userId = data.userId;
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:7000/api/auth/profile/${userId}`, {
-        headers: {
-          Authorization: `bearer ${data.token}`,
-        },
-      })
-      .then((response) => {
-        setUserToDisplay(response.data);
-        setNewFirstname(userToDisplay.data.firstname);
-        setNewLastname(userToDisplay.data.lastname);
-        setNewUsername(userToDisplay.data.username);
-        setNewEmail(userToDisplay.data.email);
-        setNewPassword(userToDisplay.data.password);
-      })
-      .catch((error) => {
-        console.error("Error fetching data: ", error);
-      })
-      .finally(() => {
-        setLoadProfile(false);
-      });
-  }, [loadProfile, data.token, userId]);
 
   async function updatePhoto(e) {
     e.preventDefault();
@@ -111,19 +86,39 @@ function PersonalProfile() {
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
+        
         setLoadProfile(true);
       })
       .catch((error) => console.log(error));
 
-    setLoadProfile(true);
+      setLoadProfile(true);
   }
 
-  async function handleUpdateEmail(e, newEmail) {
-    console.log("appel de update email");
+  function handleUpdateEmail(e, value, confirmValue) {
+    e.preventDefault();
+    document.getElementById("emailErrors").innerHTML = "";
+    if (value === confirmValue) {
+      handleUpdateData(e, "email", value);
+    } else {
+      document.getElementById("emailErrors").innerHTML =
+        "Les adresses mail ne correspondent pas";
+      return;
+    }
+
+    
   }
 
-  async function handleUpdatePassword(e, newPassword) {
-    console.log("appel de update password");
+  function handleUpdatePassword(e, value, confirmValue) {
+    e.preventDefault();
+    document.getElementById("passwordErrors").innerHTML = "";    
+    if (value === confirmValue) {
+      handleUpdateData(e, "password", value);
+    } else {
+      document.getElementById("passwordErrors").innerHTML =
+        "Les mots de passe ne correspondent pas";
+      return;
+    }
+
   }
 
   function offFocus(element) {
@@ -174,8 +169,7 @@ function PersonalProfile() {
                 <Form.Group className="mb-3" controlId="newPhoto">
                   <Form.Label>Choose a new photo </Form.Label>
                   <Form.Control
-                    onChange={(e) => {
-                      setNewPhoto(e.target.files[0]);
+                    onChange={(e) => {               
                       handlePreview();
                     }}
                     type="file"
@@ -216,11 +210,16 @@ function PersonalProfile() {
               }}
             >
               Username{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify username" />
+              <img
+                src="icones/edit.svg"
+                className="profileModifyIcon"
+                alt="modify username"
+              />
             </Form.Label>
             <Form.Control
               type="input"
               value={newUsername}
+              placeholder={userToDisplay.data.username}
               readOnly
               plaintext
               onChange={(e) => setNewUsername(e.target.value)}
@@ -247,11 +246,16 @@ function PersonalProfile() {
               }}
             >
               Firstname{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify firstname"/>
+              <img
+                src="icones/edit.svg"
+                className="profileModifyIcon"
+                alt="modify firstname"
+              />
             </Form.Label>
             <Form.Control
               type="input"
               value={newFirstname}
+              placeholder={userToDisplay.data.firstname}
               readOnly
               plaintext
               onChange={(e) => setNewFirstname(e.target.value)}
@@ -278,12 +282,16 @@ function PersonalProfile() {
               }}
             >
               Lastname{" "}
-              <img src="icones/edit.svg" className="profileModifyIcon" alt="modify lastname"/>
+              <img
+                src="icones/edit.svg"
+                className="profileModifyIcon"
+                alt="modify lastname"
+              />
             </Form.Label>
             <Form.Control
-              
               type="input"
               value={newLastname}
+              placeholder={userToDisplay.data.lastname}
               readOnly
               plaintext
               onChange={(e) => setNewLastname(e.target.value)}
@@ -296,16 +304,28 @@ function PersonalProfile() {
         </Form>
 
         <div className="formProfile">
-          <Form>
+          <Form
+            onSubmit={(e) => handleUpdateEmail(e, newEmail, confirmNewEmail)}
+          >
             <Form.Group className="mb-3" controlId="formEmail">
               <Form.Label>New email </Form.Label>
-              <Form.Control type="email" placeholder="Enter new email" />
+              <Form.Control
+                type="email"
+                placeholder="Enter new email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
             </Form.Group>
             <div id="emailErrors" className="formErrors"></div>
 
             <Form.Group className="mb-3" controlId="formConfirmEmail">
               <Form.Label>Confirm new email</Form.Label>
-              <Form.Control type="email" placeholder="Confirm new email" />
+              <Form.Control
+                type="email"
+                placeholder="Confirm new email"
+                value={confirmNewEmail}
+                onChange={(e) => setConfirmNewEmail(e.target.value)}
+              />
             </Form.Group>
             <Button variant="secondary" type="submit">
               Modify my email
@@ -317,10 +337,20 @@ function PersonalProfile() {
         </div>
 
         <div className="formProfile">
-          <Form>
+          <Form
+            onSubmit={(e) =>
+              handleUpdatePassword(e, newPassword, confirmNewPassword)
+            }
+          >
             <Form.Group className="mb-3" controlId="formPassword">
               <Form.Label>New password </Form.Label>
-              <Form.Control type="password" placeholder="Enter new password" />
+              <Form.Control
+                type="password"
+                placeholder="Enter new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
+              />
             </Form.Group>
             <div id="passwordErrors" className="formErrors"></div>
           </Form>
@@ -331,6 +361,9 @@ function PersonalProfile() {
               <Form.Control
                 type="password"
                 placeholder="Confirm new password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                autoComplete="new-password"
               />
             </Form.Group>
             <Button variant="secondary" type="submit">
