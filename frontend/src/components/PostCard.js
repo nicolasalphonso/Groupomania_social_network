@@ -18,12 +18,11 @@ const dateOptions = {
   minute: "numeric",
 };
 
-// setting the options for the authenticated request
-let data = JSON.parse(localStorage.getItem("ReponseServeur"));
-let userId = data.userId;
-
 ////////////
-const PostCard = ({ post, setLoadPosts, posts }) => {
+const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, setProfileToDisplay }) => {
+  // setting the options for the authenticated request
+  let data = JSON.parse(localStorage.getItem("ReponseServeur"));
+  let userId = data.userId;
   // setting of an array of likers from post.likers
   let likersIdString = JSON.parse(post.likers);
   let likersArray = [];
@@ -41,11 +40,9 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
   const [userLiked, setUserLiked] = useState(likersArray.includes(userId));
   // usestate for the comment contents set
   const [commentContent, setCommentContent] = useState("");
-// usestates to update and re-render the comments
+  // usestates to update and re-render the comments
   const [loadComments, setLoadComments] = useState(true);
   const [comments, setComments] = useState("");
-
-  
 
   // function to handle click on "like" button
   async function handleLike() {
@@ -90,7 +87,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
     }
   }
 
-// useEffect to re-render the comments
+  // useEffect to re-render the comments
   useEffect(() => {
     if (loadComments) {
       axios
@@ -103,7 +100,7 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
         .catch((error) => console.log(error));
     }
     setLoadComments(false);
-  }, [loadComments, post.id]);
+  }, [loadComments, post.id, data.token]);
 
   // function to post a comment
   async function handlePostComment(userId, postId, e) {
@@ -147,11 +144,21 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
       <Card>
         <Card.Body>
           <Card.Title className="postPosterInfos">
-            <Row>
-              <Col xs="1" md="1">
-                <img src={post.User.attachment} className="threadIconProfile" alt={`Profile of ${post.User.username}`}/>
+            <Row >
+              <Col xs="1" md="1" onClick={() => {
+              setProfileToDisplay(post.User);
+              setShowOtherProfile(true);
+            }}>
+                <img
+                  src={post.User.attachment}
+                  className="threadIconProfile"
+                  alt={`Profile of ${post.User.username}`}
+                />
               </Col>
-              <Col xs="7" md="9">
+              <Col xs="7" md="9" onClick={() => {
+              setProfileToDisplay(post.User);
+              setShowOtherProfile(true);
+            }}>
                 {post.User.username}
                 <br />
                 {new Date(post.createdAt).toLocaleDateString(
@@ -159,30 +166,33 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
                   dateOptions
                 )}
               </Col>
-              <Col xs="4" md="2">
-                {post.User.id === userId && (
+              
+                <Col xs="4" md="2">
                   <Row>
-                    <Col xs="6">
-                      <img
-                        src="icones/modify.png"
-                        alt="Modify post"
-                        className="posts__icon btn-modify"
-                        onClick={() => {
-                          setShowModifyForm(true);
-                        }}
-                      />
-                    </Col>
-                    <Col xs="6">
-                      <img
-                        src="icones/delete.png"
-                        alt="Delete post"
-                        className="posts__icon btn-delete"
-                        onClick={() => deletePost(post.id)}
-                      />
-                    </Col>
+                    {post.User.id === userId ? (
+                      <Col xs="6">
+                        <img
+                          src="icones/modify.png"
+                          alt="Modify post"
+                          className="posts__icon btn-modify"
+                          onClick={() => {
+                            setShowModifyForm(true);
+                          }}
+                        />
+                      </Col>
+                    ) : null }
+                    {(post.User.id === userId || isAdmin) ? (
+                      <Col xs="6">
+                        <img
+                          src="icones/delete.png"
+                          alt="Delete post"
+                          className="posts__icon btn-delete"
+                          onClick={() => deletePost(post.id)}
+                        />
+                      </Col>
+                    ) : null}
                   </Row>
-                )}
-              </Col>
+                </Col>
             </Row>
           </Card.Title>
           <Card.Text className="displayLineBreak">
@@ -190,7 +200,12 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             {newContent}
           </Card.Text>
         </Card.Body>
-        {post.attachment !== "NULL" && <Card.Img src={post.attachment} alt={`Photo postée par ${post.User.username}`}/>}
+        {post.attachment !== "NULL" && (
+          <Card.Img
+            src={post.attachment}
+            alt={`Photo postée par ${post.User.username}`}
+          />
+        )}
         <Card.Footer>
           <Row>
             <Col className="text-center">
@@ -208,6 +223,9 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             </Col>
             <Col className="text-center">
               <img
+              onClick={() => {
+                document.getElementById(`addComment${post.id}`).focus();
+              }}
                 src="icones/comment.png"
                 alt="Comment post"
                 className="posts__icon btn-comment"
@@ -215,7 +233,15 @@ const PostCard = ({ post, setLoadPosts, posts }) => {
             </Col>
           </Row>
           <Row>
-            <Comments postId={post.id} comments={comments} setLoadComments={setLoadComments} userId={userId}/>
+            <Comments
+              postId={post.id}
+              comments={comments}
+              setLoadComments={setLoadComments}
+              userId={userId}
+              isAdmin={isAdmin}
+              setShowOtherProfile={setShowOtherProfile}
+              setProfileToDisplay={setProfileToDisplay}
+            />
           </Row>
           <Row>
             <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>

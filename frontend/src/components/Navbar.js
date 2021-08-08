@@ -5,6 +5,12 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 
 const NavigationBar = () => {
+function handleLogout() {
+ if( window.confirm("Do you really want to log out !")) {
+  localStorage.removeItem("ReponseServeur");
+ }
+}
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" fixed="top">
       <Container>
@@ -24,7 +30,7 @@ const NavigationBar = () => {
           <Nav>
             <Nav.Link href="/home">News</Nav.Link>
             <Nav.Link href="/profile">Profile</Nav.Link>
-            <Nav.Link href="/">Logout</Nav.Link>
+            <Nav.Link href="/" onClick={() => handleLogout()}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

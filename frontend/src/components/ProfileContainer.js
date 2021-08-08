@@ -4,12 +4,12 @@ import PersonalProfile from "./PersonalProfile";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
-// setting the options for the authenticated request
-const userId = data.userId;
 
 function ProfileContainer() {
+  const data = JSON.parse(localStorage.getItem("ReponseServeur"));
+// setting the options for the authenticated request
+const userId = data.userId;
   const [loadProfile, setLoadProfile] = useState(true);
   const [userToDisplay, setUserToDisplay] = useState(null);
 
@@ -31,7 +31,7 @@ function ProfileContainer() {
           setLoadProfile(false);
         });
     }
-  }, [loadProfile]);
+  }, [loadProfile, data.token, userId]);
 
   return (
     <Container>

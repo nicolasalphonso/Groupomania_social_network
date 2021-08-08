@@ -52,7 +52,7 @@ schema
 
 // enregistrement de nouveaux utilisateurs
 
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   /* Todo validation des inputs utilisateurs (taille des champs, valeurs, 
   ...
   */
@@ -101,7 +101,7 @@ exports.signup = async (req, res, next) => {
 };
 
 // connexion des utilisateurs existants
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   // on crypte l'adresse email fournie pour la comparer ensuite à ce qui se trouve dans la bdd
   const adresseRequeteCryptee = cryptojs
     .HmacSHA256(req.body.email, process.env.EMAIL_KEY_SECRET)
@@ -143,25 +143,43 @@ exports.login = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-exports.getUserProfile = async (req, res, next) => {
-  await models.User.findOne({ where: { id: req.params.id } }).then((data) => {
+exports.getUserProfile = async (req, res) => {
+  const data = await models.User.findOne({ where: { id: req.params.id } });
+
+  if (data === null) {
+    res.status(500).json({ error: "user not found" });
+  } else {
     res.status(200).json({ data });
-  });
+  }
 };
 
+/** This is a description of the updateUserPhotoProfile function.
+ * if user is found by his id (primary key) we delete the previous image
+ * and update the profile with the new one
+ */
 exports.updateUserPhotoProfile = async (req, res) => {
-  await models.User.findOne({ where: { id: req.params.id } })
-    .then((user) => {
+  const userIdFromParams = req.params.id;
+const token = req.headers.authorization.split(' ')[1];
+
+
+  // find user by the primary key (id)
+  const user = await models.User.findByPk(req.params.id);
+
+  if (user === null) {
+    res.status(500).json({ error: "user not found" });
+  } else {
+    try {
+      // we set the URL of the new image
       const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
         req.file.filename
       }`;
-      user.attachment = attachmentUrl;
-      user.save();
 
+      // we check that the image doesn't belong to the "seeders"  directory
       if (
         req.body.previousImageUrl.split("/images/")[0] ===
         `${req.protocol}://${req.get("host")}`
       ) {
+        // we delete the previous image
         const previousImageName =
           req.body.previousImageUrl.split("/images/")[1];
         console.log(previousImageName);
@@ -170,15 +188,28 @@ exports.updateUserPhotoProfile = async (req, res) => {
           if (err) throw err;
         });
       }
-    })
-    .then((res) => res.status(200).json({ photoProfile: "updated" }))
-    .catch((err) => res.status(500).json({ err }));
+
+      //update of the user with the new attachment
+      user.attachment = attachmentUrl;
+      user.save();
+      res.status(200).json({ photoProfile: "updated" });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
 };
 
+/**
+ * 
+ */
 exports.updateUserInfoProfile = async (req, res) => {
-  await models.User.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      console.log(req.body);
+  // find user by the primary key (id)
+  const user = await models.User.findByPk(req.params.id);
+
+  if (user === null) {
+    res.status(500).json({ error: "user not found" });
+  } else {
+    try {
       const value = req.body.value;
       switch (req.body.type) {
         case "username":
@@ -211,23 +242,26 @@ exports.updateUserInfoProfile = async (req, res) => {
           if (isValidPassword) {
             user.password = bcrypt.hash(value, 10);
           } else {
-            res
-              .status(400)
-              .json({
-                passworderror:
-                  "the password is not valid : Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
-              });
+            res.status(400).json({
+              passworderror:
+                "the password is not valid : Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
+            });
           }
           break;
 
         default:
-          res
-            .status(500)
-            .json({ "error": "the data can not be updated" });
+          res.status(500).json({ error: "the data can not be updated" });
           break;
       }
+
       user.save();
-    })
-    .then((res) => res.status(200).json({ infoProfile: "updated" }))
-    .catch((err) => res.status(500).json({ err }));
+      res.status(200).json({ infoProfile: `updated ${type}` });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+};
+
+exports.deleteUserProfile = async (req, res) => {
+console.log("delete user profile")
 };

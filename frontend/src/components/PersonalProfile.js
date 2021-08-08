@@ -18,7 +18,7 @@ function nameFormat(name) {
   return name[0].toUpperCase() + name.substring(1).toLowerCase();
 }
 
-function PersonalProfile({setLoadProfile, userToDisplay}) {
+function PersonalProfile({ setLoadProfile, userToDisplay }) {
   const [newUsername, setNewUsername] = useState("");
   const [newFirstname, setNewFirstname] = useState("");
   const [newLastname, setNewLastname] = useState("");
@@ -86,12 +86,12 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        
+
         setLoadProfile(true);
       })
       .catch((error) => console.log(error));
 
-      setLoadProfile(true);
+    setLoadProfile(true);
   }
 
   function handleUpdateEmail(e, value, confirmValue) {
@@ -104,13 +104,11 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
         "Les adresses mail ne correspondent pas";
       return;
     }
-
-    
   }
 
   function handleUpdatePassword(e, value, confirmValue) {
     e.preventDefault();
-    document.getElementById("passwordErrors").innerHTML = "";    
+    document.getElementById("passwordErrors").innerHTML = "";
     if (value === confirmValue) {
       handleUpdateData(e, "password", value);
     } else {
@@ -118,7 +116,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
         "Les mots de passe ne correspondent pas";
       return;
     }
-
   }
 
   function offFocus(element) {
@@ -169,7 +166,7 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
                 <Form.Group className="mb-3" controlId="newPhoto">
                   <Form.Label>Choose a new photo </Form.Label>
                   <Form.Control
-                    onChange={(e) => {               
+                    onChange={(e) => {
                       handlePreview();
                     }}
                     type="file"
@@ -194,7 +191,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
             </div>
           </Col>
         </Row>
-
         <Form
           className="formProfile"
           onSubmit={(e) => {
@@ -230,7 +226,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
           </Form.Group>
           <div id="usernameErrors" className="formErrors"></div>
         </Form>
-
         <Form
           className="formProfile"
           onSubmit={(e) => {
@@ -266,7 +261,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
           </Form.Group>
           <div id="firstnameErrors" className="formErrors"></div>
         </Form>
-
         <Form
           className="formProfile"
           onSubmit={(e) => {
@@ -302,7 +296,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
           </Form.Group>
           <div id="lastnameErrors" className="formErrors"></div>
         </Form>
-
         <div className="formProfile">
           <Form
             onSubmit={(e) => handleUpdateEmail(e, newEmail, confirmNewEmail)}
@@ -335,7 +328,6 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
             </Button>
           </Form>
         </div>
-
         <div className="formProfile">
           <Form
             onSubmit={(e) =>
@@ -374,15 +366,7 @@ function PersonalProfile({setLoadProfile, userToDisplay}) {
             </Button>
           </Form>
         </div>
-
-        {userToDisplay.data.isAdmin && (
-          <Form className="formProfile">
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="radio" label="Admin" name="isAdmin" checked />
-              <Form.Check type="radio" label="Not Admin" name="isAdmin" />
-            </Form.Group>
-          </Form>
-        )}
+        <Button variant="danger">Delete Account</Button>{" "}
       </Container>
     )
   );

@@ -1,6 +1,13 @@
 .profileCard {
   margin-top: 100px;
   max-width: 500px;
+  .close {
+    font-size: xx-large;
+    font-weight: bold;
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+  }
   .img-thumbnail {
     height: 200px;
     width: 200px;

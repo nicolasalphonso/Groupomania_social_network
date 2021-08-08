@@ -277,9 +277,20 @@ nav {
   margin-right: 0;
 }
 
+input {
+  color: black;
+}
+
 .profileCard {
   margin-top: 100px;
   max-width: 500px;
+}
+.profileCard .close {
+  font-size: xx-large;
+  font-weight: bold;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
 }
 .profileCard .img-thumbnail {
   height: 200px;

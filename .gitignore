@@ -25,6 +25,7 @@
 
 # secrets
 /backend/.env
+/frontend/.env
 
 # logs
 backend/seeders/.env

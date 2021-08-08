@@ -22,7 +22,7 @@ const dateOptions = {
   minute: "numeric",
 };
 
-function Comments({ comments, setLoadComments, userId }) {
+function Comments({ comments, setLoadComments, userId, isAdmin, setProfileToDisplay, setShowOtherProfile }) {
   // usestate to set the display of the modify comment div
   const [displayModifyComment, setdisplayModifyComment] = useState(false);
   // usestate for the text to modify the comment
@@ -32,7 +32,7 @@ function Comments({ comments, setLoadComments, userId }) {
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
   async function handleDeleteComment(comment) {
-    if (userId === comment.User.id) {
+    if (userId === comment.User.id || isAdmin) {
       if (window.confirm("Delete your comment ?")) {
         await axios
           .delete(`http://localhost:7000/api/comments/${comment.id}`, {
@@ -98,7 +98,14 @@ function Comments({ comments, setLoadComments, userId }) {
             return (
               <li key={comment.id}>
                 <Row>
-                  <Col xs="1" className="m-auto">
+                  <Col
+                    xs="1"
+                    className="m-auto"
+                    onClick={() => {
+                      setProfileToDisplay(comment.User);
+                      setShowOtherProfile(true);
+                    }}
+                  >
                     <img
                       className="commentPhotoProfile"
                       src={comment.User.attachment}
@@ -117,9 +124,10 @@ function Comments({ comments, setLoadComments, userId }) {
                             )}
                           </span>
                         </Col>
-                        {comment.User.id === userId && (
-                          <Col xs="3">
-                            <Row>
+
+                        <Col xs="3">
+                          <Row>
+                            {comment.User.id === userId && (
                               <Col xs="6">
                                 <img
                                   src="icones/edit.svg"
@@ -132,6 +140,9 @@ function Comments({ comments, setLoadComments, userId }) {
                                   }
                                 />
                               </Col>
+                            )}
+
+                            {comment.User.id === userId || isAdmin ? (
                               <Col xs="6">
                                 <img
                                   src="icones/trash.svg"
@@ -140,9 +151,9 @@ function Comments({ comments, setLoadComments, userId }) {
                                   onClick={() => handleDeleteComment(comment)}
                                 />
                               </Col>
-                            </Row>
-                          </Col>
-                        )}
+                            ) : null}
+                          </Row>
+                        </Col>
                       </Row>
                       <Row>
                         <Col>{comment.content}</Col>

@@ -20,7 +20,7 @@ exports.getComments = async (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["username", "id", "attachment"],
+          attributes: ["username", "id", "attachment", "firstname", "lastname", "bio"],
         },
         {
           model: models.Post,
