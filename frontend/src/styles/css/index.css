@@ -281,6 +281,10 @@ input {
   color: black;
 }
 
+.displayModifyComment input {
+  border: solid 2px green;
+}
+
 .profileCard {
   margin-top: 100px;
   max-width: 500px;

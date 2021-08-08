@@ -83,7 +83,8 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
     } else {
       //force the user to relog
       alert("Session issue, please sign in again");
-      window.location("/");
+      localStorage.removeItem("ReponseServeur");
+      window.location.assign("/");
     }
   }
 

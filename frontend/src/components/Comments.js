@@ -22,11 +22,20 @@ const dateOptions = {
   minute: "numeric",
 };
 
-function Comments({ comments, setLoadComments, userId, isAdmin, setProfileToDisplay, setShowOtherProfile }) {
+function Comments({
+  comments,
+  setLoadComments,
+  userId,
+  isAdmin,
+  setProfileToDisplay,
+  setShowOtherProfile,
+}) {
   // usestate to set the display of the modify comment div
   const [displayModifyComment, setdisplayModifyComment] = useState(false);
   // usestate for the text to modify the comment
   const [newComment, setNewComment] = useState("");
+  // usestate to select the comment to modify
+  const [commentToModify, setCommentToModify] = useState(null);
 
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
@@ -133,11 +142,13 @@ function Comments({ comments, setLoadComments, userId, isAdmin, setProfileToDisp
                                   src="icones/edit.svg"
                                   alt="edit your comment"
                                   className="commentIcon"
-                                  onClick={() =>
+                                  onClick={() => {
+                                    setCommentToModify(comment.id);
+                                    setNewComment(comment.content);
                                     setdisplayModifyComment(
                                       !displayModifyComment
-                                    )
-                                  }
+                                    );
+                                  }}
                                 />
                               </Col>
                             )}
@@ -158,21 +169,28 @@ function Comments({ comments, setLoadComments, userId, isAdmin, setProfileToDisp
                       <Row>
                         <Col>{comment.content}</Col>
                       </Row>
-                      {comment.User.id === userId && displayModifyComment && (
-                        /*comment.id === && */ <Form
-                          onSubmit={(e) => handleModifyComment(e, comment)}
-                        >
-                          <Row>
-                            <input
-                              type="text"
-                              id="newComment"
-                              name="newComment"
-                              value={newComment}
-                              onChange={(e) => setNewComment(e.target.value)}
-                            />
-                          </Row>
-                        </Form>
-                      )}
+                      {comment.User.id === userId &&
+                        displayModifyComment &&
+                        commentToModify === comment.id && (
+                          <Form
+                          className="displayModifyComment"
+                            onSubmit={(e) => handleModifyComment(e, comment)}
+                            onBlur={() => {setdisplayModifyComment(false) }}
+                          >
+                            <Row><Col xs="3">Modify your comment :</Col>
+                            <Col xs="9">
+                              <input
+                                type="text"
+                                id={`newComment${comment.id}`}
+                                name={`newComment${comment.id}`}
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                autoFocus
+                              />
+                              </Col>
+                            </Row>
+                          </Form>
+                        )}
                     </div>
                   </Col>
                   <Row>

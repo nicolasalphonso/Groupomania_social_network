@@ -1,12 +1,13 @@
 const models = require("../models"); // import of models
 const fs = require("fs"); // import of FS to modify the file system
 const jwt = require("jsonwebtoken"); // import of JSON web token
-const post = require("../models/post");
+//const post = require("../models/post");
+//const comment = require("../models/comment");
 //const { where } = require("sequelize/types");
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 
 // get all posts
-exports.getAllPosts = async (req, res, next) => {
+exports.getAllPosts = async (req, res) => {
   try {
     const fields = req.query.fields;
     const order = req.query.order;
@@ -19,7 +20,14 @@ exports.getAllPosts = async (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["username", "id", "attachment", "bio", "lastname", "firstname"],
+          attributes: [
+            "username",
+            "id",
+            "attachment",
+            "bio",
+            "lastname",
+            "firstname",
+          ],
         },
       ],
     });
@@ -33,7 +41,7 @@ exports.getAllPosts = async (req, res, next) => {
 };
 
 // Create a post
-exports.createPost = async (req, res, next) => {
+exports.createPost = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
 
@@ -56,27 +64,31 @@ exports.createPost = async (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-/*  modify post with id postId
+/**   modify post with id postId
   use of methods findOne and save
   if req.file, there's an image to compute
   previous image should be deleted
   else only content is updated
 */
-exports.modifyPost = async (req, res, next) => {
+exports.modifyPost = async (req, res) => {
   const newContent = req.body.content;
 
   await models.Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
       if (req.file) {
+        console.log(post.attachment);
+        if (post.attachment !== "NULL") {
+          const previousImageName =
+          post.attachment.split("/images/")[1];
+          fs.unlink(`images/${previousImageName}`, (err) => {
+            if (err) throw err;
+          });
+        }
+
         const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`;
         post.attachment = attachmentUrl;
-        const previousImageName =
-          req.body.previousImageUrl.split("/images/")[1];
-        fs.unlink(`images/${previousImageName}`, (err) => {
-          if (err) throw err;
-        });
       }
 
       post.content = newContent;
@@ -90,25 +102,49 @@ exports.modifyPost = async (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// deleting a post - destroy method
-exports.deletePost = async (req, res, next) => {
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
+/** Function delete post
+ * First delete the comment(s)
+ * Then delete the image of the post
+ * Finally delete the post
+ */
+exports.deletePost = async (req, res) => {
+  try {
+    // first delete all comments associated with the post
+    const commentsToDelete = await models.Comment.findAll({
+      where: { postId: req.params.id },
+    });
+
+    for (i = 0; i < commentsToDelete.length; i++) {
+      let singleCommentToDelete = commentsToDelete[i];
+      singleCommentToDelete.destroy();
+    }
+
+    // select the post to delete
+    const post = await models.Post.findOne({ where: { id: req.params.id } });
+
+    // delete associated image
+    if (post.attachment !== "NULL") {
       const filename = post.attachment.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        models.Post.destroy({
-          where: {
-            id: req.params.id,
-          },
-        })
-          .then(() => res.status(200).json({ post: "Post deleted !" }))
-          .catch((error) => res.status(400).json({ error }));
+
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) throw err;
       });
-    })
-    .catch((error) => res.status(500).json({ error }));
+    }
+
+    //delete the post
+    post.destroy();
+    res.status(200).json({ post: "Post deleted !" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
-// management des likes
+/**
+ * Function of likes management
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 exports.likesManagement = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
