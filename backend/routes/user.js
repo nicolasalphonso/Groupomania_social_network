@@ -14,8 +14,10 @@ const bouncer = require("express-bouncer")(30000, 90000, 3);
 const auth = require('../middleware/auth');
 
 //routes vers les controlleurs
-router.post('/signup', bouncer.block, userCtrl.signup);
-router.post('/login', bouncer.block, userCtrl.login);
+//router.post('/signup', bouncer.block, userCtrl.signup);
+router.post('/signup', userCtrl.signup);
+//router.post('/login', bouncer.block, userCtrl.login);
+router.post('/login', userCtrl.login);
 router.get("/profile/:id", auth, userCtrl.getUserProfile);
 router.put("/profile/:id/photo", auth, multer, userCtrl.updateUserPhotoProfile);
 router.put("/profile/:id/infos", auth, userCtrl.updateUserInfoProfile);

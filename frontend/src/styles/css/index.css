@@ -281,7 +281,11 @@ input {
   color: black;
 }
 
-.displayModifyComment input {
+.modifyInput {
+  border: solid 2px #a7c0cc;
+}
+
+.modifyInput:focus {
   border: solid 2px green;
 }
 

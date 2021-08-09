@@ -26,6 +26,9 @@ input {
     color: black;
 }
 
-.displayModifyComment input {
+.modifyInput{
+    border: solid 2px lighten($color-1, 45%);
+}
+.modifyInput:focus {
     border: solid 2px green;   
 }

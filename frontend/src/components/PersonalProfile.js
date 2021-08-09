@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
+import axios from "axios";
 
 function isEmpty(obj) {
   for (var key in obj) {
@@ -94,30 +95,6 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     setLoadProfile(true);
   }
 
-  function handleUpdateEmail(e, value, confirmValue) {
-    e.preventDefault();
-    document.getElementById("emailErrors").innerHTML = "";
-    if (value === confirmValue) {
-      handleUpdateData(e, "email", value);
-    } else {
-      document.getElementById("emailErrors").innerHTML =
-        "Les adresses mail ne correspondent pas";
-      return;
-    }
-  }
-
-  function handleUpdatePassword(e, value, confirmValue) {
-    e.preventDefault();
-    document.getElementById("passwordErrors").innerHTML = "";
-    if (value === confirmValue) {
-      handleUpdateData(e, "password", value);
-    } else {
-      document.getElementById("passwordErrors").innerHTML =
-        "Les mots de passe ne correspondent pas";
-      return;
-    }
-  }
-
   function offFocus(element) {
     element.setAttribute("readonly", true);
     element.classList.add("form-control-plaintext");
@@ -136,6 +113,29 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     const [file] = document.getElementById("newPhoto").files;
     if (file) {
       document.getElementById("profilePhoto").src = URL.createObjectURL(file);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    if (window.confirm("Do you want to delete your account ?")) {
+      if (
+        window.confirm("Are you really sure you want to delete your account ?")
+      ) {
+        localStorage.removeItem("ReponseServeur");
+            window.location.replace("/");
+            
+        await axios
+          .delete(`http://localhost:7000/api/auth/profile/${userId}`, {
+            headers: {
+              Authorization: `bearer ${data.token}`,
+            },
+          })
+          .then((resp) => {
+            
+            console.log(resp.data);
+          })
+          .catch((error) => console.log(error));
+      }
     }
   }
 
@@ -296,77 +296,9 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           </Form.Group>
           <div id="lastnameErrors" className="formErrors"></div>
         </Form>
-        <div className="formProfile">
-          <Form
-            onSubmit={(e) => handleUpdateEmail(e, newEmail, confirmNewEmail)}
-          >
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>New email </Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter new email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-              />
-            </Form.Group>
-            <div id="emailErrors" className="formErrors"></div>
-
-            <Form.Group className="mb-3" controlId="formConfirmEmail">
-              <Form.Label>Confirm new email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Confirm new email"
-                value={confirmNewEmail}
-                onChange={(e) => setConfirmNewEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="secondary" type="submit">
-              Modify my email
-            </Button>
-            <Button variant="secondary" type="reset">
-              Cancel
-            </Button>
-          </Form>
-        </div>
-        <div className="formProfile">
-          <Form
-            onSubmit={(e) =>
-              handleUpdatePassword(e, newPassword, confirmNewPassword)
-            }
-          >
-            <Form.Group className="mb-3" controlId="formPassword">
-              <Form.Label>New password </Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-            </Form.Group>
-            <div id="passwordErrors" className="formErrors"></div>
-          </Form>
-
-          <Form>
-            <Form.Group className="mb-3" controlId="formConfirmPassword">
-              <Form.Label>Confirm new password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                autoComplete="new-password"
-              />
-            </Form.Group>
-            <Button variant="secondary" type="submit">
-              Modify my password
-            </Button>
-            <Button variant="secondary" type="reset">
-              Cancel
-            </Button>
-          </Form>
-        </div>
-        <Button variant="danger">Delete Account</Button>{" "}
+        <Button variant="danger" onClick={() => handleDeleteAccount()}>
+          Delete Account
+        </Button>{" "}
       </Container>
     )
   );

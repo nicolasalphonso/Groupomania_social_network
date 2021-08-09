@@ -134,6 +134,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
         console.log(res);
         setCommentContent("");
         setLoadComments(true);
+        document.getElementById(`addComment${post.id}`).blur();
       });
   }
 
@@ -256,6 +257,10 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
                   name={`addComment${post.id}`}
                   value={commentContent}
                   onChange={(e) => setCommentContent(e.target.value)}
+                  onBlur={() => {setCommentContent("");
+                  
+                }}
+                  className="modifyInput"
                 />
               </Col>
             </Form>

@@ -177,7 +177,7 @@ function Comments({
                             onSubmit={(e) => handleModifyComment(e, comment)}
                             onBlur={() => {setdisplayModifyComment(false) }}
                           >
-                            <Row><Col xs="3">Modify your comment :</Col>
+                            <Row><Col xs="2">Edit your comment :</Col>
                             <Col xs="9">
                               <input
                                 type="text"
@@ -186,6 +186,7 @@ function Comments({
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 autoFocus
+                                className="modifyInput"
                               />
                               </Col>
                             </Row>

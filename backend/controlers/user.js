@@ -159,8 +159,7 @@ exports.getUserProfile = async (req, res) => {
  */
 exports.updateUserPhotoProfile = async (req, res) => {
   const userIdFromParams = req.params.id;
-const token = req.headers.authorization.split(' ')[1];
-
+  const token = req.headers.authorization.split(" ")[1];
 
   // find user by the primary key (id)
   const user = await models.User.findByPk(req.params.id);
@@ -200,7 +199,7 @@ const token = req.headers.authorization.split(' ')[1];
 };
 
 /**
- * 
+ *
  */
 exports.updateUserInfoProfile = async (req, res) => {
   // find user by the primary key (id)
@@ -224,31 +223,6 @@ exports.updateUserInfoProfile = async (req, res) => {
           user.lastname = value;
           break;
 
-        case "email":
-          const isValidEmail = validator.validate(value);
-          if (isValidEmail) {
-            user.email = cryptojs
-              .HmacSHA256(value, process.env.EMAIL_KEY_SECRET)
-              .toString();
-          } else {
-            res
-              .status(400)
-              .json({ emailerror: "the email address is not valid" });
-          }
-          break;
-
-        case "password":
-          const isValidPassword = schema.validate(value);
-          if (isValidPassword) {
-            user.password = bcrypt.hash(value, 10);
-          } else {
-            res.status(400).json({
-              passworderror:
-                "the password is not valid : Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
-            });
-          }
-          break;
-
         default:
           res.status(500).json({ error: "the data can not be updated" });
           break;
@@ -263,5 +237,59 @@ exports.updateUserInfoProfile = async (req, res) => {
 };
 
 exports.deleteUserProfile = async (req, res) => {
-console.log("delete user profile")
+  // defining user id
+  const userIdToDelete = req.params.id;
+
+  // defining user to delete
+  const userToDelete = await models.User.findByPk(userIdToDelete);
+
+  if (userToDelete) {
+    try {
+      // delete all comments from user
+      const userCommentsToDelete = await models.Comment.findAll({
+        where: { userId: userIdToDelete },
+      });
+      for (i = 0; i < userCommentsToDelete.length; i++) {
+        let userCommentToDelete = userCommentsToDelete[i];
+        userCommentToDelete.destroy();
+      }
+      // delete all posts from user
+      // first retrieve list of posts of user
+      const postsToDelete = await models.Post.findAll({
+        where: { userId: userIdToDelete },
+      });
+
+      // then delete all comments attached to the posts and the posts
+      for (i = 0; i < postsToDelete.length; i++) {
+        let postToDelete = postsToDelete[i];
+        let othersCommentsToDelete = await models.Comment.findAll({
+          where: { postId: postsToDelete[i] },
+        });
+        for (i = 0; i < othersCommentsToDelete; i++) {
+          let othersCommentToDelete = othersCommentsToDelete[i];
+          othersCommentToDelete.destroy();
+        }
+        postToDelete.destroy();
+      }
+
+      //then delete profile photo
+      if (
+        userToDelete.attachment.split("/images/")[0] ===
+        `${req.protocol}://${req.get("host")}`
+      ) {
+        const profilePhoto = userToDelete.attachment.split("/images/")[1];
+
+        fs.unlink(`images/${profilePhoto}`, (err) => {
+          if (err) throw err;
+        });
+      }
+
+      //finally delete account
+      userToDelete.destroy();
+
+      res.status(200).json({ userdeleted: userIdToDelete });
+    } catch (error) {
+      res.status(500).json({ erreurbackend: error });
+    }
+  }
 };
