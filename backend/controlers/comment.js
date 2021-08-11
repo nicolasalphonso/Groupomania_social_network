@@ -20,7 +20,14 @@ exports.getComments = async (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["username", "id", "attachment", "firstname", "lastname", "bio"],
+          attributes: [
+            "username",
+            "id",
+            "attachment",
+            "firstname",
+            "lastname",
+            "bio",
+          ],
         },
         {
           model: models.Post,
@@ -35,42 +42,41 @@ exports.getComments = async (req, res, next) => {
 };
 
 // Create a comment
-exports.createComment = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-
-  console.log(req.body);
-  if (decodedToken.userId === req.body.userId) {
+exports.createComment = async (req, res) => {
+  if (req.body.commentContent.length < 65000) {
     const newComment = await models.Comment.create({
-      userId: decodedToken.userId,
+      userId: req.body.userId,
       postId: req.body.postId,
       content: req.body.commentContent,
-    })
-      .catch((error) => res.status(400).json({ error }));
+    }).catch((error) => res.status(400).json({ error }));
 
-      res.status(201).json({newCommentId: newComment.id})
+    res.status(201).json({ newCommentId: newComment.id });
+  } else {
+    res.status(500).json({ error: "Le commentaire est trop long" });
   }
 };
 
-
 //  modify comment
 exports.modifyComment = async (req, res, next) => {
+  if (req.body.content.length < 65000) {
+    const newContent = req.body.content;
 
-  const newContent = req.body.content;
-
-  await models.Comment.findOne({ where: { id: req.params.id } })
-    .then((comment) => {
-      comment.content = newContent;
-      comment.save();
-    })
-    .then(
-      res
-        .status(200)
-        .json({ commentUpdate: "Comment updated !", updatedContent: newContent })
-    )
-    .catch((error) => res.status(500).json({ error }));
+    await models.Comment.findOne({ where: { id: req.params.id } })
+      .then((comment) => {
+        comment.content = newContent;
+        comment.save();
+      })
+      .then(
+        res.status(200).json({
+          commentUpdate: "Comment updated !",
+          updatedContent: newContent,
+        })
+      )
+      .catch((error) => res.status(500).json({ error }));
+  } else {
+    res.status(500).json({ error: "Le commentaire est trop long" });
+  }
 };
-
 
 // deleting a comment - destroy method
 exports.deleteComment = async (req, res, next) => {

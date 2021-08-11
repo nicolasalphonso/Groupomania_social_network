@@ -42,26 +42,32 @@ exports.getAllPosts = async (req, res) => {
 
 // Create a post
 exports.createPost = async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  if (req.body.content.length < 65000) {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
 
-  //if the req doesn't have a file -> attachment = NULL
-  var attachment = req.file
-    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-    : "NULL";
+    //if the req doesn't have a file -> attachment = NULL
+    var attachment = req.file
+      ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+      : "NULL";
 
-  // create the post with sequelize syntax
-  const newPost = await models.Post.create({
-    userId: decodedToken.userId,
-    content: req.body.content,
-    attachment: attachment,
-  })
-    .then(() =>
-      res.status(201).json({
-        postId: newPost.id,
-      })
-    )
-    .catch((error) => res.status(400).json({ error }));
+    // create the post with sequelize syntax
+    const newPost = await models.Post.create({
+      userId: decodedToken.userId,
+      content: req.body.content,
+      attachment: attachment,
+    })
+      .then(() =>
+        res.status(201).json({
+          postId: newPost.id,
+        })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  } else {
+    res.status(500).json({
+      error: "le texte est trop long",
+    });
+  }
 };
 
 /**   modify post with id postId
@@ -71,35 +77,40 @@ exports.createPost = async (req, res) => {
   else only content is updated
 */
 exports.modifyPost = async (req, res) => {
-  const newContent = req.body.content;
+  if (req.body.content.length < 65000) {
+    const newContent = req.body.content;
 
-  await models.Post.findOne({ where: { id: req.params.id } })
-    .then((post) => {
-      if (req.file) {
-        console.log(post.attachment);
-        if (post.attachment !== "NULL") {
-          const previousImageName =
-          post.attachment.split("/images/")[1];
-          fs.unlink(`images/${previousImageName}`, (err) => {
-            if (err) throw err;
-          });
+    await models.Post.findOne({ where: { id: req.params.id } })
+      .then((post) => {
+        if (req.file) {
+          console.log(post.attachment);
+          if (post.attachment !== "NULL") {
+            const previousImageName = post.attachment.split("/images/")[1];
+            fs.unlink(`images/${previousImageName}`, (err) => {
+              if (err) throw err;
+            });
+          }
+
+          const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
+            req.file.filename
+          }`;
+          post.attachment = attachmentUrl;
         }
 
-        const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`;
-        post.attachment = attachmentUrl;
-      }
-
-      post.content = newContent;
-      post.save();
-    })
-    .then(
-      res
-        .status(200)
-        .json({ postUpdate: "Post updated !", updatedContent: newContent })
-    )
-    .catch((error) => res.status(500).json({ error }));
+        post.content = newContent;
+        post.save();
+      })
+      .then(
+        res
+          .status(200)
+          .json({ postUpdate: "Post updated !", updatedContent: newContent })
+      )
+      .catch((error) => res.status(500).json({ error }));
+  } else {
+    res.status(500).json({
+      error: "le texte est trop long",
+    });
+  }
 };
 
 /** Function delete post

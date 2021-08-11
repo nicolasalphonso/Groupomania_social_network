@@ -54,66 +54,78 @@ exports.signup = async (req, res) => {
   const validationMDP = schema.validate(req.body.password);
 
   const validationEmail = validator.validate(req.body.email);
-
-  if (validationMDP && validationEmail) {
-    bcrypt
-      .hash(req.body.password, 10) // on fait 10 tours de cryptage
-      // enregistre l'utilisateur dans bdd avec mot de passe crypté
-      .then((hash) => {
-        const user = models.User.create({
-          // cryptage de l'email dans la bdd. Pas de salage pour pouvoir la récupérer
-          // si besoin de faire un emailing par exemple.
-          email: cryptojs
-            .HmacSHA256(req.body.email, process.env.EMAIL_KEY_SECRET)
-            .toString(),
-          password: hash,
-          username: req.body.username,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          bio: req.body.bio,
-          isAdmin: req.body.isAdmin,
-        })
-          .then(function (user) {
-            return res.status(201).json({
-              userId: user.id,
-            });
+  if (
+    req.body.username.length < 21 &&
+    req.body.lastname.length < 31 &&
+    req.body.lastname.length < 31 &&
+    req.body.password.length < 17 &&
+    req.body.bio.length < 65000
+  ) {
+    if (validationMDP && validationEmail) {
+      bcrypt
+        .hash(req.body.password, 10) // on fait 10 tours de cryptage
+        // enregistre l'utilisateur dans bdd avec mot de passe crypté
+        .then((hash) => {
+          models.User.create({
+            // cryptage de l'email dans la bdd. Pas de salage pour pouvoir la récupérer
+            // si besoin de faire un emailing par exemple.
+            email: cryptojs
+              .HmacSHA256(req.body.email, process.env.EMAIL_KEY_SECRET)
+              .toString(),
+            password: hash,
+            username: req.body.username,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            bio: req.body.bio,
+            isAdmin: req.body.isAdmin,
           })
-          .catch((error) => {
-            let errorMessage = "";
+            .then(function (user) {
+              return res.status(201).json({
+                userId: user.id,
+              });
+            })
+            .catch((error) => {
+              let errorMessage = "";
 
-            console.log(error.errors[0].message);
+              console.log(error.errors[0].message);
 
-            switch (error.errors[0].message) {
-              case "users.email must be unique":
-                errorMessage =
-                  "Email is yet used. If you already have an account please login.\n Else contact the administrator";
-                break;
+              switch (error.errors[0].message) {
+                case "users.email must be unique":
+                  errorMessage =
+                    "Email is yet used. If you already have an account please login.\n Else contact the administrator";
+                  break;
 
-              case "users.username must be unique":
-                errorMessage =
-                  "Username is yet used. If you already have an account please login.\n  Else contact the administrator";
-                break;
+                case "users.username must be unique":
+                  errorMessage =
+                    "Username is yet used. If you already have an account please login.\n  Else contact the administrator";
+                  break;
 
-              default:
-                errorMessage = "Undefined error";
-                break;
-            }
+                default:
+                  errorMessage = "Undefined error";
+                  break;
+              }
 
-            res.status(400).json({ error: errorMessage });
-          });
-      })
-      .catch((error) => res.status(500).json({ error }));
-  } else {
-    if (!validationEmail) {
-      res.status(400).json({
-        error: "Unvalid email address",
-      });
+              res.status(400).json({ error: errorMessage });
+            });
+        })
+        .catch((error) => res.status(500).json({ error }));
     } else {
-      res.status(400).json({
-        error:
-          "Password must contain at least one lowercase, one uppercase, 1 digits. It must be between 8 and 16 characters long",
-      });
+      if (!validationEmail) {
+        res.status(400).json({
+          error: "Unvalid email address",
+        });
+      } else {
+        res.status(400).json({
+          error:
+            "Password must contain at least one lowercase, one uppercase, 1 digits. It must be between 8 and 16 characters long",
+        });
+      }
     }
+  } else {
+    res.status(500).json({
+      error:
+        "One of your input is too long, please check the form you submitted",
+    });
   }
 };
 
@@ -175,9 +187,6 @@ exports.getUserProfile = async (req, res) => {
  * and update the profile with the new one
  */
 exports.updateUserPhotoProfile = async (req, res) => {
-  const userIdFromParams = req.params.id;
-  const token = req.headers.authorization.split(" ")[1];
-
   // find user by the primary key (id)
   const user = await models.User.findByPk(req.params.id);
 
@@ -227,26 +236,35 @@ exports.updateUserInfoProfile = async (req, res) => {
   } else {
     try {
       const value = req.body.value;
+      let isValid = false;
+
       switch (req.body.type) {
         case "username":
           user.username = value;
+          isValid = value.length < 21 ? true : false;
           break;
 
         case "firstname":
           user.firstname = value;
+          isValid = value.length < 31 ? true : false;
           break;
 
         case "lastname":
           user.lastname = value;
+          isValid = value.length < 31 ? true : false;
           break;
 
         default:
           res.status(500).json({ error: "the data can not be updated" });
+          return;
           break;
       }
-
-      user.save();
-      res.status(200).json({ infoProfile: `updated ${type}` });
+      if (isValid) {
+        user.save();
+        res.status(200).json({ infoProfile: `updated ${type}` });
+      } else {
+        res.status(500).json({ error: "Input length is too long" });
+      }
     } catch (error) {
       res.status(500).json({ error });
     }
