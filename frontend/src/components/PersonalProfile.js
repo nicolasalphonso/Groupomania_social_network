@@ -23,10 +23,6 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
   const [newUsername, setNewUsername] = useState("");
   const [newFirstname, setNewFirstname] = useState("");
   const [newLastname, setNewLastname] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [confirmNewEmail, setConfirmNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
   // setting the options for the authenticated request
@@ -85,12 +81,17 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
       myInit
     )
       .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
+      .then((resultat) => {
+        console.log(resultat);
+        if (resultat.error) {
+          alert(resultat.error);
+        }
 
         setLoadProfile(true);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+      });
 
     setLoadProfile(true);
   }

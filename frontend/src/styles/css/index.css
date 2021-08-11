@@ -157,9 +157,6 @@ body {
 #registerForm h1 {
   font-size: xx-large;
 }
-#registerForm sup {
-  color: red;
-}
 
 nav {
   position: fixed;

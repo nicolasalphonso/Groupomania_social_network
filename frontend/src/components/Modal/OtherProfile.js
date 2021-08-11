@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
 import Modal from "react-modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import { useState } from "react";
 
 // React-modal settings
 const customStyles = {

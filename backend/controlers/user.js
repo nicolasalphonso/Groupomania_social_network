@@ -260,8 +260,28 @@ exports.updateUserInfoProfile = async (req, res) => {
           break;
       }
       if (isValid) {
-        user.save();
-        res.status(200).json({ infoProfile: `updated ${type}` });
+        user.save()
+        .then(() => res.status(200).json({ infoProfile: `updated ${type}` }))
+        .catch((error) => {
+          let errorMessage = "";
+
+              console.log(error.errors[0].message);
+
+              switch (error.errors[0].message) {
+
+                case "users.username must be unique":
+                  errorMessage =
+                    "Username is yet used";
+                  break;
+
+                default:
+                  errorMessage = "Undefined error";
+                  break;
+              }
+
+              res.status(400).json({ error: errorMessage });
+        })
+        //
       } else {
         res.status(500).json({ error: "Input length is too long" });
       }
