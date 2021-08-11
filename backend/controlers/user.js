@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, where } = require("sequelize");
 
 // Option 1: Passing a connection URI
 const sequelize = new Sequelize("sqlite::memory:"); // Example for sqlite
@@ -37,25 +37,20 @@ schema
   .is()
   .min(8) // Taille minimale 8
   .is()
-  .max(12) // Taille maximale 12
+  .max(16) // Taille maximale 16
   .has()
   .uppercase() // Contient au moins une majuscule
   .has()
   .lowercase() // Contient au moins une minuscule
   .has()
-  .digits(2) // Doit contenir au moins 2 chiffres
+  .digits(1) // Doit contenir au moins 1 chiffres
   .has()
   .not()
-  .spaces() // Ne doit pas contenir d'espace
-  .has()
-  .symbols(); // Doit contenir au moins un symbole
+  .spaces(); // Ne doit pas contenir d'espace
 
 // enregistrement de nouveaux utilisateurs
 
 exports.signup = async (req, res) => {
-  /* Todo validation des inputs utilisateurs (taille des champs, valeurs, 
-  ...
-  */
   const validationMDP = schema.validate(req.body.password);
 
   const validationEmail = validator.validate(req.body.email);
@@ -83,18 +78,40 @@ exports.signup = async (req, res) => {
               userId: user.id,
             });
           })
-          .catch((error) => res.status(400).json({ error }));
+          .catch((error) => {
+            let errorMessage = "";
+
+            console.log(error.errors[0].message);
+
+            switch (error.errors[0].message) {
+              case "users.email must be unique":
+                errorMessage =
+                  "Email is yet used. If you already have an account please login.\n Else contact the administrator";
+                break;
+
+              case "users.username must be unique":
+                errorMessage =
+                  "Username is yet used. If you already have an account please login.\n  Else contact the administrator";
+                break;
+
+              default:
+                errorMessage = "Undefined error";
+                break;
+            }
+
+            res.status(400).json({ error: errorMessage });
+          });
       })
       .catch((error) => res.status(500).json({ error }));
   } else {
     if (!validationEmail) {
       res.status(400).json({
-        error: "L'adresse mail n'est pas valide",
+        error: "Unvalid email address",
       });
     } else {
       res.status(400).json({
         error:
-          "Password must contain at least one lowercase, one uppercase, one special character, 2 digits. It must be between 8 and 12 characters long",
+          "Password must contain at least one lowercase, one uppercase, 1 digits. It must be between 8 and 16 characters long",
       });
     }
   }

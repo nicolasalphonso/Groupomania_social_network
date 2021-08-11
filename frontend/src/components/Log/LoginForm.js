@@ -8,7 +8,7 @@ const LoginForm = () => {
 
   const handleLogin = (e) => {
     let donnees = {
-        email: email,
+        email: email.toLowerCase(),
         password: password
     };
       e.preventDefault();
@@ -45,6 +45,7 @@ const LoginForm = () => {
         onChange={(e) => setEmail(e.target.value)}
         value={email}
         autoComplete="email"
+        required="required"
       />
       <label htmlFor="password">Password</label>
       <input
@@ -54,6 +55,7 @@ const LoginForm = () => {
         onChange={(e) => setPassword(e.target.value)}
         value={password}
         autoComplete="current-password"
+        required="required"
       />
       <input type="submit" value="login" />
       <div id="loginError"></div>

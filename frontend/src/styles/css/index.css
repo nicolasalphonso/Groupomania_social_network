@@ -146,6 +146,21 @@ body {
   margin: 60px auto;
 }
 
+.fillingNotes {
+  font-style: italic;
+  font-size: small;
+}
+
+#registerForm {
+  font-size: large;
+}
+#registerForm h1 {
+  font-size: xx-large;
+}
+#registerForm sup {
+  color: red;
+}
+
 nav {
   position: fixed;
   width: 100%;

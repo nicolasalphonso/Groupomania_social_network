@@ -187,6 +187,7 @@ function Comments({
                                 onChange={(e) => setNewComment(e.target.value)}
                                 autoFocus
                                 className="modifyInput"
+                                maxlength="65000"
                               />
                               </Col>
                             </Row>

@@ -99,6 +99,7 @@ const ModifyForm = ({
                 value={updatedNewContent}
                 id="updatedNewContent"
                 onChange={(e) => setUpdatedNewContent(e.target.value)}
+                maxlength="65000"
               />
             </Col>
           </Row>

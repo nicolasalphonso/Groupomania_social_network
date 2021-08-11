@@ -62,8 +62,9 @@ const PostForm = ({ setLoadPosts }) => {
           onChange={(e) => setContent(e.target.value)}
           value={content}
           placeholder="what's up ?"
-          rows="5"
+          rows="4"
           required
+          maxlength="65000"
         />
         <div id="contentError" />
         <label htmlFor="attachment" aria-label="add a photo to your post">Add a photo</label>

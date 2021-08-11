@@ -122,8 +122,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
         window.confirm("Are you really sure you want to delete your account ?")
       ) {
         localStorage.removeItem("ReponseServeur");
-            window.location.replace("/");
-            
+        window.location.replace("/");
+
         await axios
           .delete(`http://localhost:7000/api/auth/profile/${userId}`, {
             headers: {
@@ -131,7 +131,6 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
             },
           })
           .then((resp) => {
-            
             console.log(resp.data);
           })
           .catch((error) => console.log(error));
@@ -146,8 +145,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           <Col>
             <div className="bg-white rounded shadow-sm py-5 px-4">
               <h1 className="mb-0 nameDisplay">
-                {nameFormat(userToDisplay.data.firstname)}{" "}
-                {nameFormat(userToDisplay.data.lastname)}
+                {userToDisplay.data.firstname &&
+                  nameFormat(userToDisplay.data.firstname)}{" "}
+                {userToDisplay.data.lastname &&
+                  nameFormat(userToDisplay.data.lastname)}
               </h1>
               <p className="small text-muted">{userToDisplay.data.username}</p>
               <p>{userToDisplay.data.bio}</p>
@@ -206,6 +207,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               }}
             >
               Username{" "}
+              <span className="fillingNotes">
+                {" "}
+                ( Only letters, up to 20 characters )
+              </span>{" "}
               <img
                 src="icones/edit.svg"
                 className="profileModifyIcon"
@@ -222,6 +227,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("username"));
               }}
+              pattern="[a-z]{1,20}"
+              title="Username should contain only letters. Length is limited to 20 characters"
             />
           </Form.Group>
           <div id="usernameErrors" className="formErrors"></div>
@@ -241,6 +248,9 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               }}
             >
               Firstname{" "}
+              <span className="fillingNotes">
+                ( only letters up to 30 characters )
+              </span>{" "}
               <img
                 src="icones/edit.svg"
                 className="profileModifyIcon"
@@ -257,6 +267,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("firstname"));
               }}
+              pattern="[A-Za-z]{1,30}"
+              title="Firstname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
           <div id="firstnameErrors" className="formErrors"></div>
@@ -276,6 +288,9 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               }}
             >
               Lastname{" "}
+              <span className="fillingNotes">
+                ( only letters up to 30 characters )
+              </span>{" "}
               <img
                 src="icones/edit.svg"
                 className="profileModifyIcon"
@@ -292,6 +307,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("lastname"));
               }}
+              pattern="[A-Za-z]{1,30}"
+              title="Lastname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
           <div id="lastnameErrors" className="formErrors"></div>
