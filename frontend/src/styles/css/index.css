@@ -185,6 +185,10 @@ nav {
   object-fit: cover;
 }
 
+.card {
+  margin-top: 35px;
+}
+
 .card-img {
   max-height: 450px;
   object-fit: scale-down;
@@ -201,6 +205,9 @@ nav {
   padding: 30px;
   text-align: center;
   border-radius: 20px;
+}
+.posts__info {
+  font-size: medium;
 }
 .posts ul {
   padding: 10px;
@@ -236,12 +243,25 @@ nav {
   padding: 15px;
 }
 .posts form img {
-  width: 180px;
-  height: 180px;
+  max-width: 180px;
+  max-height: 180px;
   object-fit: scale-down;
 }
 .posts__icon {
-  height: 50px;
+  height: 40px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+.card-text {
+  font-size: large;
+}
+
+.headerPost {
+  font-size: medium;
 }
 
 .modalModifyPost {
@@ -269,7 +289,20 @@ nav {
 }
 
 .row .userAndContent {
-  margin: 10px;
+  margin: 0px;
+}
+
+.commentGlobal {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.commentInfos {
+  font-size: small;
+}
+
+.commentContent {
+  font-size: large;
 }
 
 .commentDate {
@@ -280,6 +313,8 @@ nav {
 .commentIcon {
   width: 13px;
   height: 13px;
+  padding: 0px;
+  margin-right: 20px;
 }
 
 .commentPhotoProfile {
@@ -344,6 +379,9 @@ input {
 .profileCard .confirmPhotoProfileChange {
   height: 15px;
   width: 15px;
+}
+.profileCard input {
+  text-align: center;
 }
 
 /*# sourceMappingURL=index.css.map */

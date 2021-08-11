@@ -18,6 +18,10 @@
   object-fit:cover;
 }
 
+.card {
+  margin-top: 35px; 
+}
+
 .card-img {
   max-height: 450px;
   object-fit: scale-down;
@@ -34,6 +38,10 @@
     padding: 30px;
     text-align: center;
     border-radius: 20px;
+
+    &__info {
+      font-size: medium;
+    }
   
   
     ul {
@@ -73,8 +81,8 @@
         padding: 15px;
       }
       img {
-        width: 180px;
-        height: 180px;
+        max-width: 180px;
+        max-height: 180px;
         object-fit: scale-down;
       }
   
@@ -83,6 +91,19 @@
     
 
     &__icon {
-      height: 50px;
+      height: 40px;
     }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-text {
+    font-size: large;
+  }
+
+  .headerPost {
+    font-size: medium;
   }

@@ -106,9 +106,9 @@ function Comments({
           comments.map((comment) => {
             return (
               <li key={comment.id}>
-                <Row>
+                <Row className="commentGlobal">
                   <Col
-                    xs="1"
+                    xs="1" md="1"
                     className="m-auto"
                     onClick={() => {
                       setProfileToDisplay(comment.User);
@@ -121,10 +121,10 @@ function Comments({
                       alt={`Profile of ${comment.User.username}`}
                     />
                   </Col>
-                  <Col xs="11">
+                  <Col xs="11" md="11">
                     <div className="row userAndContent">
                       <Row>
-                        <Col xs="9">
+                        <Col xs="9" className="commentInfos">
                           {comment.User.username} -
                           <span className="commentDate">
                             {new Date(comment.createdAt).toLocaleDateString(
@@ -137,7 +137,7 @@ function Comments({
                         <Col xs="3">
                           <Row>
                             {comment.User.id === userId && (
-                              <Col xs="6">
+                              <Col xs="6" className="commentIcon">
                                 <img
                                   src="icones/edit.svg"
                                   alt="edit your comment"
@@ -167,7 +167,7 @@ function Comments({
                         </Col>
                       </Row>
                       <Row>
-                        <Col>{comment.content}</Col>
+                        <Col className="commentContent">{comment.content}</Col>
                       </Row>
                       {comment.User.id === userId &&
                         displayModifyComment &&
@@ -177,7 +177,7 @@ function Comments({
                             onSubmit={(e) => handleModifyComment(e, comment)}
                             onBlur={() => {setdisplayModifyComment(false) }}
                           >
-                            <Row><Col xs="2">Edit your comment :</Col>
+                            <Row><Col xs="12" md="2">Edit your comment :</Col>
                             <Col xs="9">
                               <input
                                 type="text"
@@ -196,7 +196,7 @@ function Comments({
                     </div>
                   </Col>
                   <Row>
-                    <Col xs={{ span: 3, offset: 3 }}></Col>
+                    <Col md={{ span: 3, offset: 3 }}></Col>
                   </Row>
                 </Row>
               </li>

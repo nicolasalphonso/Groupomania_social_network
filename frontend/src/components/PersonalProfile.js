@@ -87,13 +87,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           alert(resultat.error);
         }
 
-        setLoadProfile(true);
       })
       .catch((error) => {
         console.log(error);
       });
-
-    setLoadProfile(true);
   }
 
   function offFocus(element) {
@@ -141,7 +138,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
 
   return (
     !isEmpty(userToDisplay) && (
-      <Container className="profileCard">
+      <Container className="profileCard text-center">
         <Row className="text-center">
           <Col>
             <div className="bg-white rounded shadow-sm py-5 px-4">
@@ -198,7 +195,6 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           onSubmit={(e) => {
             e.preventDefault();
             handleUpdateData(e, "username", newUsername);
-            offFocus(document.getElementById("username"));
           }}
         >
           <Form.Group className="mb-3" controlId="username">
@@ -210,12 +206,13 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               Username{" "}
               <span className="fillingNotes">
                 {" "}
-                ( Only letters, up to 20 characters )
+                ( letters, up to 20 chars )
               </span>{" "}
               <img
                 src="icones/edit.svg"
                 className="profileModifyIcon"
                 alt="modify username"
+                id="modifyUsername"
               />
             </Form.Label>
             <Form.Control
@@ -250,7 +247,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
             >
               Firstname{" "}
               <span className="fillingNotes">
-                ( only letters up to 30 characters )
+                ( letters, up to 30 chars )
               </span>{" "}
               <img
                 src="icones/edit.svg"
@@ -275,7 +272,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           <div id="firstnameErrors" className="formErrors"></div>
         </Form>
         <Form
-          className="formProfile"
+          className="formProfile text-center"
           onSubmit={(e) => {
             e.preventDefault();
             handleUpdateData(e, "lastname", newLastname);
@@ -290,7 +287,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
             >
               Lastname{" "}
               <span className="fillingNotes">
-                ( only letters up to 30 characters )
+                ( letters, up to 20 chars )
               </span>{" "}
               <img
                 src="icones/edit.svg"

@@ -140,14 +140,11 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
 
   return (
     <li key={post.id}>
-      <p>
-        userId : {userId} , post.User.id : {post.User.id}
-      </p>
       <Card>
         <Card.Body>
           <Card.Title className="postPosterInfos">
             <Row >
-              <Col xs="1" md="1" onClick={() => {
+              <Col xs="2" md="1" onClick={() => {
               setProfileToDisplay(post.User);
               setShowOtherProfile(true);
             }}>
@@ -157,7 +154,9 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
                   alt={`Profile of ${post.User.username}`}
                 />
               </Col>
-              <Col xs="7" md="9" onClick={() => {
+              <Col xs="7" md="9" className="posts__info"
+              
+              onClick={() => {
               setProfileToDisplay(post.User);
               setShowOtherProfile(true);
             }}>
@@ -169,7 +168,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
                 )}
               </Col>
               
-                <Col xs="4" md="2">
+                <Col xs="3" md="2">
                   <Row>
                     {post.User.id === userId ? (
                       <Col xs="6">
@@ -248,6 +247,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
           <Row>
             <Form onSubmit={(e) => handlePostComment(userId, post.id, e)}>
               <Col xs="3">
+                <br/>
                 <label htmlFor={`addComment${post.id}`}>Add a comment</label>
               </Col>
               <Col xs="9">

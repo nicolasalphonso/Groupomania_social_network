@@ -1,9 +1,23 @@
 .row {
     .userAndContent{
-        margin: 10px;
+        margin: 0px;
     }
     
 }
+
+.commentGlobal {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.commentInfos {
+    font-size: small;
+}
+
+.commentContent {
+    font-size: large;
+}
+
 
 .commentDate {
     font-style: italic;
@@ -13,6 +27,8 @@
 .commentIcon {
     width: 13px;
     height: 13px;
+    padding: 0px;
+    margin-right: 20px;
 }
 
 .commentPhotoProfile {
