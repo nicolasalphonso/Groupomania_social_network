@@ -27,7 +27,7 @@ const Log = () => {
     <div className="loginForm">
       <div className="container">
         <Row>
-        <Col xs={4}>
+        <Col xs="12" lg={4}>
         <ul>
           <li
             onClick={handleModals}
@@ -45,7 +45,7 @@ const Log = () => {
           </li>
         </ul>
         </Col>
-        <Col xs={8}>
+        <Col xs={12} lg="8">
         {loginModal && <LoginForm />}
         {registerModal && <RegisterForm />}
         </Col>

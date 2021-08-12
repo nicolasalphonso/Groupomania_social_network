@@ -146,6 +146,10 @@ body {
   margin: 60px auto;
 }
 
+.loginImage {
+  max-width: 100%;
+}
+
 .fillingNotes {
   font-style: italic;
   font-size: small;
@@ -167,7 +171,6 @@ nav {
 
 .postsContainer {
   max-width: 800px;
-  margin-top: 100px;
 }
 
 .postContent {

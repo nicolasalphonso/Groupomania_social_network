@@ -10,11 +10,11 @@ const Loginsubscribe = () => {
     <div className="loginPage">
       <Container>
         <Row>
-          <Col xs={7}>
+          <Col xs="12" lg="7">
             <Log />
           </Col>
-          <Col xs={5}>
-              <img src="./images/login.jpg" alt="connexion et enregistrement" />
+          <Col xs="12" lg="5">
+              <img src="./images/login.jpg" alt="connexion et enregistrement" className="loginImage"/>
           </Col>
         </Row>
       </Container>

@@ -12,10 +12,9 @@ function handleLogout() {
 }
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="light" fixed="top">
+    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" fixed="top">
       <Container>
-        <Nav.Link href="/home">
-          <Navbar.Brand>
+          <Navbar.Brand href="/home">
             <img
               alt="groupomania logo"
               src="./images/icon-nav.png"
@@ -23,11 +22,9 @@ function handleLogout() {
               className="d-inline-block align-center"
             />
           </Navbar.Brand>
-        </Nav.Link>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto"></Nav>
-          <Nav>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
             <Nav.Link href="/home">News</Nav.Link>
             <Nav.Link href="/profile">Profile</Nav.Link>
             <Nav.Link href="/" onClick={() => handleLogout()}>Logout</Nav.Link>
