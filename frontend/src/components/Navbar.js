@@ -12,7 +12,7 @@ function handleLogout() {
 }
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" fixed="top">
+    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" className="static-top">
       <Container>
           <Navbar.Brand href="/home">
             <img
@@ -24,7 +24,7 @@ function handleLogout() {
           </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="ms-auto">
             <Nav.Link href="/home">News</Nav.Link>
             <Nav.Link href="/profile">Profile</Nav.Link>
             <Nav.Link href="/" onClick={() => handleLogout()}>Logout</Nav.Link>
