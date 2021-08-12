@@ -66,6 +66,7 @@ const Thread = () => {
         showOtherProfile={showOtherProfile}
         profileToDisplay={profileToDisplay}
         isAdmin={isAdmin}
+        setLoadPosts={setLoadPosts}
       />
     </div>
   );

@@ -66,7 +66,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
   async function deletePost(id) {
     // delete the post from the database
     // verify again that the user is the correct one
-    if (userId === post.User.id) {
+    if ((userId === post.User.id) || isAdmin) {
       if (window.confirm("Delete your post ?")) {
         await axios
           .delete(`http://localhost:7000/api/posts/${id}`, {

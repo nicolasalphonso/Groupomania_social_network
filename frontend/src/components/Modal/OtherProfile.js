@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
 
 // React-modal settings
 const customStyles = {
@@ -27,10 +28,37 @@ const OtherProfile = ({
   setShowOtherProfile,
   showOtherProfile,
   profileToDisplay,
-  isAdmin
+  isAdmin,
+  setLoadPosts,
 }) => {
-  function deleteProfile(idToDelete) {
-    console.log("delete profile" + idToDelete);
+  async function  deleteProfile(idToDelete) {
+    if (isAdmin) {
+      if (window.confirm("Do you want to delete this account ?")) {
+        if (
+          window.confirm("Are you really sure you want to delete this account ?")
+        ) {
+          const data = JSON.parse(localStorage.getItem("ReponseServeur"));
+  
+          await axios
+            .delete(`http://localhost:7000/api/auth/profile/${idToDelete}`, {
+              headers: {
+                Authorization: `bearer ${data.token}`,
+              },
+            })
+            .then((resp) => {
+              console.log(resp.data);
+            })
+            .catch((error) => console.log(error));
+        }
+      }
+      setShowOtherProfile(false);
+      setLoadPosts(true);
+    } else {
+      //force the user to relog
+      alert("Session issue, please sign in again");
+      localStorage.removeItem("ReponseServeur");
+      window.location.assign("/");
+    }
   }
 
   return (
@@ -73,14 +101,18 @@ const OtherProfile = ({
               </Col>
             </Row>
             {isAdmin ? (
-            <Row>
-              <Col className="text-center">
-                <Button variant="danger" className="align-center" onClick={() => deleteProfile(profileToDisplay.id)}>
-                  Delete Account
-                </Button>
-              </Col>
-            </Row>) : null 
-            }
+              <Row>
+                <Col className="text-center">
+                  <Button
+                    variant="danger"
+                    className="align-center"
+                    onClick={() => deleteProfile(profileToDisplay.id)}
+                  >
+                    Delete Account
+                  </Button>
+                </Col>
+              </Row>
+            ) : null}
           </Container>
         ) : null}
       </Modal>

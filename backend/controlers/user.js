@@ -58,8 +58,7 @@ exports.signup = async (req, res) => {
     req.body.username.length < 21 &&
     req.body.lastname.length < 31 &&
     req.body.lastname.length < 31 &&
-    req.body.password.length < 17 &&
-    req.body.bio.length < 65000
+    req.body.password.length < 17
   ) {
     if (validationMDP && validationEmail) {
       bcrypt
