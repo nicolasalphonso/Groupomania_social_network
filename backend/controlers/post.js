@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken"); // import of JSON web token
 //const comment = require("../models/comment");
 //const { where } = require("sequelize/types");
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
+const functions = require("./functions");
 
 // get all posts
 exports.getAllPosts = async (req, res) => {
@@ -119,34 +120,45 @@ exports.modifyPost = async (req, res) => {
  * Finally delete the post
  */
 exports.deletePost = async (req, res) => {
-  try {
-    // first delete all comments associated with the post
-    const commentsToDelete = await models.Comment.findAll({
-      where: { postId: req.params.id },
-    });
+  // verify that the user is the owner or the admin
+  let allowed = functions.isAllowed(req);
 
-    for (i = 0; i < commentsToDelete.length; i++) {
-      let singleCommentToDelete = commentsToDelete[i];
-      singleCommentToDelete.destroy();
-    }
-
-    // select the post to delete
-    const post = await models.Post.findOne({ where: { id: req.params.id } });
-
-    // delete associated image
-    if (post.attachment !== "NULL") {
-      const filename = post.attachment.split("/images/")[1];
-
-      fs.unlink(`images/${filename}`, (err) => {
-        if (err) throw err;
+  if (
+    allowed.userIdFromToken === req.params.id ||
+    allowed.isAdminFromToken === 1
+  ) {
+    try {
+      // first delete all comments associated with the post
+      const commentsToDelete = await models.Comment.findAll({
+        where: { postId: req.params.id },
       });
-    }
 
-    //delete the post
-    post.destroy();
-    res.status(200).json({ post: "Post deleted !" });
-  } catch (error) {
-    res.status(500).json({ error });
+      for (i = 0; i < commentsToDelete.length; i++) {
+        let singleCommentToDelete = commentsToDelete[i];
+        singleCommentToDelete.destroy();
+      }
+
+      // select the post to delete
+      const post = await models.Post.findOne({ where: { id: req.params.id } });
+
+      // delete associated image
+      if (post.attachment !== "NULL") {
+        const filename = post.attachment.split("/images/")[1];
+
+        fs.unlink(`images/${filename}`, (err) => {
+          if (err) throw err;
+        });
+      }
+
+      //delete the post
+      post.destroy();
+      res.status(200).json({ post: "Post deleted !" });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+  else {
+    res.status(500).json({ error: "user not allowed to use this fonction" });
   }
 };
 

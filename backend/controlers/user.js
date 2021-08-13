@@ -32,6 +32,9 @@ const fs = require("fs"); // import of FS to modify the file system
 // Create a schema
 var schema = new passwordValidator();
 
+//import custom functions
+const functions = require("./functions");
+
 // Propriétés du mot de passe
 schema
   .is()
@@ -295,6 +298,11 @@ exports.updateUserInfoProfile = async (req, res) => {
 };
 
 exports.deleteUserProfile = async (req, res) => {
+// verify that the user is the owner or the admin
+let allowed = functions.isAllowed(req);
+
+if((allowed.userIdFromToken === req.params.id) || (allowed.isAdminFromToken === 1)) {
+
   // defining user id
   const userIdToDelete = req.params.id;
 
@@ -350,4 +358,7 @@ exports.deleteUserProfile = async (req, res) => {
       res.status(500).json({ erreurbackend: error });
     }
   }
+} else {
+  res.status(500).json({ error: "user not allowed to use this fonction" });
+}
 };

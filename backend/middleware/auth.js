@@ -1,23 +1,23 @@
-// importation de JSONWebToken
+// import of JSONWebToken
 const jwt = require('jsonwebtoken');
 
-// importation de dotenv
+// import of dotenv
 const dotenv = require("dotenv").config( {path: '../'});
 
-// try catch car peut plusieurs problèmes
+// try catch as different possible problems
 module.exports = (req, res, next) => {
   try {
-    // token est 2ème élément du header authorization
+    // token is the second element of header authorization
     const token = req.headers.authorization.split(' ')[1];
-    // décodage du token
+    // token decoding
     const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-    // on récupère le userId du token décodé
+    // retrieving userId fron decoded token
     const userId = decodedToken.userId;
-    // on vérifie que l'userId correspond à celui du token
+    // verifiying that the user id is the same as the token one
     if (req.body.userId && req.body.userId !== userId) {
       throw 'invalid user ID';
     } else {
-      // on passe au middleware suivant car la requête est authentifiée
+      // next middleware as the request is authentified
       next();
     }
   } catch (error) {
