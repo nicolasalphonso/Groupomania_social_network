@@ -301,8 +301,9 @@ exports.deleteUserProfile = async (req, res) => {
 // verify that the user is the owner or the admin
 let allowed = functions.isAllowed(req);
 
-if((allowed.userIdFromToken === req.params.id) || (allowed.isAdminFromToken === 1)) {
+if((allowed.userIdFromToken == req.params.id) || (allowed.isAdminFromToken === 1)) {
 
+  console.log("ok");
   // defining user id
   const userIdToDelete = req.params.id;
 

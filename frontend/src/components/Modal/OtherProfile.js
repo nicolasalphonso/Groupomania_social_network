@@ -52,7 +52,7 @@ const OtherProfile = ({
         }
       }
       setShowOtherProfile(false);
-      setLoadPosts(true);
+      window.location.assign("/home");
     } else {
       //force the user to relog
       alert("Session issue, please sign in again");

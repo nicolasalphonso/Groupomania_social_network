@@ -83,7 +83,7 @@ exports.modifyComment = async (req, res, next) => {
 
 // deleting a comment - destroy method
 exports.deleteComment = async (req, res, next) => {
-  // verify that the user is the owner or the admin
+  // verify that the user is the owner or an admin
   let allowed = functions.isAllowed(req);
 
   if((allowed.userIdFromToken === req.params.id) || (allowed.isAdminFromToken === 1)) {
