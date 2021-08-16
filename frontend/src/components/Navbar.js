@@ -12,7 +12,7 @@ function handleLogout() {
 }
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" className="static-top">
+    <Navbar collapseOnSelect expand="lg" bg="light" variant="light" fixed="top">
       <Container>
           <Navbar.Brand href="/home">
             <img
