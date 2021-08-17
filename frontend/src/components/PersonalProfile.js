@@ -91,6 +91,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
       .catch((error) => {
         console.log(error);
       });
+
+      setLoadProfile(true);
   }
 
   function offFocus(element) {
@@ -195,11 +197,13 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           onSubmit={(e) => {
             e.preventDefault();
             handleUpdateData(e, "username", newUsername);
+            offFocus(document.getElementById("username"));
           }}
         >
           <Form.Group className="mb-3" controlId="username">
             <Form.Label
               onClick={() => {
+                setNewUsername(userToDisplay.data.username);
                 onFocus(document.getElementById("username"));
               }}
             >
@@ -242,6 +246,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           <Form.Group className="mb-3" controlId="firstname">
             <Form.Label
               onClick={() => {
+                setNewFirstname(userToDisplay.data.firstname);
                 onFocus(document.getElementById("firstname"));
               }}
             >
@@ -282,6 +287,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
           <Form.Group className="mb-3" controlId="lastname">
             <Form.Label
               onClick={() => {
+                setNewLastname(userToDisplay.data.lastname);
                 onFocus(document.getElementById("lastname"));
               }}
             >

@@ -74,7 +74,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
               Authorization: `bearer ${data.token}`,
             },
           })
-          .then((res) => res.status(200).json(`posts ${id} deleted`))
+          .then(() => console.log(`posts ${id} deleted`))
           .catch((error) => console.log(error));
 
         // rerender the thread

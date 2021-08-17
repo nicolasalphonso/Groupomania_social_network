@@ -88,9 +88,6 @@ function Comments({
       // rerender the comments
       setLoadComments(true);
 
-      // reset the form used et modify the comment
-      //setNewComment("");
-
       // hide the form
       setdisplayModifyComment(false);
     } else {
