@@ -1,13 +1,13 @@
 const models = require("../models"); // import of models
-const jwt = require("jsonwebtoken"); // import of JSON web token
-const comment = require("../models/comment");
+//const jwt = require("jsonwebtoken"); // import of JSON web token
+//const comment = require("../models/comment");
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 const functions = require("./functions");
 
 
 
 /**
- * get comments of a post
+ * get all comments of a post
  */
 exports.getComments = async (req, res) => {
   try {
@@ -52,13 +52,17 @@ exports.getComments = async (req, res) => {
 exports.createComment = async (req, res) => {
   if (req.body.commentContent.length < 65000) {
     // create the new comment
-    const newComment = await models.Comment.create({
-      userId: req.body.userId,
-      postId: req.body.postId,
-      content: req.body.commentContent,
-    }).catch((error) => res.status(400).json({ error }));
+    try {
+      const newComment = await models.Comment.create({
+        userId: req.body.userId,
+        postId: req.body.postId,
+        content: req.body.commentContent,
+      });
+      res.status(201).json({ newCommentId: newComment.id });
+    } catch (error) {
+      res.status(400).json({ error })
+    }
 
-    res.status(201).json({ newCommentId: newComment.id });
   } else {
     res.status(500).json({ error: "Comment is too long" });
   }
