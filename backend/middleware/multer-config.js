@@ -1,8 +1,8 @@
-// importation de multer pour la gestion des fichiers
+// import of multer for file management
 const multer = require('multer');
 const upload = multer();
 
-// Mime types potentiels des fichiers reçus
+// Mime types of received files
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     // on récupère le nom original, on remplace les espaces par des _
-    const name = file.originalname.split(' ').join('_');
+    const name = file.originalname.split(' ').join('_').replace(".","");
     // on crée l'extension grâce aux MIME_TYPES définis
     const extension = MIME_TYPES[file.mimetype];
     // on crée le filename en ajoutant aussi un timestamp
