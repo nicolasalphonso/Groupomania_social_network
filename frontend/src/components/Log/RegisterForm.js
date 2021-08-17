@@ -69,7 +69,7 @@ const RegisterForm = () => {
         id="firstname"
         onChange={(e) => setFirstname(e.target.value)}
         value={firstname}
-        pattern="[A-Za-z]{1,30}"
+        pattern="[A-Za-z ]+{1,30}"
         title="Firstname should contain only letters. Length is limited to 30 characters"
         required="required"
       />
@@ -77,7 +77,7 @@ const RegisterForm = () => {
       <sup> *</sup>
       <br />
       <span className="fillingNotes">
-        lastname : only letters up to 30 characters
+        lastname : only letters up to 30 characters, no space
       </span>
       <input
         type="text"
@@ -85,7 +85,7 @@ const RegisterForm = () => {
         id="lastname"
         onChange={(e) => setLastname(e.target.value)}
         value={lastname}
-        pattern="[A-Za-z]{1,30}"
+        pattern="[A-Za-z ]+{1,30}"
         title="Lastname should contain only letters. Length is limited to 30 characters"
         required="required"
       />

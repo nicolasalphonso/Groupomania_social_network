@@ -82,6 +82,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     )
       .then((res) => res.json())
       .then((resultat) => {
+        setLoadProfile(true);
         console.log(resultat);
         if (resultat.error) {
           alert(resultat.error);
@@ -91,8 +92,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
       .catch((error) => {
         console.log(error);
       });
-
-      setLoadProfile(true);
+      
   }
 
   function offFocus(element) {
@@ -270,7 +270,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("firstname"));
               }}
-              pattern="[A-Za-z]{1,30}"
+              pattern="[A-Za-z ]+{1,30}"
               title="Firstname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
@@ -311,7 +311,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("lastname"));
               }}
-              pattern="[A-Za-z]{1,30}"
+              pattern="[A-Za-z ]+{1,30}"
               title="Lastname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
