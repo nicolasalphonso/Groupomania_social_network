@@ -6,14 +6,16 @@ const functions = require("./functions");
 
 
 
-// get comments of a post
-exports.getComments = async (req, res, next) => {
+/**
+ * get comments of a post
+ */
+exports.getComments = async (req, res) => {
   try {
     const fields = req.query.fields;
     const order = req.query.order;
 
     // use of sequelize syntax, on table posts using a left outer join on users
-    // retrieving in it username, firstname and lastname
+    // retrieving in it id, bio, username, firstname and lastname
     const comments = await models.Comment.findAll({
       where: {
         postId: req.params.id,
@@ -44,9 +46,12 @@ exports.getComments = async (req, res, next) => {
   }
 };
 
-// Create a comment
+/**
+ * used to create a comment
+ */
 exports.createComment = async (req, res) => {
   if (req.body.commentContent.length < 65000) {
+    // create the new comment
     const newComment = await models.Comment.create({
       userId: req.body.userId,
       postId: req.body.postId,
@@ -55,52 +60,80 @@ exports.createComment = async (req, res) => {
 
     res.status(201).json({ newCommentId: newComment.id });
   } else {
-    res.status(500).json({ error: "Le commentaire est trop long" });
+    res.status(500).json({ error: "Comment is too long" });
   }
 };
 
-//  modify comment
-exports.modifyComment = async (req, res, next) => {
+/**
+ * used to modify a comment
+ * we determine if the user is allowed to perform the action
+ * then we modify the comment
+ */
+exports.modifyComment = async (req, res) => {
+
+  // verify first that the content length is correct
   if (req.body.content.length < 65000) {
+
     const newContent = req.body.content;
 
-    await models.Comment.findOne({ where: { id: req.params.id } })
-      .then((comment) => {
-        comment.content = newContent;
-        comment.save();
-      })
-      .then(
-        res.status(200).json({
-          commentUpdate: "Comment updated !",
-          updatedContent: newContent,
-        })
-      )
-      .catch((error) => res.status(500).json({ error }));
+    // determine who is allowed to perform the action
+    let allowed = functions.isAllowed(req);
+
+    // determine the comment to modify
+    const commentToModify = await models.Comment.findOne({ where: { id: req.params.id } });
+
+    // verify that the user is the owner
+    if (allowed.userIdFromToken === commentToModify.userId) {
+
+      // modify the content
+      commentToModify.content = newContent;
+
+      // save the changes
+      commentToModify.save()
+        .then(
+          res.status(200).json({
+            commentUpdate: "Comment updated !",
+            updatedContent: newContent,
+          })
+        )
+        .catch((error) => res.status(500).json({ error }));
+    }
+    else {
+      // the user is not allowed to perform the action
+      res.status(500).json({ error: "user not allowed to use this fonction" });
+    }
+
+
+
+
   } else {
-    res.status(500).json({ error: "Le commentaire est trop long" });
+    res.status(500).json({ error: "Comment is too long" });
   }
 };
 
-// deleting a comment - destroy method
-exports.deleteComment = async (req, res, next) => {
-  // verify that the user is the owner or an admin
+/**
+ * used to delete a comment
+ * we determine if the user is allowed to perform the action
+ * then we delete the comment
+ */
+exports.deleteComment = async (req, res) => {
+
+  // determine who is allowed to perform the action
   let allowed = functions.isAllowed(req);
 
-  if((allowed.userIdFromToken === req.params.id) || (allowed.isAdminFromToken === 1)) {
+  // determine the comment to delete
+  const commentToDestroy = await models.Comment.findOne({ where: { id: req.params.id } });
 
-  await models.Comment.findOne({ where: { id: req.params.id } })
-    .then((comment) => {
-      models.Comment.destroy({
-        where: {
-          id: req.params.id,
-        },
-      })
-        .then(() => res.status(200).json({ post: "Comment deleted !" }))
-        .catch((error) => res.status(400).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
+  // verify that the user is the owner or an admin
+  if ((allowed.userIdFromToken === commentToDestroy.userId) || (allowed.isAdminFromToken === 1)) {
+
+    // destroy the comment
+    commentToDestroy.destroy()
+      .then(() => res.status(200).json({ post: "Comment deleted !" }))
+      .catch((error) => res.status(400).json({ error }));
   }
   else {
+    // the user is not allowed to perform the action
     res.status(500).json({ error: "user not allowed to use this fonction" });
   }
 };

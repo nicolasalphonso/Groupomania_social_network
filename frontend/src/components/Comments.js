@@ -49,7 +49,7 @@ function Comments({
               Authorization: `bearer ${data.token}`,
             },
           })
-          .then((res) => res.status(200).json(`Comment ${comment.id} deleted`))
+          .then(() => console.log(`Comment ${comment.id} deleted`))
           .catch((error) => console.log(error));
 
         // rerender the comments
@@ -82,7 +82,7 @@ function Comments({
       };
 
       await fetch(`http://localhost:7000/api/comments/${comment.id}`, myInit)
-        .then((res) => res.status(200).json(`Comment ${comment.id} updated`))
+        .then(() => console.log(`Comment ${comment.id} updated`))
         .catch((error) => console.log(error));
 
       // rerender the comments
@@ -188,7 +188,7 @@ function Comments({
                                 onChange={(e) => setNewComment(e.target.value)}
                                 autoFocus
                                 className="modifyInput"
-                                maxlength="65000"
+                                maxLength="65000"
                               />
                               </Col>
                             </Row>
