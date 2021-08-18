@@ -7,6 +7,11 @@ import Button from "react-bootstrap/Button";
 import { useState } from "react";
 import axios from "axios";
 
+/** Function : checks if an object is empty 
+ * 
+ * @param {*} obj : object to study
+ * @returns true if object is empty, else returns false
+ */
 function isEmpty(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) return false;
@@ -15,16 +20,27 @@ function isEmpty(obj) {
   return true;
 }
 
-
+/** functional component : displays personal profile */
 function PersonalProfile({ setLoadProfile, userToDisplay }) {
+  /*
+  local states : 
+    newUsername : new username
+    newFirstname : new firstname
+    newLastname: new lastname
+  */
   const [newUsername, setNewUsername] = useState("");
   const [newFirstname, setNewFirstname] = useState("");
   const [newLastname, setNewLastname] = useState("");
+
   const data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
   // setting the options for the authenticated request
   const userId = data.userId;
 
+  /** function : handles photo update
+   * 
+   * @param {*} e : event
+   */
   async function updatePhoto(e) {
     e.preventDefault();
     const [file] = document.getElementById("newPhoto").files;
@@ -56,6 +72,12 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     document.getElementById("formPhoto").reset();
   }
 
+  /** function : handles infos update
+   * 
+   * @param {*} e : event
+   * @param {*} type : type of value
+   * @param {*} value : value
+   */
   async function handleUpdateData(e, type, value) {
     const updateData = {
       type: type,
@@ -92,6 +114,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
 
   }
 
+  /** function : manages what needs to be done when an element loses focus
+   * 
+   * @param {*} element : the element that loses focus
+   */
   function offFocus(element) {
     element.setAttribute("readonly", true);
     element.classList.add("form-control-plaintext");
@@ -99,6 +125,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     setLoadProfile(true);
   }
 
+  /** function : manages what needs to be done when an element gains focus
+   * 
+   * @param {*} element : the element taht gains focus
+   */
   function onFocus(element) {
     element.removeAttribute("readonly");
     element.classList.remove("form-control-plaintext");
@@ -106,6 +136,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     element.focus();
   }
 
+  /** function : handles preview on image change */
   function handlePreview() {
     const [file] = document.getElementById("newPhoto").files;
     if (file) {
@@ -113,6 +144,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
     }
   }
 
+  /** function : handles delete of personal account */
   async function handleDeleteAccount() {
     if (window.confirm("Do you want to delete your account ?")) {
       if (
@@ -131,8 +163,10 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
             console.log(resp.data);
           })
           .catch((error) => console.log(error));
-        
-window.location.replace("/");
+
+        // go back to login/register page
+        window.location.replace("/");
+        // delete token
         localStorage.removeItem("ReponseServeur");
       }
     }

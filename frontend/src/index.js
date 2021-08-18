@@ -4,7 +4,6 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./styles/css/index.css";
 
-// wrapping of App in a Provider
 ReactDOM.render(
       <App />,
   document.getElementById('root')

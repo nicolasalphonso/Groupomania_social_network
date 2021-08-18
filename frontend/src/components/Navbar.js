@@ -1,10 +1,15 @@
 import React from "react";
-//import { NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 
+/** functional component : displays the navigation bar  */
 const NavigationBar = () => {
+
+  /** function : handles the logout
+   * removes token
+   * redirects to the login / registering page
+   */
 function handleLogout() {
  if( window.confirm("Do you really want to log out !")) {
   localStorage.removeItem("ReponseServeur");

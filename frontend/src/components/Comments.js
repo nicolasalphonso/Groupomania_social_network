@@ -22,6 +22,9 @@ const dateOptions = {
   minute: "numeric",
 };
 
+/** Functional component : displays a comment
+ * and, when needed, a form to modify it
+ */
 function Comments({
   comments,
   setLoadComments,
@@ -40,6 +43,10 @@ function Comments({
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
+  /** function to delete the comment associated
+   * 
+   * @param {*} comment : comment to delete
+   */
   async function handleDeleteComment(comment) {
     if (userId === comment.User.id || isAdmin) {
       if (window.confirm("Delete your comment ?")) {
@@ -63,9 +70,14 @@ function Comments({
     }
   }
 
+  /** function to modify the comment associated
+   * 
+   * @param {*} comment : comment to modify
+   */
   async function handleModifyComment(e, comment) {
     e.preventDefault();
 
+    // fetch settings
     if (userId === comment.User.id) {
       let dataModifyComment = {
         content: newComment.trim(),
@@ -171,22 +183,22 @@ function Comments({
                         displayModifyComment &&
                         commentToModify === comment.id && (
                           <Form
-                          className="displayModifyComment"
+                            className="displayModifyComment"
                             onSubmit={(e) => handleModifyComment(e, comment)}
-                            onBlur={() => {setdisplayModifyComment(false) }}
+                            onBlur={() => { setdisplayModifyComment(false) }}
                           >
                             <Row><Col xs="12" md="2">Edit your comment :</Col>
-                            <Col xs="9">
-                              <input
-                                type="text"
-                                id={`newComment${comment.id}`}
-                                name={`newComment${comment.id}`}
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                autoFocus
-                                className="modifyInput"
-                                maxLength="65000"
-                              />
+                              <Col xs="9">
+                                <input
+                                  type="text"
+                                  id={`newComment${comment.id}`}
+                                  name={`newComment${comment.id}`}
+                                  value={newComment}
+                                  onChange={(e) => setNewComment(e.target.value)}
+                                  autoFocus
+                                  className="modifyInput"
+                                  maxLength="65000"
+                                />
                               </Col>
                             </Row>
                           </Form>

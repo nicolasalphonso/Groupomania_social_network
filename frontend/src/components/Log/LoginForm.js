@@ -1,11 +1,24 @@
 import React from "react";
 import { useState } from "react";
 
+/** functional component that allows user to login */
 const LoginForm = () => {
+  /*
+  local states :
+  email : email entered
+  password : password entered
+  */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // dom element that will show the errors
   const loginError = document.getElementById("loginError");
 
+  /** function to handle login
+   * prepares the fetch and analyses the response
+   * 
+   * @param {*} e : event
+   */
   const handleLogin = (e) => {
     let donnees = {
         email: email.toLowerCase(),

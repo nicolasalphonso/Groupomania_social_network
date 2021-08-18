@@ -20,17 +20,31 @@ const customStyles = {
 
 Modal.setAppElement(document.getElementById("root"));
 
+/** formats the name of an user with an uppercase at the beginning
+ * 
+ * @param {*} name : name to compute
+ * @returns the name computed
+ */
 function nameFormat(name) {
   return name[0].toUpperCase() + name.substring(1).toLowerCase();
 }
 
+/** functional component : display the profile of someone else
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 const OtherProfile = ({
   setShowOtherProfile,
   showOtherProfile,
   profileToDisplay,
   isAdmin,
-  setLoadPosts,
 }) => {
+
+  /** function that deletes a profile
+   * 
+   * @param {*} idToDelete : id of the profile to delete
+   */
   async function  deleteProfile(idToDelete) {
     if (isAdmin) {
       if (window.confirm("Do you want to delete this account ?")) {
@@ -51,6 +65,7 @@ const OtherProfile = ({
             .catch((error) => console.log(error));
         }
       }
+      // reload entire thread
       setShowOtherProfile(false);
       window.location.assign("/home");
     } else {

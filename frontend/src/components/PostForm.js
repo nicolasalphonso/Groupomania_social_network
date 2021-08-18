@@ -3,15 +3,27 @@ import { useState } from "react";
 import axios from "axios";
 import emptyPreview from "../images/empty_preview.png";
 
+/** functional component : used to add a post in the thread */
 const PostForm = ({ setLoadPosts }) => {
+  /*
+  local states:
+  content : content of the post - required
+  attachment : image attachment of the post - optional
+  showingPostForm : used to determine if the post form needs to be shown
+  */
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState("");
   const [showingPostform, setShowingPostform] = useState(false);
+
   const contentError = document.getElementById("contentError");
 
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
+  /** function to handle the post form submit
+   * 
+   * @param {*} e : event
+   */
   async function handlePost(e) {
     e.preventDefault();
     content.trim();
@@ -19,6 +31,7 @@ const PostForm = ({ setLoadPosts }) => {
     formData.append("content", content);
     formData.append("attachment", attachment);
 
+    // content is required
     if (!content) {
       contentError.innerHTML = "The content of the post is required";
     } else {
@@ -32,7 +45,7 @@ const PostForm = ({ setLoadPosts }) => {
         .catch((error) => console.error(error));
     }
 
-    // rerender the thread
+    // render the thread
     setLoadPosts(true);
 
     // empty and close post form
@@ -41,6 +54,7 @@ const PostForm = ({ setLoadPosts }) => {
     setShowingPostform(false);
   }
 
+  /** function : handle preview when an image is selected */
   function handlePreview() {
     const [file] = document.getElementById("attachment").files;
     if (file) {

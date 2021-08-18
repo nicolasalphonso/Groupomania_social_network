@@ -4,6 +4,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+/** Functional component : displays the Log component and the image associated
+ */
 const Loginsubscribe = () => {
   return (
     <main>

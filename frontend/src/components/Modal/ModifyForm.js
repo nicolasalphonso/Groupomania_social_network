@@ -20,6 +20,7 @@ const customStyles = {
 
 Modal.setAppElement(document.getElementById("root"));
 
+/** functional component : displays a modal to modify a post */
 const ModifyForm = ({
   setShowModifyForm,
   showModifyForm,
@@ -30,9 +31,15 @@ const ModifyForm = ({
   postId,
   setLoadPosts
 }) => {
+  /*
+  local states:
+  updatedNewContent : content updated via ModifyForm
+  updatedNewAttachment : attachment updated via ModifyForm
+  */
   const [updatedNewContent, setUpdatedNewContent] = useState(newContent);
   const [updatedNewAttachment, setUpdatedNewAttachment] = useState(newAttachment);
 
+  /** function to handle the preview on image change */
   function handlePreview() {
     const [file] = document.getElementById("attachment").files;
     if (file) {
@@ -41,11 +48,17 @@ const ModifyForm = ({
     setUpdatedNewAttachment(URL.createObjectURL(file))
   }
 
+  /** function to update a post
+   * 
+   * @param {*} id : id of the post
+   * @param {*} e : event (submit)
+   */
   async function updatePost(id, e) {
     e.preventDefault();
 
     let data = JSON.parse(localStorage.getItem("ReponseServeur"));
 
+    // setting the fetch options
     var formData = new FormData();
     formData.append("content", updatedNewContent.trim());
 

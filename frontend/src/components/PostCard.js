@@ -18,7 +18,9 @@ const dateOptions = {
   minute: "numeric",
 };
 
-////////////
+/** functional component : postcard
+ * displays a post including its comments
+ */
 const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, setProfileToDisplay }) => {
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
@@ -44,7 +46,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
   const [loadComments, setLoadComments] = useState(true);
   const [comments, setComments] = useState("");
 
-  // function to handle click on "like" button
+  /** function to handle click on "like" button */ 
   async function handleLike() {
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
@@ -62,7 +64,10 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
       });
   }
 
-  //function to delete the post
+  /** function to delete a post 
+   * 
+   * @param {*} id : id of the post that will be deleted
+   */
   async function deletePost(id) {
     // delete the post from the database
     // verify again that the user is the correct one
@@ -77,7 +82,7 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
           .then(() => console.log(`posts ${id} deleted`))
           .catch((error) => console.log(error));
 
-        // rerender the thread
+        // render the thread
         setLoadPosts(delete posts.post);
       }
     } else {
@@ -88,7 +93,9 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
     }
   }
 
-  // useEffect to re-render the comments
+  /**
+   * useEffect to render the comments
+   */
   useEffect(() => {
     if (loadComments) {
       axios
@@ -103,24 +110,32 @@ const PostCard = ({ post, setLoadPosts, posts, isAdmin, setShowOtherProfile, set
     setLoadComments(false);
   }, [loadComments, post.id, data.token]);
 
-  // function to post a comment
+
+  /** function to post a comment
+   * 
+   * @param {*} userId : id of the user who posts the comment
+   * @param {*} postId : id of the post on which the user comments
+   * @param {*} e : event (submit)
+   */
   async function handlePostComment(userId, postId, e) {
     e.preventDefault();
     console.log("userId : " + userId);
     console.log("postId : " + postId);
     console.log("commentContent : " + commentContent);
 
+    // setting headers
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `bearer ${data.token}`);
-    //myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json");
 
+    // setting data of post
     let dataPostContent = {
       userId: userId,
       postId: post.id,
       commentContent: commentContent,
     };
 
+    // setting fetch informations
     let myInit = {
       method: "POST",
       headers: myHeaders,

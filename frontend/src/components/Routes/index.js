@@ -4,6 +4,11 @@ import Loginsubscribe from '../../pages/Loginsubscribe';
 import Profile from '../../pages/Profile';
 import Home from '../../pages/Home';
 
+/**Routes to the 3 pages
+ *  / is for login and registering
+ *  /profile for personal profile display
+ *  /home for thread display
+ */
 const index = () => {
     return (
         <Router>

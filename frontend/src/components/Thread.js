@@ -2,11 +2,14 @@ import PostCard from "./PostCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import PostForm from "./PostForm";
-// import of dotenv
-/*import env from "react-dotenv";*/
 import jwt_decode from "jwt-decode";
 import OtherProfile from "./Modal/OtherProfile";
 
+/** Function : checks if an object is empty 
+ * 
+ * @param {*} obj : object to study
+ * @returns true if object is empty, else returns false
+ */
 function isEmpty(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) return false;
@@ -14,6 +17,9 @@ function isEmpty(obj) {
   return true;
 }
 
+/** functionnal component : main thread
+ * displays PostForm, PostCard and OtherProfile
+ */
 const Thread = () => {
   // setting the options for the authenticated request
   let data = JSON.parse(localStorage.getItem("ReponseServeur"));
@@ -22,11 +28,20 @@ const Thread = () => {
   const decodedtoken = jwt_decode(data.token);
   const isAdmin = decodedtoken.isAdmin;
 
+  /* local states :
+  * posts : all the posts of the thread
+  * loadPosts : render the posts if true
+  * showOtherProfile : show the modal "OtherProfile"
+  * profileToDisplay : profile to display in the modal "OtherProfile"
+  * 
+  */
   const [posts, setPosts] = useState({});
   const [loadPosts, setLoadPosts] = useState(true);
   const [showOtherProfile, setShowOtherProfile] = useState(false);
   const [profileToDisplay, setProfileToDisplay] = useState(null);
 
+  // query of posts when local state loadposts is true
+  // sets loadposts false when finished
   useEffect(() => {
     if (loadPosts) {
       axios

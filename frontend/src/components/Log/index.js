@@ -4,13 +4,17 @@ import LoginForm from "./LoginForm";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+/** functional component to show login or registering form */
 const Log = () => {
   // we use local states to know if the user chooses to connect or register
-  // default is that we try to login
+  // default is that we try to login (loginModal = ture)
   const [loginModal, setLoginModal] = useState(true);
   const [registerModal, setRegisterModal] = useState(false);
 
-  // this manages the modal associated with register and login
+  /** this function manages the modal associated with register and login
+   * 
+   * @param {*} e : event
+   */
   const handleModals = (e) => {
     if (e.target.id === "login") {
       setRegisterModal(false);

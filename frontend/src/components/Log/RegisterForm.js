@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 
+/** functional component to display the register form */
 const RegisterForm = () => {
+  // local states = data entered by the user. Explicit names. 
+  // ctrlPassword is used to type a second time the password and check they are similar
   const [username, setUsername] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -50,6 +53,7 @@ const RegisterForm = () => {
     }
   };
 
+  // html attributes are used to control the inputs
   return (
     <form action="" onSubmit={handleRegister} id="registerForm">
       <h1>Register</h1>
