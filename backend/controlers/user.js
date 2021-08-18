@@ -204,120 +204,148 @@ exports.updateUserPhotoProfile = async (req, res) => {
   // find user by the primary key (id)
   const user = await models.User.findByPk(req.params.id);
 
-  if (user === null) {
-    res.status(500).json({ error: "user not found" });
-  } else {
-    try {
-      // we set the URL of the new image
-      const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename
-        }`;
+  // determine who is allowed to perform the action
+  let allowed = functions.isAllowed(req);
 
-      // we check that the image doesn't belong to the "seeders"  directory
-      if (
-        req.body.previousImageUrl.split("/images/")[0] ===
-        `${req.protocol}://${req.get("host")}`
-      ) {
-        // we delete the previous image
-        const previousImageName =
-          req.body.previousImageUrl.split("/images/")[1];
-        console.log(previousImageName);
+  // verify that the user is the owner
+  if (allowed.userIdFromToken == req.params.id) {
 
-        fs.unlink(`images/${previousImageName}`, (err) => {
-          if (err) throw err;
-        });
+    if (user === null) {
+      res.status(500).json({ error: "user not found" });
+    } else {
+      try {
+        // we set the URL of the new image
+        const attachmentUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename
+          }`;
+
+        // we check that the image doesn't belong to the "seeders"  directory
+        if (
+          req.body.previousImageUrl.split("/images/")[0] ===
+          `${req.protocol}://${req.get("host")}`
+        ) {
+          // we delete the previous image
+          const previousImageName =
+            req.body.previousImageUrl.split("/images/")[1];
+
+          fs.unlink(`images/${previousImageName}`, (err) => {
+            if (err) throw err;
+          });
+        }
+
+        // update of the user with the new attachment
+        user.attachment = attachmentUrl;
+        user.save();
+        res.status(200).json({ photoProfile: "updated" });
+      } catch (error) {
+        res.status(500).json({ error });
       }
-
-      // update of the user with the new attachment
-      user.attachment = attachmentUrl;
-      user.save();
-      res.status(200).json({ photoProfile: "updated" });
-    } catch (error) {
-      res.status(500).json({ error });
     }
+  } else {
+    // the user is not allowed to perform the action
+    res.status(500).json({ error: "user not allowed to use this fonction" });
   }
+
 };
 
 /** update user profile infos
  * if user is found by primary key (id)
- * we update the value sent
+ * we update the value sent according to its type
  */
 exports.updateUserInfoProfile = async (req, res) => {
   // find user by the primary key (id)
   const user = await models.User.findByPk(req.params.id);
 
-  if (user === null) {
-    res.status(500).json({ error: "user not found" });
-  } else {
-    try {
-      // check that the input is valid according to its type
-      const value = req.body.value;
-      let isValid = false;
-
-      switch (req.body.type) {
-        case "username":
-          user.username = value;
-          isValid = value.length < 21 ? true : false;
-          break;
-
-        case "firstname":
-          user.firstname = value;
-          isValid = value.length < 31 ? true : false;
-          break;
-
-        case "lastname":
-          user.lastname = value;
-          isValid = value.length < 31 ? true : false;
-          break;
-
-        default:
-          res.status(500).json({ error: "the data can not be updated" });
-          return;
-      }
-      if (isValid) {
-        try {
-          user.save();
-          res.status(200).json({ infoProfile: `updated ${type}` });
-
-        } catch (error) {
-          let errorMessage = "";
-
-          try {
-            switch (error.errors[0].message) {
-
-              case "users.username must be unique":
-                errorMessage =
-                  "Username is yet used";
-                break;
-
-              default:
-                errorMessage = "Undefined error";
-                break;
-            }
-          }
-          catch (error) {
-            console.log(error);
-            return;
-          }
-
-          res.status(400).json({ error: errorMessage });
-        }
-        //
-      } else {
-        res.status(500).json({ error: "Input length is too long" });
-      }
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  }
-};
-
-exports.deleteUserProfile = async (req, res) => {
-  // verify that the user is the owner or the admin
+  // determine who is allowed to perform the action
   let allowed = functions.isAllowed(req);
 
+  // verify that the user is the owner
+  if (allowed.userIdFromToken == req.params.id) {
+    if (user === null) {
+      res.status(500).json({ error: "user not found" });
+    } else {
+      try {
+        // check that the input is valid according to its type
+        const value = req.body.value;
+        let isValid = false;
+
+        switch (req.body.type) {
+          case "username":
+            user.username = value;
+            isValid = value.length < 21 ? true : false;
+            break;
+
+          case "firstname":
+            user.firstname = value;
+            isValid = value.length < 31 ? true : false;
+            break;
+
+          case "lastname":
+            user.lastname = value;
+            isValid = value.length < 31 ? true : false;
+            break;
+
+          default:
+            res.status(500).json({ error: "the data can not be updated" });
+            return;
+        }
+        // if value is valid, save the user updated
+        if (isValid) {
+          try {
+            user.save();
+            res.status(200).json({ infoProfile: `updated ${type}` });
+
+          } catch (error) {
+            // personalize error message
+            let errorMessage = "";
+
+            try {
+              switch (error.errors[0].message) {
+
+                case "users.username must be unique":
+                  errorMessage =
+                    "Username is yet used";
+                  break;
+
+                default:
+                  errorMessage = "Undefined error";
+                  break;
+              }
+            }
+            catch (error) {
+              console.log(error);
+              return;
+            }
+
+            res.status(400).json({ error: errorMessage });
+          }
+          //
+        } else {
+          res.status(500).json({ error: "Input length is too long" });
+        }
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    }
+  }
+  else {
+    // the user is not allowed to perform the action
+    res.status(500).json({ error: "user not allowed to use this fonction" });
+  }
+
+};
+
+/** delete user account
+ *  first verify that the user connected can perform the action
+ * then delete user's comments
+ * then delete user's posts and their comments
+ * finally delete user account
+ */
+exports.deleteUserProfile = async (req, res) => {
+  // determine who is allowed to perform the action
+  let allowed = functions.isAllowed(req);
+// verify that the user is the owner or the admin
   if ((allowed.userIdFromToken == req.params.id) || (allowed.isAdminFromToken === 1)) {
 
-    console.log("ok");
     // defining user id
     const userIdToDelete = req.params.id;
 

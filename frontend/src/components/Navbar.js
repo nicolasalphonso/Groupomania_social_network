@@ -8,6 +8,7 @@ const NavigationBar = () => {
 function handleLogout() {
  if( window.confirm("Do you really want to log out !")) {
   localStorage.removeItem("ReponseServeur");
+  window.location.assign("/");
  }
 }
 
@@ -27,7 +28,7 @@ function handleLogout() {
           <Nav className="ms-auto">
             <Nav.Link href="/home">News</Nav.Link>
             <Nav.Link href="/profile">Profile</Nav.Link>
-            <Nav.Link href="/" onClick={() => handleLogout()}>Logout</Nav.Link>
+            <Nav.Link onClick={() => handleLogout()}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -15,9 +15,6 @@ function isEmpty(obj) {
   return true;
 }
 
-function nameFormat(name) {
-  return name[0].toUpperCase() + name.substring(1).toLowerCase();
-}
 
 function PersonalProfile({ setLoadProfile, userToDisplay }) {
   const [newUsername, setNewUsername] = useState("");
@@ -92,7 +89,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
       .catch((error) => {
         console.log(error);
       });
-      
+
   }
 
   function offFocus(element) {
@@ -121,8 +118,8 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
       if (
         window.confirm("Are you really sure you want to delete your account ?")
       ) {
-        localStorage.removeItem("ReponseServeur");
-        window.location.replace("/");
+        setLoadProfile(false);
+
 
         await axios
           .delete(`http://localhost:7000/api/auth/profile/${userId}`, {
@@ -134,6 +131,9 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
             console.log(resp.data);
           })
           .catch((error) => console.log(error));
+        
+window.location.replace("/");
+        localStorage.removeItem("ReponseServeur");
       }
     }
   }
@@ -144,14 +144,6 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
         <Row className="text-center">
           <Col>
             <div className="bg-white rounded shadow-sm py-5 px-4">
-              <h1 className="mb-0 nameDisplay">
-                {userToDisplay.data.firstname &&
-                  nameFormat(userToDisplay.data.firstname)}{" "}
-                {userToDisplay.data.lastname &&
-                  nameFormat(userToDisplay.data.lastname)}
-              </h1>
-              <p className="small text-muted">{userToDisplay.data.username}</p>
-              <p>{userToDisplay.data.bio}</p>
               <img
                 src={userToDisplay.data.attachment}
                 alt={`Profile of ${userToDisplay.data.username}`}
@@ -270,7 +262,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("firstname"));
               }}
-              pattern="[A-Za-z ]+{1,30}"
+              pattern="[A-Za-z\s]{1,30}"
               title="Firstname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
@@ -311,7 +303,7 @@ function PersonalProfile({ setLoadProfile, userToDisplay }) {
               onBlur={() => {
                 offFocus(document.getElementById("lastname"));
               }}
-              pattern="[A-Za-z ]+{1,30}"
+              pattern="[A-Za-z\s]{1,30}"
               title="Lastname should contain only letters. Length is limited to 30 characters"
             />
           </Form.Group>
