@@ -1,3 +1,6 @@
+/**
+ * users of demo version when using sequelize db:seed:all
+ */
 "use strict";
 require("dotenv").config();
 const bcrypt = require("bcrypt");

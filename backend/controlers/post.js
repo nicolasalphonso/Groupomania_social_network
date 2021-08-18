@@ -4,9 +4,7 @@ const jwt = require("jsonwebtoken"); // import of JSON web token
 const dotenv = require("dotenv").config({ path: "../" }); // import of environment variables
 const functions = require("./functions");
 
-/**
- * get all posts
- */
+/** get all posts */
 exports.getAllPosts = async (req, res) => {
   try {
     const fields = req.query.fields;
@@ -40,8 +38,7 @@ exports.getAllPosts = async (req, res) => {
   }
 };
 
-/**
- * create a post
+/** create a post
  *  if req.file, there's an image to compute
  */
 exports.createPost = async (req, res) => {

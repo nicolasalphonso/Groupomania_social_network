@@ -1,7 +1,7 @@
 // code fourni par Openclassrooms pour la configuration du serveur
 const http = require('http');
 
-// import de l'application exportée depuis app.js
+// import of application exported from app.js
 const app = require('./app');
 
 const normalizePort = val => {
@@ -15,10 +15,9 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '5000');
+const port = normalizePort(process.env.PORT || '7000');
 
- // on renseigne l'application express sur le port
- // sur lequel elle va tourner
+ // express app will run on "port"
 app.set('port', port);
 
 const errorHandler = error => {
@@ -41,7 +40,7 @@ const errorHandler = error => {
   }
 };
 
-const server = http.createServer(app); // on passe l'application au serveur
+const server = http.createServer(app); // sending app to the server
 
 server.on('error', errorHandler);
 server.on('listening', () => {

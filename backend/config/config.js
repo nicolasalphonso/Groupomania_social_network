@@ -1,3 +1,4 @@
+/** explains sequelize-cli how to connect to the database */
 require ('dotenv').config();
 
 module.exports = {

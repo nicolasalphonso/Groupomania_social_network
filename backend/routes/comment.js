@@ -8,7 +8,7 @@ const auth = require('../middleware/auth');
 // all controls are in the controler post file
 const postCtrl = require('../controlers/comment');
 
-// all request are authentified (auth)
+// all requests are authentified (auth)
 // route to get all comments
 router.get('/:id', auth, postCtrl.getComments);
 //route to create a comment

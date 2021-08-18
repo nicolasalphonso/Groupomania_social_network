@@ -6,9 +6,7 @@ const functions = require("./functions");
 
 
 
-/**
- * get all comments of a post
- */
+/** get all comments of a post */
 exports.getComments = async (req, res) => {
   try {
     const fields = req.query.fields;
@@ -46,9 +44,7 @@ exports.getComments = async (req, res) => {
   }
 };
 
-/**
- * used to create a comment
- */
+/** used to create a comment */
 exports.createComment = async (req, res) => {
   if (req.body.commentContent.length < 65000) {
     // create the new comment
@@ -68,8 +64,7 @@ exports.createComment = async (req, res) => {
   }
 };
 
-/**
- * used to modify a comment
+/** used to modify a comment
  * we determine if the user is allowed to perform the action
  * then we modify the comment
  */
@@ -115,8 +110,7 @@ exports.modifyComment = async (req, res) => {
   }
 };
 
-/**
- * used to delete a comment
+/** used to delete a comment
  * we determine if the user is allowed to perform the action
  * then we delete the comment
  */

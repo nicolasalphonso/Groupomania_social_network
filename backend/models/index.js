@@ -1,3 +1,4 @@
+/** sequelize automatically generated file */
 'use strict';
 
 const fs = require('fs');

@@ -9,21 +9,21 @@ const MIME_TYPES = {
   'image/png': 'png'
 };
 
-// objet de configuration pour multer
+// configuration of multer
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'images'); // null = pas d'erreur
   },
   filename: (req, file, callback) => {
-    // on récupère le nom original, on remplace les espaces par des _
+    // retrieving and comuting original name
     const name = file.originalname.split(' ').join('_').replace(".","");
-    // on crée l'extension grâce aux MIME_TYPES définis
+    // create extension according to the mimetypes
     const extension = MIME_TYPES[file.mimetype];
-    // on crée le filename en ajoutant aussi un timestamp
+    // creating filename adding a timestamp
     callback(null, name + Date.now() + '.' + extension);
   }
 });
 
 
-// export du middleware multer configuré
+// export of multer middleware setted
 module.exports = multer({storage: storage}).single('attachment');

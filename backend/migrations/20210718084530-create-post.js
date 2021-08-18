@@ -1,3 +1,4 @@
+/** comments migrations files used to set the posts database */
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {

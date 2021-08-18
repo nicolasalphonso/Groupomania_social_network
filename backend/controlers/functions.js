@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken"); // import of JSON web token
 
+/** function isAllowed checks user id and admin state from token
+ * 
+ * @param {*} req : request
+ * @returns an object with eh user id and te admin state from the token
+ */
 function isAllowed(req) {
     // token is the second element of header authorization
   const token = req.headers.authorization.split(' ')[1];

@@ -1,3 +1,4 @@
+/** model of a new user */
 "use strict";
 const { Sequelize, Datatypes, Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {

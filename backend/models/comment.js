@@ -1,3 +1,6 @@
+/** model of a new comment
+ * 
+ */
 'use strict';
 const {
   Model

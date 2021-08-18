@@ -1,8 +1,3 @@
-//const { Sequelize, where } = require("sequelize");
-
-// Option 1: Passing a connection URI
-//const sequelize = new Sequelize("sqlite::memory:"); // Example for sqlite
-
 // import dotenv
 const dotenv = require("dotenv").config({ path: "../" });
 

@@ -1,14 +1,14 @@
-// Application utilisant le framework Express
-// utilise sequilize pour la gestion de la base de données MySQL
-const express = require("express"); // importation d'Express
+// Application using Express framework
+// uses sequilize fot MySQL database management
+const express = require("express"); // import of Express
 const bodyParser = require('body-parser');
-const dotenv = require("dotenv").config(); // importation de dotenv
-const helmet = require('helmet'); // importation de Helmet - sécurisation des entêtes HTTP
-const xss = require('xss-clean'); // importation de XSS Clean contre les attaques XSS
-const { Sequelize, Model, DataTypes } = require('sequelize'); // importation de sequelize
+const dotenv = require("dotenv").config(); // import of dotenv
+const helmet = require('helmet'); // import Helmet - securising HTTP headers
+const xss = require('xss-clean'); // import XSS Clean against XSS attacks
+const { Sequelize, Model, DataTypes } = require('sequelize'); // import sequelize
 const sequelize = new Sequelize('sqlite::memory:');
 
-// Connexion à la base de données
+// Connexion to database
 try {
   sequelize.authenticate();
   console.log('Connection has been established successfully.');
@@ -16,24 +16,24 @@ try {
   console.error('Unable to connect to the database:', error);
 }
 
-const toobusy = require('toobusy-js'); // importation de toobusy-js : prévention des attaques DoS (Denial of Service)
-// importation de morgan et fs pour la génération et l'écriture des logs
+const toobusy = require('toobusy-js'); // import toobusy-js : prevents DoS Attacks (Denial of Service)
+// import morgan and fs for logs
 const morgan = require('morgan');
 const fs = require('fs');
-// importation de express-session - stocke les données de session sur le serveur
-// en production, il faut des configurations supplémentaires
+// import express-session - save session data on server
+// in production, we'll need more settings
 const session = require('express-session');
-// importation de path pour accéder au path de notre serveur
+// import path to access our server path
 const path = require('path');
 
-// Routeurs pour les "posts" et les "utilisateurs"
+// Routers to "posts" and "users"
 const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
 const commentRoutes = require('./routes/comment');
 
-const app = express(); // notre application
+const app = express(); // our app
 
-// too busy - prévention de DoS
+// too busy - prevents DoS attacks
 app.use(function(req, res, next) {
   if (toobusy()) {
       res.status(503, "Le serveur est surchargé");
@@ -42,8 +42,8 @@ app.use(function(req, res, next) {
   }
 });
 
-  // headers pour éviter les erreurs CORS - appliqué à toutes les routes
-  // nous souhaitons que nos deux serveurs puissent communiquer
+  // headers to avoid CORS errors - for all routes
+  // our 2 servers must communicate
   // Cross Origin Resource sharing
   app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -52,37 +52,37 @@ app.use(function(req, res, next) {
       "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
     );
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    next(); // passe l'exécution au middleware suivant
+    next(); 
   });
   
   //Body Parser configuration
   app.use(bodyParser.urlencoded({ extended: true}))
   
-  // transforme le corps de la requête en objet JSON
+  // transforms request body in JSON object
   app.use(express.json());
 
-  // Log de toutes les requêtes
+  // Log of all requests
   const accessLogs = fs.createWriteStream(path.join(__dirname, 'requetes.log'), { flags: 'a'});
   app.use(morgan('combined', { stream: accessLogs}));
 
-  // Stockage de manière persistante du JSON Web token durant 15 minutes
+  // persistent save of JSON token during 15 minutes
   app.use(session({ secret: process.env.COOKIE_KEY_SECRET, resave: false, saveUninitialized: true, cookie: { maxAge: 900000}}));
 
-  // Sécurisation des entêtes
+  // securing headers
   app.use(helmet());
 
-  // Prévention des attaques XSS
+  // Prevents XSS attacks
   app.use(xss());
   
-  // répond aux requêtes à /images en rendant notre dossier images statique 
+  // answers requests to images folder making folder static 
   app.use('/images', express.static(path.join(__dirname, 'images')));
 
-  // routes of basic routeurs
+  // routes of basic routers
   app.use('/api/posts', postRoutes); 
   app.use('/api/auth', userRoutes);
   app.use('/api/comments', commentRoutes);
   
 
-// exportation de l'application pour pouvoir y accéder depuis
-// d'autres fichiers notamment le serveur node
+// export app so that it can be reached from
+// other files, especially the node server
 module.exports = app;

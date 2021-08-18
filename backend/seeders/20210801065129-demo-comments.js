@@ -1,3 +1,6 @@
+/**
+ * comments of demo version when using sequelize db:seed:all
+ */
 "use strict";
 
 module.exports = {
